@@ -1,4 +1,4 @@
-import { useState, useSyncExternalStore } from 'react'
+import { useState } from 'react'
 import {
     XCircleIcon,
     Square2StackIcon,
@@ -115,7 +115,7 @@ function GenerateQoutation({ visible, close }) {
     const HandelRProdeutSelect = (i, e) => {
 
         let val = e.target.value;
-        let id = e.target.selectedIndex;
+        // let id = e.target.selectedIndex;
 
         let preRProduct = [...RProductList];
         preRProduct[i]["name"] = val;

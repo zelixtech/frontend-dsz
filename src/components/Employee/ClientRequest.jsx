@@ -1,6 +1,6 @@
 import React from 'react'
 
-function ClientRequest({ request, requestCatagory, date, Status }) {
+function ClientRequest({ request, requestCatagory, date, Status, Lastseen }) {
     return (
         <div className='px-4 py-2 mx-4 my-2 flex justify-between items-center bg-white shadow-md  rounded-md'>
             <div>
@@ -9,14 +9,21 @@ function ClientRequest({ request, requestCatagory, date, Status }) {
                 </h1>
                 <p className='text-gray-400'>{requestCatagory}</p>
             </div>
-            <div>
-                <h1 className='text-base font-400'>{date}</h1>
-                <p className='text-gray-400'>Order Date</p>
+            <div className='flex flex-col justify-center '>
+                <p className='text-base text-center'>Order Date</p>
+                <h1 className='text-gray-400 font-400'>{date}</h1>
             </div>
 
-            {Status === "New" ? <button className='px-2 py-1 h-8 bg-blue-100 text-base font-[400] text-primary rounded-md shadow-sm'> Assign ME </button> :
-                <button className='px-2 py-1 h-8 bg-blue-100 text-base font-[400] text-primary rounded-md shadow-sm'> View </button>
-            }
+            {Status === "New" ? <button className='px-3 py-1 h-8 bg-blue-500 text-base font-[400] text-white rounded-[4px] shadow-sm'> Assign ME </button>
+                : (
+                    <>
+                        <div className='flex flex-col justify-center '>
+                            <p className='text-base text-center'>Last Seen</p>
+                            <h1 className='text-gray-400 font-400'>{Lastseen}</h1>
+                        </div>
+                        <button className='px-4 py-1 h-8 bg-blue-500 text-base font-[400] text-white rounded-[4px] shadow-sm'> View </button>
+                    </>
+                )}
 
         </div>
     )

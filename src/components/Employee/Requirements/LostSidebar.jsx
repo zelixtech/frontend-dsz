@@ -1,17 +1,12 @@
-// import { useEffect } from 'react'
-import Followup from './Followup'
-import { usePopups } from '../../PopupsContext'
+import React from 'react';
+import Followup from './Followup';
+import { usePopups } from '../../PopupsContext';
 import SidebarClientinfo from './SidebarClientinfo';
 
-function RunningSidebar() {
+function LostSidebar() {
 
     const { chat } = usePopups();
     const [ChatPopup, SetChatPopup] = chat
-
-    // useEffect(() => {
-    //     console.log(ChatPopup, SetChatPopup)
-    // }, [])
-
 
     return (
         <div className='mx-6 mt-10 felx flex-col text-[14px] text-black'>
@@ -90,36 +85,25 @@ function RunningSidebar() {
             <div className='max-h-[350px] overflow-y-scroll'>
                 <Followup Date={"7 Nov 2022"} Detail={"Qoutation sended"} />
                 <Followup Date={"9 Nov 2022"} Detail={"will call later"} />
-                <Followup Date={"11 Nov 2022"} Detail={"the client is busy."} />
+                <Followup Date={"11 Nov 2022"} Detail={"The client is busy."} />
             </div>
 
-            <div className='flex flex-col mt-4'>
+            {/* <div className='flex flex-col mt-4'>
                 <label className='text-primary'>Follow Up</label>
                 <textarea className="my-2 pl-2 h-6 outline-none border-b-2 border-green-500" type="text" ></textarea>
                 <button className='px-4 py-2 mb-2 mx-2 bg-primary text-white font-medium rounded-md shadow-md' >Save</button>
-            </div >
+            </div > */}
 
             <div className='mt-8 mb-5 text-[14px]'>
                 <div className='flex flex-col justify-center items-center'>
-
-
-
+                    <button className='w-[95%] px-4 py-2 mb-2 bg-primary text-white font-medium rounded-md shadow-md' >Send to Running</button>
+                    <button className='w-[95%] px-4 py-2 mb-2 bg-primary text-white font-medium rounded-md shadow-md' >Send to Close</button>
                     <button onClick={() => SetChatPopup(true)} className='w-[95%] px-4 py-2 bg-green-500 text-white font-medium rounded-md shadow-md'>Chat</button>
-
-                    <div className='flex justify-between w-[95%] mt-3'>
-
-                        <button className='w-[48%] px-4 py-2 mb-2 bg-primary text-white font-medium rounded-md shadow-md' >Lost</button>
-                        <button className='w-[48%] px-4 py-2 mb-2 bg-primary text-white font-medium rounded-md shadow-md' >Close</button>
-
-                    </div>
                 </div>
             </div>
-
-
-
 
         </div>
     )
 }
 
-export default RunningSidebar
+export default LostSidebar

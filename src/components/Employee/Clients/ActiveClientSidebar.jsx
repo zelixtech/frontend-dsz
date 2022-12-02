@@ -31,7 +31,7 @@ function ActiveClientSidebar() {
             </div>
 
 
-            <div className='mt-6 mb-8 text-[14px] fixed bottom-0'>
+            <div className='mt-6 mb-8 text-[14px] fixed bottom-0 -z-10'>
                 <div className='flex justify-center items-center'>
                     {/* <button className='px-4 py-2 bg-primary text-white font-medium rounded-md shadow-md' >Create Quotation</button> */}
                     <button className='ml-2 px-4 py-2 bg-rose-500 text-white font-medium rounded-md shadow-md'>Block Client</button>

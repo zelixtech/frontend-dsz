@@ -1,8 +1,9 @@
 import React from 'react'
 import Followup from './Followup'
 import { usePopups } from '../../PopupsContext'
+import SidebarClientinfo from './SidebarClientinfo';
 
-function DoneSidebar() {
+function CloseSidebar() {
 
     const { chat } = usePopups();
     const [ChatPopup, SetChatPopup] = chat
@@ -12,15 +13,7 @@ function DoneSidebar() {
 
             <div>
 
-                <span className='flex items-center'>
-                    <h1 className="headline">vishal savaliya</h1>
-                    <p className='mx-6 bg-gray-400  text-white px-2 rounded-sm font-medium'>New</p>
-                </span>
-
-                <div className='pt-2 text-gray-400'>
-                    <p className=''>vsleitan@gmail.com</p>
-                    <p>+91 9510342875</p>
-                </div>
+                <SidebarClientinfo Name={"vishal savaliya"} Email={"vsleitan.work@gmail.com"} Mobile={"91 9510342875"} Status="New" />
 
                 <div className='pt-5'>
                     <h1 className='text-sm text-black'>Requirement for Heat Resistant Safety Cover</h1>
@@ -103,7 +96,7 @@ function DoneSidebar() {
 
             <div className='mt-8 mb-5 text-[14px]'>
                 <div className='flex flex-col justify-center items-center'>
-                    <button className='w-[95%] px-4 py-2 mb-2 bg-primary text-white font-medium rounded-md shadow-md' >Send to Close</button>
+                    {/* <button className='w-[95%] px-4 py-2 mb-2 bg-primary text-white font-medium rounded-md shadow-md' >Send to Close</button> */}
                     <button onClick={() => SetChatPopup(true)} className='w-[95%] px-4 py-2 bg-green-500 text-white font-medium rounded-md shadow-md'>Chat</button>
                 </div>
             </div>
@@ -112,4 +105,4 @@ function DoneSidebar() {
     )
 }
 
-export default DoneSidebar
+export default CloseSidebar

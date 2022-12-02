@@ -4,13 +4,14 @@ import { TabSelector } from "../TabSelector";
 import ClientQuery from './Requirements/Query';
 import NewRightsidebar from './Requirements/NewRightsidebar';
 import RunningSidebar from "./Requirements/RunningSidebar";
-import DoneSidebar from "./Requirements/DoneSidebar";
+import LostSidebar from "./Requirements/LostSidebar";
 import SearchBar from "./SearchBar";
 
 
 import Chat from '../Popups/Chat'
 import { usePopups } from '../../components/PopupsContext'
 import GenerateQoutation from "../Popups/GenerateQoutation";
+import CloseSidebar from "./Requirements/CloseSidebar";
 
 
 function Requrements({ Input, searchHandler }) {
@@ -18,7 +19,7 @@ function Requrements({ Input, searchHandler }) {
     const [selectedTab, setSelectedTab] = useTabs([
         "New",
         "Running",
-        "Done",
+        "Lost",
         "Close",
     ]);
 
@@ -48,10 +49,10 @@ function Requrements({ Input, searchHandler }) {
                         Running
                     </TabSelector>
                     <TabSelector
-                        isActive={selectedTab === "Done"}
-                        onClick={() => setSelectedTab("Done")}
+                        isActive={selectedTab === "Lost"}
+                        onClick={() => setSelectedTab("Lost")}
                     >
-                        Done
+                        Lost
                     </TabSelector>
                     <TabSelector
                         isActive={selectedTab === "Close"}
@@ -68,7 +69,7 @@ function Requrements({ Input, searchHandler }) {
                 <div>
                     <TabPanel hidden={selectedTab !== "New"}><ClientQuery Status={"New"} /></TabPanel>
                     <TabPanel hidden={selectedTab !== "Running"}><ClientQuery Status={"Rinning"} /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Done"}><ClientQuery Status={"Done"} /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Lost"}><ClientQuery Status={"Lost"} /></TabPanel>
                     <TabPanel hidden={selectedTab !== "Close"}><ClientQuery Status={"Close"} /></TabPanel>
                 </div>
 
@@ -83,8 +84,8 @@ function Requrements({ Input, searchHandler }) {
                 <div>
                     <TabPanel hidden={selectedTab !== "New"}><NewRightsidebar /></TabPanel>
                     <TabPanel hidden={selectedTab !== "Running"}><RunningSidebar /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Done"}><DoneSidebar /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Close"}>Billing</TabPanel>
+                    <TabPanel hidden={selectedTab !== "Lost"}><LostSidebar /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Close"}><CloseSidebar /></TabPanel>
                 </div>
 
                 <Chat visible={ChatPopup} close={SetChatPopup} />

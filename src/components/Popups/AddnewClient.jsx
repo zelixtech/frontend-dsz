@@ -36,7 +36,7 @@ function AddnewClient({ visible, close }) {
                             </div>
                             <div className='flex flex-col'>
                                 <label className='label'>Mobile No</label>
-                                <input className='NewEmployeeinput w-[300px]' type="number" name="employee_name" />
+                                <input className='NewEmployeeinput w-[300px]' type="tel" name="employee_name" />
                             </div>
 
                         </div>

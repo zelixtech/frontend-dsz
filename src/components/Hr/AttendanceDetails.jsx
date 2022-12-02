@@ -12,7 +12,7 @@ function AttendanceDetails({ Name, Position, Leave, Attendance, Halfleave }) {
             </div>
 
 
-            <div className='flex items-center w-[68%]'>
+            <div className='flex items-center justify-center w-[68%]'>
                 <h1 className='border-l-2 h-10 w-4 ml-6 mr-2 border-gray-300'></h1>
                 <div>
                     <p className='text-blue-500 text-xl font-medium'>{Attendance}</p>

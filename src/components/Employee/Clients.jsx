@@ -5,6 +5,7 @@ import SearchBar from './SearchBar';
 import AllClients from './Clients/AllClients';
 import BlockedClientsSidebar from './Clients/BlockedClientsSidebar';
 import ActiveClientSidebar from './Clients/ActiveClientSidebar';
+import ClientSerachbar from './Clients/ClientSerachbar';
 
 
 
@@ -40,7 +41,8 @@ function Users({ Input, searchHandler }) {
                 </nav>
 
 
-                <SearchBar Input={Input} searchHandler={searchHandler} />
+                {/* <SearchBar  /> */}
+                <ClientSerachbar Input={Input} searchHandler={searchHandler} />
 
                 {/* requests  */}
 

@@ -3,7 +3,7 @@ import {
     XCircleIcon
 } from '@heroicons/react/24/outline'
 
-function AddNewRequest({ visible, close }) {
+function AddnewClient({ visible, close }) {
     if (!visible) return null;
 
     return (
@@ -14,7 +14,7 @@ function AddNewRequest({ visible, close }) {
 
                 <div className='sticky top-0 backdrop-blur-sm bg-bg bg-opacity-20'>
                     <div className='flex justify-between px-20 pt-5 pb-2'>
-                        <h1 className='heading'>Add New Requirement</h1>
+                        <h1 className='heading'>Add New Client</h1>
                         <XCircleIcon onClick={() => close(false)} className="w-8" />
                     </div>
                 </div>
@@ -28,49 +28,22 @@ function AddNewRequest({ visible, close }) {
                             <input className='NewEmployeeinput' type="text" name="employee_name" />
                         </div>
 
+                        <div className='flex justify-between py-3'>
+
+                            <div className='flex flex-col'>
+                                <label className='label'>Email</label>
+                                <input className='NewEmployeeinput w-[300px]' type="email" name="employee_name" />
+                            </div>
+                            <div className='flex flex-col'>
+                                <label className='label'>Mobile No</label>
+                                <input className='NewEmployeeinput w-[300px]' type="number" name="employee_name" />
+                            </div>
+
+                        </div>
+
                         <div className='flex flex-col'>
-                            <label className='label'>Mobile No</label>
+                            <label className='label'>City</label>
                             <input className='NewEmployeeinput' type="text" name="employee_name" />
-                        </div>
-                        <div className='flex flex-col'>
-                            <label className='label'>Email</label>
-                            <input className='NewEmployeeinput' type="email" name="employee_name" />
-                        </div>
-
-                        <div className='flex flex-col'>
-                            <label className='label'>Requirements</label>
-                            <input className='NewEmployeeinput' type="email" name="employee_name" />
-                        </div>
-
-                        <div className='flex justify-between py-3'>
-
-                            <div className='flex flex-col'>
-                                <label className='label'>Inquiry Date</label>
-                                <input className='NewEmployeeinput w-[300px]' type="date" name="employee_name" />
-                            </div>
-                            <div className='flex flex-col'>
-                                <label className='label'>Time</label>
-                                <input className='NewEmployeeinput w-[300px]' type="time" name="employee_name" />
-                            </div>
-
-                        </div>
-
-                        <div className='flex flex-col'>
-                            <label className='label'>Message</label>
-                            <textarea className='NewEmployeeinput h-[100px]' type="text" name="employee_name" ></textarea>
-                        </div>
-
-                        <div className='flex justify-between py-3'>
-
-                            <div className='flex flex-col'>
-                                <label className='label'>Location</label>
-                                <input className='NewEmployeeinput w-[300px]' type="text" name="employee_name" />
-                            </div>
-                            <div className='flex flex-col'>
-                                <label className='label'>Source</label>
-                                <input className='NewEmployeeinput w-[300px]' type="text" name="employee_name" />
-                            </div>
-
                         </div>
 
                         <div className='flex flex-col'>
@@ -95,4 +68,4 @@ function AddNewRequest({ visible, close }) {
     )
 }
 
-export default AddNewRequest;
+export default AddnewClient

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import {
     XCircleIcon,
     Square2StackIcon,
@@ -12,8 +12,25 @@ function GenerateQoutation({ visible, close }) {
     const [ProductList, SetProduct] = useState([{}]);
     const [RProductList, SetRProduct] = useState([{}]);
     const [TACList, SetTACList] = useState("");
+    const [Currency, SetCurrency] = useState("INR")
+    const [Data, SetData] = useState([{
+        "sender": {
+            "name": "urvisha patel",
+            "mobile": "9510504070"
+        },
+        "client": {
+            "name": "Client name",
+            "mobile": "(+91) 9999999999",
+            "company": "Company name/ Industry",
+            "address": "Rekab tower c wing 1st floor flat no 114 E S Patanwala ( gurepdev) Bombay maharashtra",
+            "gst": "27AGFPS5954C1Z7",
+            "email": "email@gmail.com"
+        },
+    }])
 
 
+
+    // The products handels 
 
     const HandelProdeutSelect = (i, e) => {
 
@@ -22,6 +39,7 @@ function GenerateQoutation({ visible, close }) {
         let preProduct = [...ProductList];
         preProduct[i]["name"] = val;
         preProduct[i]["data"] = productDetails[0][val].data;
+        preProduct[i]["unit"] = productDetails[0][val].data[0]["Unit"];
         SetProduct(preProduct);
 
     }
@@ -42,8 +60,12 @@ function GenerateQoutation({ visible, close }) {
         preProduct[i]["rate"] = dataSet.max;
         SetProduct(preProduct);
 
-        console.log(i, ProductList.RProductList)
+        // console.log(i, ProductList.RProductList)
     }
+
+
+
+    // Rate Input Handel
 
     const HandelRateInpt = (i, e) => {
 
@@ -55,6 +77,18 @@ function GenerateQoutation({ visible, close }) {
 
     }
 
+    // Quantity Input Handel
+
+    const HandelPquantityInput = (i, e) => {
+
+        let val = e.target.value;
+
+        let preProduct = [...ProductList];
+        preProduct[i]["quantity"] = val;
+        SetProduct(preProduct);
+
+        // console.log(ProductList);
+    }
 
 
     const RemoveProdctFields = (i) => {
@@ -72,6 +106,12 @@ function GenerateQoutation({ visible, close }) {
 
 
 
+
+
+
+    // recommended products handels 
+
+
     const HandelRProdeutSelect = (i, e) => {
 
         let val = e.target.value;
@@ -80,9 +120,11 @@ function GenerateQoutation({ visible, close }) {
         let preRProduct = [...RProductList];
         preRProduct[i]["name"] = val;
         preRProduct[i]["data"] = productDetails[0][val].data;
+        preRProduct[i]["unit"] = productDetails[0][val].data[0]["Unit"];
         SetRProduct(preRProduct);
 
     }
+
 
     const HandelRThiknessSelect = (i, element, e) => {
 
@@ -98,8 +140,11 @@ function GenerateQoutation({ visible, close }) {
         preRProduct[i]["rate"] = dataSet.max;
         SetRProduct(preRProduct);
 
-        console.log(i, RProductList, ProductList)
+        // console.log(i, RProductList, ProductList)
     }
+
+
+    // rate Input handel
 
     const HandelRProductRateInpt = (i, e) => {
         let val = e.target.value;
@@ -110,14 +155,26 @@ function GenerateQoutation({ visible, close }) {
 
     }
 
+    // Quantity Input Handel
+
+    const HandelRPquantityInput = (i, e) => {
+
+        let val = e.target.value;
+
+        let preRProduct = [...RProductList];
+        preRProduct[i]["quantity"] = val;
+        SetRProduct(preRProduct);
+
+        // console.log(RProductList);
+    }
 
 
     const RemoveRProdctFields = (i) => {
-        // console.log(i, ProductList)
+
         let rproductFileds = [...RProductList];
         rproductFileds.splice(i, 1);
         SetRProduct(rproductFileds);
-        // console.log(ProductList)
+
     }
 
 
@@ -127,10 +184,46 @@ function GenerateQoutation({ visible, close }) {
 
 
 
-    const HandelTACInput = (e) => {
+    // Term and Condition Handel
 
+    const HandelTACInput = (e) => {
         SetTACList(e.target.value);
-        // console.log(TACList)
+    }
+
+
+
+    // Currency handel
+
+    const HandelCurrency = (e) => {
+
+        let val = e.target.value;
+        val = val.split(" ")[1];
+
+        SetCurrency(val);
+        console.log(val);
+    }
+
+
+
+    const HandelSubmit = () => {
+        let pevData = [...Data];
+        pevData[0]["products"] = ProductList;
+        pevData[0]["rproducts"] = RProductList;
+        pevData[0]["TAC"] = TACList;
+        pevData[0]["isTAC"] = TACList.length;
+        pevData[0]["isRP"] = Object.keys(RProductList[0]).length;
+        SetData(pevData);
+        // console.log(pevData);
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(Data)
+        };
+
+        fetch('http://localhost:8000/download', requestOptions)
+            .then(response => response)
+            .then(data => console.log(data));
     }
 
     if (!visible) return null;
@@ -150,7 +243,7 @@ function GenerateQoutation({ visible, close }) {
                     </div>
                 </div>
 
-                <div className='px-28 pb-20 w-[950px]'>
+                <div className='px-28 pb-20 w-[980px]'>
 
                     <h1 className='text-heading pt-8 pb-2 text-green-500'>Select Products</h1>
 
@@ -197,11 +290,11 @@ function GenerateQoutation({ visible, close }) {
 
                                         </div>
 
-                                        <div className='flex justify-between py-1'>
+                                        <div className='flex justify-between py-1 items-end'>
                                             <div className='flex flex-col py-2'>
                                                 <label className='label'>Select thikness</label>
 
-                                                <select id="thikness" name="thikness" className='NewEmployeeinput w-[300px]' onChange={e => { HandelThiknessSelect(index, element, e) }} defaultValue={element.thikness || "Select Option"} value={element.thikness || "Select Option"}>
+                                                <select id="thikness" name="thikness" className='NewEmployeeinput w-[250px]' onChange={e => { HandelThiknessSelect(index, element, e) }} defaultValue={element.thikness || "Select Option"} value={element.thikness || "Select Option"}>
 
                                                     <option value="Select Option" disabled hidden >Choose here</option>
 
@@ -218,16 +311,26 @@ function GenerateQoutation({ visible, close }) {
                                                 </select>
                                             </div>
 
-                                            <div className='flex justify-between py-2'>
-                                                <div className='flex flex-col justify-end mr-8'>
-                                                    <p className='text-[12px]'>Min Rate: {element.min || 0}</p>
-                                                    <p className='text-[12px]'>Standrad Rate: {element.max || 0}</p>
+                                            <div className='flex py-2'>
+                                                <div className='flex flex-col justify-end'>
+                                                    <p className='text-[11px]'>Min: {element.min || 0}</p>
+                                                    <p className='text-[11px]'>Std: {element.max || 0}</p>
                                                 </div>
-                                                <div className='flex flex-col ml-2'>
+                                                <div className='flex flex-col ml-4'>
                                                     <label className='label'>Enter Rate</label>
                                                     <input className={element.rate < element.min ? 'NewEmployeeinput w-[150px] text-red-500' : 'NewEmployeeinput w-[150px]'} type="text" name="employee_name" value={element.rate} onChange={(e) => { HandelRateInpt(index, e) }} />
                                                 </div>
                                             </div>
+
+
+
+                                            <div className='flex flex-col py-2'>
+                                                <label className='label'>Enter Quantity</label>
+                                                <input className='NewEmployeeinput w-[150px]' type="text" name="employee_name" onChange={(e) => { HandelPquantityInput(index, e) }} />
+                                            </div>
+
+
+
                                         </div>
 
                                     </div>
@@ -304,15 +407,22 @@ function GenerateQoutation({ visible, close }) {
                                                 </select>
                                             </div>
 
-                                            <div className='flex justify-between py-2'>
-                                                <div className='flex flex-col justify-end mr-8'>
-                                                    <p className='text-[12px]'>Min Rate: {element.min || 0}</p>
-                                                    <p className='text-[12px]'>Standrad Rate: {element.max || 0}</p>
+                                            <div className='flex py-2'>
+                                                <div className='flex flex-col justify-end'>
+                                                    <p className='text-[11px]'>Min: {element.min || 0}</p>
+                                                    <p className='text-[11px]'>Std: {element.max || 0}</p>
                                                 </div>
-                                                <div className='flex flex-col ml-2'>
+                                                <div className='flex flex-col ml-4'>
                                                     <label className='label'>Enter Rate</label>
                                                     <input className={element.rate < element.min ? 'NewEmployeeinput w-[150px] text-red-500' : 'NewEmployeeinput w-[150px]'} type="text" name="employee_name" value={element.rate} onChange={(e) => { HandelRProductRateInpt(index, e) }} />
                                                 </div>
+                                            </div>
+
+
+
+                                            <div className='flex flex-col py-2'>
+                                                <label className='label'>Enter Quantity</label>
+                                                <input className='NewEmployeeinput w-[150px]' type="text" name="employee_name" onChange={(e) => { HandelRPquantityInput(index, e) }} />
                                             </div>
                                         </div>
 
@@ -337,9 +447,28 @@ function GenerateQoutation({ visible, close }) {
                     </div>
 
 
+                    <h1 className='text-heading pt-8 pb-2 text-green-500'>Currency</h1>
+
+                    <div>
+
+                        <div className='flex flex-col ml-2'>
+                            <label className='label'>Select Currency</label>
+                            <div>
+                                <input className="" type="radio" name="currency" value="₹ INR" id="INR" {...Currency === 'INR' ? "checked" : null} onClick={(e) => { HandelCurrency(e) }} />
+                                <label className='pl-2 text-[14px]' for="INR">₹ INR</label>
+                            </div>
+                            <div>
+                                <input className="" type="radio" name="currency" value="$ USD" id="USD" {...Currency === 'USD' ? "checked" : null} onClick={(e) => { HandelCurrency(e) }} />
+                                <label className='pl-2 text-[14px]' for="USD">$ USD</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+
                     <div>
                         {/* <button className='py-2 px-6 mt-10 bg-sky-500 text-white font-medium rounded-md shadow-sm' onClick={() => { addFields() }}>Add</button> */}
-                        <button className='py-2 px-6 mt-10 bg-green-500 text-white font-medium rounded-md shadow-sm '>Submit</button>
+                        <button className='py-2 px-6 mt-10 bg-green-500 text-white font-medium rounded-md shadow-sm' onClick={() => { HandelSubmit() }}>Submit</button>
                     </div>
                 </div>
             </div>

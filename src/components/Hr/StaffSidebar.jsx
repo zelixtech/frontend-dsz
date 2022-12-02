@@ -2,9 +2,16 @@ import React from 'react'
 import {
     EllipsisVerticalIcon,
 } from '@heroicons/react/24/outline'
+import { usePopups } from '../PopupsContext';
+import EditEmployeeDetails from '../Popups/EditEmployeeDetails';
 
 
 function StaffSidebar() {
+
+    const { employee } = usePopups();
+
+    const [EditStaffDetails, SetEditStaffDetails] = employee;
+
     return (
         <div className='mx-6 mt-10 felx flex-col text-[14px] text-black'>
 
@@ -80,13 +87,47 @@ function StaffSidebar() {
                     </div>
                 </div>
 
+
+
+                <hr className='mx-auto my-3 w-[60%] bg-indigo-500 h-[2px]' />
+
+                <div className='mt-7 mb-8'>
+
+                    <div className='pt-2'>
+                        <h1 className='text-gray-400'>Name (Given in Bank)</h1>
+                        <p className='text-black'>Shreeji sangani</p>
+                    </div>
+
+                    <div className='py-2'>
+                        <h1 className='text-gray-400'>Bank Name</h1>
+                        <p className='text-black pr-4'>HDFC BANK</p>
+                    </div>
+
+                    <div className='pt-2'>
+                        <h1 className='text-gray-400'>Branch Name</h1>
+                        <p className='text-black'>Nikol shakha</p>
+                    </div>
+
+                    <div className='py-2'>
+                        <h1 className='text-gray-400'>Account No</h1>
+                        <p className='text-black pr-4'>159510342875</p>
+                    </div>
+                    <div className='py-2'>
+                        <h1 className='text-gray-400'>IFSC Code</h1>
+                        <p className='text-black pr-4'>HDFN04040</p>
+                    </div>
+                </div>
+
             </div>
 
-            <div className='my-6 mx-auto w-[-webkit-fill-available]  text-[14px]  fixed bottom-2'>
+            <div className='my-6 mx-auto text-[14px]'>
 
-                <button className='px-4 py-2 w-[85%] mx-auto bg-primary text-white font-medium rounded-md shadow-md' >Edit</button>
+                <button className='px-4 py-2 w-[95%] mx-auto bg-primary text-white font-medium rounded-md shadow-md' onClick={() => { SetEditStaffDetails(true) }} >Edit</button>
 
             </div>
+
+            <EditEmployeeDetails visible={EditStaffDetails} close={SetEditStaffDetails} />
+
 
         </div>
     )

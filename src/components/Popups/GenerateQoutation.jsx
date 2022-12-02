@@ -9,6 +9,10 @@ import { products, productDetails } from '../../Data/Data'
 
 function GenerateQoutation({ visible, close }) {
 
+
+    const [Loading, setLoading] = useState(false);
+    const [Link, setLink] = useState("")
+
     const [ProductList, SetProduct] = useState([{}]);
     const [RProductList, SetRProduct] = useState([{}]);
     const [TACList, SetTACList] = useState("");
@@ -200,12 +204,12 @@ function GenerateQoutation({ visible, close }) {
         val = val.split(" ")[1];
 
         SetCurrency(val);
-        console.log(val);
+        // console.log(val);
     }
 
 
 
-    const HandelSubmit = () => {
+    const HandelSubmit = async () => {
         let pevData = [...Data];
         pevData[0]["products"] = ProductList;
         pevData[0]["rproducts"] = RProductList;
@@ -221,9 +225,17 @@ function GenerateQoutation({ visible, close }) {
             body: JSON.stringify(Data)
         };
 
-        fetch('http://localhost:8000/download', requestOptions)
-            .then(response => response)
-            .then(data => console.log(data));
+
+        setLoading(true);
+
+        console.log(Loading);
+
+        await fetch('http://localhost:8000/download', requestOptions)
+            .then(response => response.text())
+            .then(text => { setLink(text); console.log(Link) });
+
+        setLoading(false);
+        // console.log(1, Loading[1]);
     }
 
     if (!visible) return null;
@@ -468,8 +480,26 @@ function GenerateQoutation({ visible, close }) {
 
                     <div>
                         {/* <button className='py-2 px-6 mt-10 bg-sky-500 text-white font-medium rounded-md shadow-sm' onClick={() => { addFields() }}>Add</button> */}
-                        <button className='py-2 px-6 mt-10 bg-green-500 text-white font-medium rounded-md shadow-sm' onClick={() => { HandelSubmit() }}>Submit</button>
+                        <button className='py-2 px-6 mt-10 bg-green-500 text-white font-medium rounded-md shadow-sm' onClick={() => { HandelSubmit() }}>{
+                            Loading ? "Generating Quotaion..." : "Generate Quotation"
+                        }</button>
+
                     </div>
+
+                    <h1 className='text-heading pt-8 pb-2 text-gray-500'>Preview</h1>
+
+                    <object data={Link} type="application/pdf" width="100%" height="100%" className='W-[100%] h-screen '>
+                        <p>View PDF</p>
+                    </object>
+
+
+                    <div>
+                        {/* <button className='py-2 px-6 mt-10 bg-sky-500 text-white font-medium rounded-md shadow-sm' onClick={() => { addFields() }}>Add</button> */}
+                        <button className='py-2 px-6 mt-10 bg-blue-500 text-white font-medium rounded-[5px] shadow-sm mr-2'>Mail</button>
+                        <button className='py-2 px-6 mt-10 bg-green-500 text-white font-medium rounded-[5px] shadow-sm ml-2'>WhatsApp</button>
+
+                    </div>
+
                 </div>
             </div>
 

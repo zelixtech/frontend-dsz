@@ -91,6 +91,10 @@ function AddEmplotyee() {
                         <input className='NewEmployeeinput' type="text" name="employee_name" />
                     </div>
                     <div className='flex flex-col'>
+                        <label className='label'>Account No</label>
+                        <input className='NewEmployeeinput' type="text" name="employee_name" />
+                    </div>
+                    <div className='flex flex-col'>
                         <label className='label'>ISFC Code</label>
                         <input className='NewEmployeeinput' type="text" name="employee_name" />
                     </div>

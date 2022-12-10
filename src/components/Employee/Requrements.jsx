@@ -1,4 +1,4 @@
-// import { useEffect } from 'react';
+import { useEffect } from 'react';
 import { TabPanel, useTabs } from "react-headless-tabs";
 import { TabSelector } from "../TabSelector";
 import ClientQuery from './Requirements/Query';
@@ -26,6 +26,26 @@ function Requrements({ Input, searchHandler }) {
     const { chat, qoutation } = usePopups();
     const [ChatPopup, SetChatPopup] = chat;
     const [NewQoutation, SetNewQoutation] = qoutation;
+
+
+    useEffect(() => {
+        var myHeaders = new Headers();
+        myHeaders.append("Cookie", "darshanSession=s%3AgIDiWuErG9DzIfFSZAA7vb3DJXrttbPk.qsQccDQ7Jit7ZIq3jyEDvZkSkIb0sYq%2FTUEvdrcWKuI");
+
+        var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+
+        fetch("http://184.72.65.91:3000/api/query/all", requestOptions)
+            .then(response => response.text())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
+    }, [])
+
+
+
 
     return (
         <div className='basis-[83%] flex'>

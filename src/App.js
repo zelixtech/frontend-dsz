@@ -1,30 +1,44 @@
-import logo from './logo.svg';
 import './App.css';
 
 
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
-  Link
 } from "react-router-dom";
+
 
 import Employee from './view/Employee';
 import Hr from './view/Hr';
 import Admin from './view/Admin';
+import Login from './view/Login';
+
+import { useSelector } from 'react-redux';
 
 
 
 function App() {
+
+  const UserDetails = useSelector((state) => state.user);
+
+  // const User = UserDetails.user;
+  const User = true;
+
   return (
 
-    <div>
-      <Routes>
-        <Route path="/Employee/*" element={<Employee />} />
-        <Route path="/hr/*" element={<Hr />} />
-        <Route path="/Admin" element={<Admin />} />
-      </Routes >
-    </div>
+    < >
+      {
+        !User ? <Login /> : (<div>
+          <Routes>
+            <Route path="/employee/*" element={<Employee />} />
+            <Route path="/hr/*" element={<Hr />} />
+            <Route path="/admin" element={<Admin />} />
+          </Routes >
+        </div>)
+
+      }
+    </>
+
+
   );
 }
 

@@ -12,6 +12,7 @@ function GenerateQoutation({ visible, close }) {
 
     const [Loading, setLoading] = useState(false);
     const [Link, setLink] = useState("")
+    const [Preview, SetPreview] = useState(false);
 
     const [ProductList, SetProduct] = useState([{}]);
     const [RProductList, SetRProduct] = useState([{}]);
@@ -483,14 +484,20 @@ function GenerateQoutation({ visible, close }) {
                         <button className='py-2 px-6 mt-10 bg-green-500 text-white font-medium rounded-md shadow-sm' onClick={() => { HandelSubmit() }}>{
                             Loading ? "Generating Quotaion..." : "Generate Quotation"
                         }</button>
+                        {/* {
+                            !Loading && !Preview && <button className='py-2 px-6 mt-10 bg-green-500 text-white font-medium rounded-[5px] shadow-sm ml-2' onClick={() => { SetPreview(!Preview) }}>Preview Quotaion</button>
+                        } */}
+
 
                     </div>
 
                     <h1 className='text-heading pt-8 pb-2 text-gray-500'>Preview</h1>
 
+
                     <object data={Link} type="application/pdf" width="100%" height="100%" className='W-[100%] h-screen '>
                         <p>View PDF</p>
                     </object>
+
 
 
                     <div>

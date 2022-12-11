@@ -20,7 +20,9 @@ function Hr() {
 
     return (
         <PopupProvider >
+
             <div className='flex'>
+
                 <HrSidebar />
 
                 <Routes>

@@ -1,6 +1,3 @@
-import './App.css';
-
-
 import {
   Routes,
   Route,
@@ -13,8 +10,8 @@ import Admin from './view/Admin';
 import Login from './view/Login';
 
 import { useSelector } from 'react-redux';
-
-
+import { ReactNotifications } from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
 
 function App() {
 
@@ -25,20 +22,22 @@ function App() {
 
   return (
 
-    < >
-      {
-        !User ? <Login /> : (<div>
-          <Routes>
-            <Route path="/employee/*" element={<Employee />} />
-            <Route path="/hr/*" element={<Hr />} />
-            <Route path="/admin" element={<Admin />} />
-          </Routes >
-        </div>)
+    <div>
+      <ReactNotifications />
+      <>
+        {
+          !User ? <Login /> : (<div>
+            <Routes>
+              <Route path="/employee/*" element={<Employee />} />
+              <Route path="/hr/*" element={<Hr />} />
+              <Route path="/admin" element={<Admin />} />
+            </Routes >
+          </div>)
 
-      }
-    </>
+        }
 
-
+      </>
+    </div>
   );
 }
 

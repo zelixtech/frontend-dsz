@@ -1,16 +1,52 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import {
     EllipsisVerticalIcon,
 } from '@heroicons/react/24/outline'
 import { usePopups } from '../PopupsContext';
 import EditEmployeeDetails from '../Popups/EditEmployeeDetails';
+import axios from 'axios';
 
 
-function StaffSidebar() {
+function StaffSidebar({ Data = {}, EmployeeId }) {
+
 
     const { employee } = usePopups();
 
     const [EditStaffDetails, SetEditStaffDetails] = employee;
+
+    const [BankDetails, setBankDetails] = useState({})
+
+
+    // console.log(Data)
+
+    useEffect(() => {
+
+        var config = {
+            method: 'get',
+            url: 'http://184.72.65.91:3000/api/employee/bankinfo/' + EmployeeId,
+            headers: {
+                'Cookie': 'darshanSession=s%3AgIDiWuErG9DzIfFSZAA7vb3DJXrttbPk.qsQccDQ7Jit7ZIq3jyEDvZkSkIb0sYq%2FTUEvdrcWKuI'
+            }
+        };
+
+        // console.log(config.url)
+        axios(config)
+            .then(function (response) {
+                console.log(JSON.stringify(response.data));
+                var resData = response.data;
+                if (resData.error) {
+                    console.log(resData.errorMessage);
+                    setBankDetails({});
+                } else {
+                    setBankDetails(resData.data);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+    }, [EmployeeId])
+
 
     return (
         <div className='mx-6 mt-10 felx flex-col text-[14px] text-black'>
@@ -18,13 +54,13 @@ function StaffSidebar() {
             <div>
 
                 <span className='flex items-center justify-between'>
-                    <h1 className="headline">Shreeji Sangani</h1>
+                    <h1 className="headline">{Data.employee_name}</h1>
                     <p className='w-5 mr-3'><EllipsisVerticalIcon /> </p>
                 </span>
 
                 <div className='pt-2 text-gray-400'>
-                    <p>Shreejisangani@gmail.com</p>
-                    <p>+91 9510342875</p>
+                    <p>{Data.employee_email}</p>
+                    <p>{Data.employee_mobile}</p>
                 </div>
 
             </div>
@@ -43,7 +79,7 @@ function StaffSidebar() {
                     <div className='flex justify-between w-[90%] py-2'>
                         <div>
                             <h1 className='text-gray-400'>Date of Joinonig</h1>
-                            <p>15 Nov 2022 </p>
+                            <p>{Data.employee_doj}</p>
                         </div>
 
                         <div>
@@ -54,7 +90,7 @@ function StaffSidebar() {
 
                     <div className='pt-2'>
                         <h1 className='text-gray-400'>Office Mail</h1>
-                        <p className='text-black'>Shreeji@darshansafatyzon.in</p>
+                        <p className='text-black'>{Data.employee_office_email}</p>
                     </div>
 
                 </div>
@@ -67,23 +103,23 @@ function StaffSidebar() {
                     <div className='flex justify-between w-[90%] py-2'>
                         <div>
                             <h1 className='text-gray-400'>DOB</h1>
-                            <p>27/10/2001</p>
+                            <p>{Data.employee_dob}</p>
                         </div>
 
                         <div>
                             <h1 className='text-gray-400'>Mobile No</h1>
-                            <p>+91 9510704050</p>
+                            <p>{Data.employee_mobile}</p>
                         </div>
                     </div>
 
                     <div className='pt-2'>
                         <h1 className='text-gray-400'>Email</h1>
-                        <p className='text-black'>Shreejisangani@gmail</p>
+                        <p className='text-black'>{Data.employee_email}</p>
                     </div>
 
                     <div className='py-2'>
                         <h1 className='text-gray-400'>Address</h1>
-                        <p className='text-black pr-4'>13/Keyur Park, Nr.-Sukan Bunglows, Nikol-naroda Road, Ahmedabad-382345</p>
+                        <p className='text-black pr-4'>{Data.employee_address}</p>
                     </div>
                 </div>
 
@@ -95,17 +131,17 @@ function StaffSidebar() {
 
                     <div className='pt-2'>
                         <h1 className='text-gray-400'>Name (Given in Bank)</h1>
-                        <p className='text-black'>Shreeji sangani</p>
+                        <p className='text-black'>{BankDetails.employee_name_as_in_bank}</p>
                     </div>
 
                     <div className='py-2'>
                         <h1 className='text-gray-400'>Bank Name</h1>
-                        <p className='text-black pr-4'>HDFC BANK</p>
+                        <p className='text-black pr-4'>{BankDetails.bank_info_name}</p>
                     </div>
 
                     <div className='pt-2'>
                         <h1 className='text-gray-400'>Branch Name</h1>
-                        <p className='text-black'>Nikol shakha</p>
+                        <p className='text-black'>{BankDetails.bank_info_branch_name}</p>
                     </div>
 
                     <div className='py-2'>
@@ -114,7 +150,7 @@ function StaffSidebar() {
                     </div>
                     <div className='py-2'>
                         <h1 className='text-gray-400'>IFSC Code</h1>
-                        <p className='text-black pr-4'>HDFN04040</p>
+                        <p className='text-black pr-4'>{BankDetails.bank_info_ifsc_code}</p>
                     </div>
                 </div>
 

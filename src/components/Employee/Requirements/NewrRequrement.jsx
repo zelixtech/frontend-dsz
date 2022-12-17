@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import ClientRequest from '../ClientRequest';
 import { fechUnAssignQuery } from '../../../Reducer/querySclice';
-import { Dispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 
@@ -21,7 +20,7 @@ function NewRequrement() {
         return "Loading Requrements...";
     }
 
-    console.log(UAQuery);
+    // console.log(UAQuery);
 
     return (
         <div className='my-5 overflow-y-scroll h-screen'>

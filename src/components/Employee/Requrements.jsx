@@ -13,6 +13,7 @@ import { usePopups } from '../../components/PopupsContext'
 import GenerateQoutation from "../Popups/GenerateQoutation";
 import CloseSidebar from "./Requirements/CloseSidebar";
 import NewRequrement from './Requirements/NewrRequrement';
+import Running from './Requirements/Running';
 
 
 
@@ -70,7 +71,7 @@ function Requrements({ Input, searchHandler }) {
 
                 <div>
                     <TabPanel hidden={selectedTab !== "New"}><NewRequrement /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Running"}><ClientQuery Status={"Rinning"} /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Running"}><Running /></TabPanel>
                     <TabPanel hidden={selectedTab !== "Lost"}><ClientQuery Status={"Lost"} /></TabPanel>
                     <TabPanel hidden={selectedTab !== "Close"}><ClientQuery Status={"Close"} /></TabPanel>
                 </div>

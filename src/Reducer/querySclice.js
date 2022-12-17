@@ -65,11 +65,9 @@ export function fechAssignQuery() {
     return async function fechAssignQueryThunk(dispatch, getState) {
         try {
 
-            var axios = require('axios');
-
             var config = {
                 method: 'get',
-                url: 'http://184.72.65.91:3000/api/query/all/employee/1',
+                url: 'http://184.72.65.91:3000/api/query/all/employee/4',
                 headers: {}
             };
 

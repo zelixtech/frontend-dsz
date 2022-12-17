@@ -18,7 +18,6 @@ function AddNewRequest({ visible, close }) {
 
     var d = new Date();
 
-
     const HandelAddNewClient = () => {
         setIsNewClient(!IsNewClient);
     }
@@ -63,7 +62,6 @@ function AddNewRequest({ visible, close }) {
                 console.log(error);
             });
     }, [])
-
 
 
     const errorMessages = {
@@ -247,7 +245,7 @@ function AddNewRequest({ visible, close }) {
 
         axios(config)
             .then(function (response) {
-                console.log(JSON.stringify(response.data));
+                // console.log(JSON.stringify(response.data));
 
                 var resdata = response.data;
 
@@ -286,15 +284,6 @@ function AddNewRequest({ visible, close }) {
                             onScreen: true
                         }
                     });
-
-                    // setClientData({
-                    //     "client_name": "",
-                    //     "client_mobile": "",
-                    //     "client_email": "",
-                    //     "client_address": "",
-                    //     "client_city": "",
-                    //     "client_industry": ""
-                    // })
 
                 }
 

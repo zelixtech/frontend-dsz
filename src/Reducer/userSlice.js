@@ -9,7 +9,7 @@ const userSlice = createSlice({
         },
         setDept(state, action) {
             state.dept = action.payload;
-        }
+        },
     }
 })
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import { TabPanel, useTabs } from "react-headless-tabs";
 import { TabSelector } from "../TabSelector";
 import SearchBar from './SearchBar';
@@ -6,6 +6,9 @@ import AllClients from './Clients/AllClients';
 import BlockedClientsSidebar from './Clients/BlockedClientsSidebar';
 import ActiveClientSidebar from './Clients/ActiveClientSidebar';
 import ClientSerachbar from './Clients/ClientSerachbar';
+import { useDispatch } from 'react-redux';
+import { fechClients } from '../../Reducer/clientSlice';
+
 
 
 
@@ -16,6 +19,7 @@ function Users({ Input, searchHandler }) {
         "Active",
         "Blocked",
     ]);
+
 
     return (
 
@@ -47,8 +51,8 @@ function Users({ Input, searchHandler }) {
                 {/* requests  */}
 
                 <div>
-                    <TabPanel hidden={selectedTab !== "Active"}><AllClients /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Blocked"}><AllClients /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Active"}><AllClients Status={0} /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Blocked"}><AllClients Status={1} /></TabPanel>
 
                 </div>
 

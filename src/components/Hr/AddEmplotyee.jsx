@@ -46,7 +46,6 @@ function AddEmplotyee() {
 
     const HandelEmployeeDetailInput = (e) => {
 
-
         var field = e.target.name;
         // console.log(field);
 

@@ -22,10 +22,10 @@ function Staff({ HrInput, HrSearchHandler }) {
 
         axios(config)
             .then(function (response) {
-                console.log(JSON.stringify(response.data));
+                // console.log(JSON.stringify(response.data));
                 var resData = response.data;
                 setEmployee(resData.data);
-                console.log(Employee);
+                // console.log(Employee);
                 setEmployeeId(resData.data[0].employee_id)
             })
             .catch(function (error) {

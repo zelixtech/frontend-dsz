@@ -1,10 +1,27 @@
 import React from 'react'
+import { useSelector } from 'react-redux';
 import { usePopups } from '../../PopupsContext'
 
 function NewRightsidebar() {
 
     const { qoutation } = usePopups();
     const [NewQoutation, SetNewQoutation] = qoutation;
+
+
+    const Querys = useSelector((state) => state.query.UnassignQuery);
+    const UAQID = useSelector((state) => state.query.UAQID);
+
+    if (!UAQID || !Querys) {
+        return "Loading Requerment Details"
+    }
+
+    const req = Querys.filter((obj) => {
+        return obj.query_id === parseInt(UAQID);
+    })
+
+
+    // console.log(req);/
+
 
     return (
         <div className='mx-6 mt-10 felx flex-col text-[14px] text-black'>
@@ -22,7 +39,7 @@ function NewRightsidebar() {
                 </div>
 
                 <div className='pt-5'>
-                    <h1 className='headline'>Requirement for Heat Resistant Safety Cover</h1>
+                    <h1 className='headline'>{req[0].query_subject}</h1>
                 </div>
             </div>
 
@@ -39,12 +56,12 @@ function NewRightsidebar() {
 
                     <div>
                         <h1 className='text-gray-400'>Inquery on</h1>
-                        <p>7 nov 2022, 18:36:41</p>
+                        <p>{req[0].query_create_time.split("T")[0]} {req[0].query_create_time.split("T")[1].split(".")[0]}</p>
                     </div>
 
                     <div className='pt-2'>
                         <h1 className='text-gray-400'>Message</h1>
-                        <p className='text-[14px] text-justify pr-4'>My Requirement is for Heat Resistant Safety Cover. Kindly send me price and other details. Why do you need this : For Business Use Preferred Location : Suppliers from Pune will be Preferred</p>
+                        <p className='text-[14px] text-justify pr-4'>{req[0].query_message}</p>
                     </div>
 
 
@@ -63,7 +80,7 @@ function NewRightsidebar() {
 
                         <div>
                             <h1 className='text-gray-400'>Source</h1>
-                            <p>India mart</p>
+                            <p>{req[0].query_source}</p>
                         </div>
                     </div>
 

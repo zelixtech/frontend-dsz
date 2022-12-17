@@ -24,7 +24,6 @@ function ClientDetails({ Username, MobileNo, Email, Company, Status, ClientId })
             <div className='flex items-center px-2 w-[15%]'>
                 <button className='px-4 py-1 h-8 bg-primary text-base font-[400] text-white rounded-[4px] shadow-sm' id={ClientId} onClick={(e) => {
                     dispatch(setActiveClient(e.target.id))
-                    // console.log(e.target.id);
                 }}
                 > View </button>
             </div>

@@ -1,8 +1,17 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import { setUAQID } from '../../Reducer/querySclice';
 
-function ClientRequest({ request, requestCatagory, date, Status, Lastseen }) {
+function ClientRequest({ request, requestCatagory, date, Status, Lastseen, QueryId }) {
+
+
+    const dispatch = useDispatch();
+
     return (
-        <div className='px-4 py-2 mx-4 my-2 flex justify-between items-center bg-white shadow-md  rounded-md'>
+        <div className='px-4 py-2 mx-4 my-2 flex justify-between items-center bg-white shadow-md  rounded-md' id={QueryId} onClick={(e) => {
+            dispatch(setUAQID(QueryId))
+            console.log(QueryId)
+        }}>
             <div>
                 <h1 className='text-base font-400'>
                     {request}

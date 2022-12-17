@@ -12,6 +12,8 @@ import Chat from '../Popups/Chat'
 import { usePopups } from '../../components/PopupsContext'
 import GenerateQoutation from "../Popups/GenerateQoutation";
 import CloseSidebar from "./Requirements/CloseSidebar";
+import NewRequrement from './Requirements/NewrRequrement';
+
 
 
 function Requrements({ Input, searchHandler }) {
@@ -28,28 +30,8 @@ function Requrements({ Input, searchHandler }) {
     const [NewQoutation, SetNewQoutation] = qoutation;
 
 
-    useEffect(() => {
-        var myHeaders = new Headers();
-        myHeaders.append("Cookie", "darshanSession=s%3AgIDiWuErG9DzIfFSZAA7vb3DJXrttbPk.qsQccDQ7Jit7ZIq3jyEDvZkSkIb0sYq%2FTUEvdrcWKuI");
-
-        var requestOptions = {
-            method: 'GET',
-            headers: myHeaders,
-            redirect: 'follow'
-        };
-
-        fetch("http://184.72.65.91:3000/api/query/all", requestOptions)
-            .then(response => response.text())
-            .then(result => console.log(result))
-            .catch(error => console.log('error', error));
-    }, [])
-
-
-
-
     return (
         <div className='basis-[83%] flex'>
-
 
             {/* main content  */}
 
@@ -87,7 +69,7 @@ function Requrements({ Input, searchHandler }) {
                 {/* requests  */}
 
                 <div>
-                    <TabPanel hidden={selectedTab !== "New"}><ClientQuery Status={"New"} /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "New"}><NewRequrement /></TabPanel>
                     <TabPanel hidden={selectedTab !== "Running"}><ClientQuery Status={"Rinning"} /></TabPanel>
                     <TabPanel hidden={selectedTab !== "Lost"}><ClientQuery Status={"Lost"} /></TabPanel>
                     <TabPanel hidden={selectedTab !== "Close"}><ClientQuery Status={"Close"} /></TabPanel>

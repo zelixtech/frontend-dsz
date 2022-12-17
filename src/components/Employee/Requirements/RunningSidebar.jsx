@@ -2,15 +2,25 @@
 import Followup from './Followup'
 import { usePopups } from '../../PopupsContext'
 import SidebarClientinfo from './SidebarClientinfo';
+import { useSelector } from 'react-redux';
+
 
 function RunningSidebar() {
 
     const { chat } = usePopups();
     const [ChatPopup, SetChatPopup] = chat
 
-    // useEffect(() => {
-    //     console.log(ChatPopup, SetChatPopup)
-    // }, [])
+
+    const Querys = useSelector((state) => state.query.AssignQuery);
+    const AQID = useSelector((state) => state.query.AQID);
+
+    if (!AQID || !Querys) {
+        return "Loading Requerment Details"
+    }
+
+    const req = Querys.filter((obj) => {
+        return obj.query_id === parseInt(AQID);
+    })
 
 
     return (
@@ -21,7 +31,7 @@ function RunningSidebar() {
                 <SidebarClientinfo Name={"vishal savaliya"} Email={"vsleitan.work@gmail.com"} Mobile={"91 9510342875"} Status="New" />
 
                 <div className='pt-5'>
-                    <h1 className='text-sm text-black'>Requirement for Heat Resistant Safety Cover</h1>
+                    <h1 className='text-sm text-black'>{req[0].query_subject}</h1>
                 </div>
             </div>
 
@@ -41,12 +51,12 @@ function RunningSidebar() {
 
                     <div>
                         <h1 className='text-gray-400'>Inquery on</h1>
-                        <p>7 nov 2022, 18:36:41</p>
+                        <p>{req[0].query_create_time.split("T")[0]} {req[0].query_create_time.split("T")[1].split(".")[0]}</p>
                     </div>
 
                     <div className='pt-2'>
                         <h1 className='text-gray-400'>Message</h1>
-                        <p className='text-[14px] text-justify pr-4'>My Requirement is for Heat Resistant Safety Cover. Kindly send me price and other details. Why do you need this : For Business Use Preferred Location : Suppliers from Pune will be Preferred</p>
+                        <p className='text-[14px] text-justify pr-4'>{req[0].query_message}</p>
                     </div>
 
 

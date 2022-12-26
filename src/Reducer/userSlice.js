@@ -10,8 +10,11 @@ const userSlice = createSlice({
         setDept(state, action) {
             state.dept = action.payload;
         },
+        setClient(state, action) {
+            state.client = action.payload;
+        }
     }
 })
 
-export const { setUser, setDept } = userSlice.actions;
+export const { setUser, setDept, setClient } = userSlice.actions;
 export default userSlice.reducer;

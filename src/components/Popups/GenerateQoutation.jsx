@@ -14,10 +14,25 @@ function GenerateQoutation({ visible, close }) {
     const [Link, setLink] = useState("")
     const [Preview, SetPreview] = useState(false);
 
+
+    const [metadata, setmetadata] = useState({
+        offer_validity: "30 Days",
+        payment_terms: "100% Advanced payment",
+        dispatch_through: "As Per Your Suggestion",
+        destination: "As Per Your Suggestion",
+        terms_of_deliver: "Available in Ready Stock",
+        total_bundel: "As per Actual",
+        transportation_cost: "To Pay",
+        transportation: "To pay : Trasport Godown",
+        packaging_and_forwarding_charges: 0,
+        GST: 18,
+        currency: "INR",
+
+    })
+
     const [ProductList, SetProduct] = useState([{}]);
     const [RProductList, SetRProduct] = useState([{}]);
     const [TACList, SetTACList] = useState("");
-    const [Currency, SetCurrency] = useState("INR")
     const [Data, SetData] = useState([{
         "sender": {
             "name": "urvisha patel",
@@ -33,6 +48,43 @@ function GenerateQoutation({ visible, close }) {
         },
     }])
 
+    // productDetails[0]["Signature Aluminum Fire Suit"].products.map((obj, i) => {
+    //     console.log(obj.key)
+    // });
+
+
+    // console.log(productDetails[0]["Signature Aluminum Fire Suit"].products);
+
+    // Object.keys(productDetails[0]["Signature Aluminium Coated Fiberglass Fabric"].products).forEach((product, id) => {
+    //     return (
+    //         console.log(product)
+    //     )
+    // })
+
+    // Object.keys(productDetails[0]).forEach((product, id) => {
+
+    //     return (
+    //         console.log(product)
+    //     )
+    // })
+
+
+
+    // handel select metadata 
+
+    const HandelMetadataInput = (e) => {
+
+        var field = e.target.name;
+        var val = e.target.value;
+
+        var Premetadata = { ...metadata };
+        Premetadata[field] = val;
+        setmetadata(Premetadata);
+
+        console.log(metadata)
+
+    }
+
 
 
     // The products handels 
@@ -43,42 +95,94 @@ function GenerateQoutation({ visible, close }) {
 
         let preProduct = [...ProductList];
         preProduct[i]["name"] = val;
-        preProduct[i]["data"] = productDetails[0][val].data;
-        preProduct[i]["unit"] = productDetails[0][val].data[0]["Unit"];
+        preProduct[i]["product"] = undefined;
+        preProduct[i]["details"] = {};
+        preProduct[i]["detailsTobeShown"] = {};
         SetProduct(preProduct);
+
+        // console.log(val);
+        // console.log(ProductList)
 
     }
 
     const HandelThiknessSelect = (i, element, e) => {
 
         let val = e.target.value;
-        let id = e.target.selectedIndex;
-
-
-        let dataSet = productDetails[0][element.name].thikness[id - 1];
-
+        // let id = e.target.selectedIndex;
 
         let preProduct = [...ProductList];
-        preProduct[i]["thikness"] = val;
-        preProduct[i]["min"] = dataSet.min;
-        preProduct[i]["max"] = dataSet.max;
-        preProduct[i]["rate"] = dataSet.max;
-        SetProduct(preProduct);
+        preProduct[i]["product"] = val;
+        preProduct[i]["details"] = { ...productDetails[0][element.name].products[val].data };
+        preProduct[i]["width"] = productDetails[0][element.name].products[val].Width ? productDetails[0][element.name].products[val].Width.split(" ")[0] : "NA";
+        preProduct[i]["wxlunit"] = productDetails[0][element.name].products[val].Width ? productDetails[0][element.name].products[val].Width.split(" ")[1] : productDetails[0][element.name].products[val].Length.split(" ")[1];
+        preProduct[i]["length"] = productDetails[0][element.name].products[val].Length ? productDetails[0][element.name].products[val].Length.split(" ")[0] : "NA";
 
-        // console.log(i, ProductList.RProductList)
+        preProduct[i]["min"] = productDetails[0][element.name].products[val]["Min Rate"];
+        preProduct[i]["rate"] = productDetails[0][element.name].products[val]["Standard Rate"];
+        preProduct[i]["unit"] = productDetails[0][element.name].products[val]["Selling Unit"];
+        preProduct[i]["HSNCode"] = productDetails[0][element.name].products[val]["HSN Code"];
+        preProduct[i]["ModleNo"] = productDetails[0][element.name].products[val]["ModleNo"];
+        preProduct[i]["detailsTobeShown"] = { ...productDetails[0][element.name].products[val].data };
+
+
+
+        SetProduct(preProduct);
+        // console.log(element.name);
+        // console.log(productDetails[0][element.name].products[val]);
+        console.log(ProductList)
     }
 
+    const HandelProdeutDetailSelect = (i, element, e) => {
+        console.log("cliked")
+    }
+
+    const handelOnChecked = (i, element, e) => {
+
+        var field = e.target.name;
+        var val = e.target.value;
+
+        let preProduct = [...ProductList];
+        console.log(preProduct[i]["detailsTobeShown"][field]);
+
+        if (preProduct[i]["detailsTobeShown"][field]) {
+            delete preProduct[i]["detailsTobeShown"][field];
+        } else {
+            preProduct[i]["detailsTobeShown"][field] = val;
+        }
+        SetProduct(preProduct);
+
+
+        console.log(ProductList);
+
+    }
+
+
+    const handelChangeFieldValue = (i, element, e) => {
+        var field = e.target.name;
+        var val = e.target.value;
+
+        let preProduct = [...ProductList];
+
+        preProduct[i]["detailsTobeShown"][field] = val;
+
+        SetProduct(preProduct);
+        // console.log(e.target.value)
+
+        console.log(ProductList[i]["detailsTobeShown"]);
+    }
 
 
     // Rate Input Handel
 
-    const HandelRateInpt = (i, e) => {
+    const HandelCustomInt = (i, e) => {
 
+        let field = e.target.name;
         let val = e.target.value;
-
         let preProduct = [...ProductList];
-        preProduct[i]["rate"] = val;
+        preProduct[i][field] = val;
         SetProduct(preProduct);
+
+        console.log(ProductList)
 
     }
 
@@ -197,26 +301,14 @@ function GenerateQoutation({ visible, close }) {
 
 
 
-    // Currency handel
-
-    const HandelCurrency = (e) => {
-
-        let val = e.target.value;
-        val = val.split(" ")[1];
-
-        SetCurrency(val);
-        // console.log(val);
-    }
-
-
-
     const HandelSubmit = async () => {
         let pevData = [...Data];
         pevData[0]["products"] = ProductList;
-        pevData[0]["rproducts"] = RProductList;
+        pevData[0]["rproducts"] = [];
         pevData[0]["TAC"] = TACList;
         pevData[0]["isTAC"] = TACList.length;
         pevData[0]["isRP"] = Object.keys(RProductList[0]).length;
+        pevData[0]["metadata"] = metadata;
         SetData(pevData);
         // console.log(pevData);
 
@@ -258,6 +350,49 @@ function GenerateQoutation({ visible, close }) {
 
                 <div className='px-28 pb-20 w-[980px]'>
 
+                    <h1 className='text-heading pt-8 pb-2 text-green-500'>Meta Data</h1>
+
+                    <div className=''>
+
+                        <div className='flex py-0.5 items-end'>
+                            <div className='flex flex-col w-1/2'>
+                                <label className='label'>Offer Validity</label>
+                                <input className='Qinput w-[96%]' type="text" name="offer_validity" value={metadata.offer_validity} onChange={(e) => { HandelMetadataInput(e) }} />
+                            </div>
+
+                            <div className='flex flex-col w-1/2'>
+                                <label className='label'>Payment Terms</label>
+                                <input className='Qinput w-[96%]' type="text" name="payment_terms" value={metadata.payment_terms} onChange={(e) => { HandelMetadataInput(e) }} />
+                            </div>
+                        </div>
+
+                        <div className='flex py-0.5 items-end'>
+                            <div className='flex flex-col w-1/2'>
+                                <label className='label'>Dispatch Through</label>
+                                <input className='Qinput w-[96%]' type="text" name="dispatch_through" value={metadata.dispatch_through} onChange={(e) => { HandelMetadataInput(e) }} />
+                            </div>
+
+                            <div className='flex flex-col w-1/2'>
+                                <label className='label'>Destination</label>
+                                <input className='Qinput w-[96%]' type="text" name="destination" value={metadata.destination} onChange={(e) => { HandelMetadataInput(e) }} />
+                            </div>
+                        </div>
+
+                        <div className='flex py-0.5 items-end'>
+                            <div className='flex flex-col w-1/2'>
+                                <label className='label'>Terms Of Deliver</label>
+                                <input className='Qinput w-[96%]' type="text" name="terms_of_deliver" value={metadata.terms_of_deliver} onChange={(e) => { HandelMetadataInput(e) }} />
+                            </div>
+
+                            <div className='flex flex-col w-1/2'>
+                                <label className='label'>Total Bundel</label>
+                                <input className='Qinput w-[96%]' type="text" name="total_bundel" value={metadata.total_bundel} onChange={(e) => { HandelMetadataInput(e) }} />
+                            </div>
+                        </div>
+
+                    </div>
+
+
                     <h1 className='text-heading pt-8 pb-2 text-green-500'>Select Products</h1>
 
                     <div className=''>
@@ -285,15 +420,14 @@ function GenerateQoutation({ visible, close }) {
                                     <div className='border-gray-100 border-2 rounded-md px-8 py-4'>
 
                                         <div className='flex flex-col pb-2'>
-                                            <label className='label'>Select ProductList</label>
+                                            <label className='label'>Select Product</label>
 
                                             <select id="product" name="product" className='NewEmployeeinput' onChange={e => { HandelProdeutSelect(index, e) }} defaultValue={element.name || "Select Option"} value={element.name || "Select Option"} >
 
                                                 <option value="Select Option" disabled hidden >Choose here</option>
 
                                                 {
-                                                    products.map((product, id) => {
-
+                                                    Object.keys(productDetails[0]).map((product, id) => {
                                                         return (
                                                             <option value={product} id={id}>{product}</option>
                                                         )
@@ -303,46 +437,98 @@ function GenerateQoutation({ visible, close }) {
 
                                         </div>
 
-                                        <div className='flex justify-between py-1 items-end'>
+
+                                        <div className='flex flex-col py-2'>
+                                            <label className='label'>Select Product Type</label>
+
+                                            <select id="thikness" name="thikness" className='NewEmployeeinput' onChange={e => { HandelThiknessSelect(index, element, e) }} defaultValue={element.product || "Select Option"} value={element.product || "Select Option"}>
+
+                                                <option value="Select Option" disabled hidden >Choose here</option>
+
+                                                {element.name ? (
+                                                    Object.keys(productDetails[0][element.name].products).map((product, id) => {
+                                                        return (
+                                                            <option value={product} id={id}>{product}</option>
+                                                        )
+                                                    })
+                                                ) : null
+                                                }
+                                            </select>
+                                        </div>
+
+
+                                        <div className='flex justify-between py-1 items-center'>
                                             <div className='flex flex-col py-2'>
-                                                <label className='label'>Select thikness</label>
-
-                                                <select id="thikness" name="thikness" className='NewEmployeeinput w-[250px]' onChange={e => { HandelThiknessSelect(index, element, e) }} defaultValue={element.thikness || "Select Option"} value={element.thikness || "Select Option"}>
-
-                                                    <option value="Select Option" disabled hidden >Choose here</option>
-
-                                                    {element.name ?
-
-                                                        productDetails[0][element.name].thikness.map((product, id) => {
-                                                            return (
-                                                                <option value={product.thikness} id={id}>{product.thikness}</option>
-                                                            )
-                                                        })
-
-                                                        : null
-                                                    }
-                                                </select>
+                                                <label className='label'>Width</label>
+                                                <input className='w-[100px] Qinput' type="text" name="width" value={element.width || ""} onChange={(e) => { HandelCustomInt(index, e) }} />
                                             </div>
 
-                                            <div className='flex py-2'>
-                                                <div className='flex flex-col justify-end'>
+                                            <div className='flex flex-col py-2'>
+                                                <label className='label'>length</label>
+                                                <input className='w-[100px] Qinput' type="text" name="length" value={element.length || ""} onChange={(e) => { HandelCustomInt(index, e) }} />
+                                            </div>
+
+                                            <div className='flex flex-col py-2'>
+                                                <label className='label'>Unit</label>
+                                                <input className='w-[100px] Qinput' type="text" name="wxlunit" value={element.wxlunit || ""} onChange={(e) => { HandelCustomInt(index, e) }} />
+                                            </div>
+
+
+                                            <div className='flex flex-col py-2'>
+                                                {/* <div className='flex flex-col justify-end'>
                                                     <p className='text-[11px]'>Min: {element.min || 0}</p>
                                                     <p className='text-[11px]'>Std: {element.max || 0}</p>
-                                                </div>
-                                                <div className='flex flex-col ml-4'>
-                                                    <label className='label'>Enter Rate</label>
-                                                    <input className={element.rate < element.min ? 'NewEmployeeinput w-[150px] text-red-500' : 'NewEmployeeinput w-[150px]'} type="text" name="employee_name" value={element.rate} onChange={(e) => { HandelRateInpt(index, e) }} />
-                                                </div>
+                                                </div> */}
+
+                                                <label className='label'>Enter Rate</label>
+                                                <input className={element.rate < element.min ? 'w-[150px] Qinput text-red-500' : 'Qinput w-[180px]'} type="text" name="rate" value={element.rate} onChange={(e) => { HandelCustomInt(index, e) }} />
+
                                             </div>
 
 
 
                                             <div className='flex flex-col py-2'>
                                                 <label className='label'>Enter Quantity</label>
-                                                <input className='NewEmployeeinput w-[150px]' type="text" name="employee_name" onChange={(e) => { HandelPquantityInput(index, e) }} />
+                                                <input className='w-[180px] Qinput' type="text" name="quantity" onChange={(e) => { HandelCustomInt(index, e) }} />
                                             </div>
 
+                                        </div>
 
+                                        <div className='flex flex-col py-2'>
+                                            <label className='label'>Note</label>
+                                            <textarea className='NewEmployeeinput text-sm w-[100%]' type="text" name="note" onChange={(e) => { HandelCustomInt(index, e) }}></textarea>
+                                        </div>
+
+
+                                        <div className='flex flex-col py-2'>
+                                            <label className='label'>Select Product Details</label>
+
+                                            {/* <select id="product" name="product" className='NewEmployeeinput' onChange={e => { HandelProdeutDetailSelect(index, e) }} defaultValue={element.name || "Select Option"} value={element.name || "Select Option"} > */}
+
+                                            {/* <option value="Select Option" disabled hidden >Choose here</option> */}{/* </select> */}
+
+                                            <div className='flex flex-wrap mt-2'>
+
+                                                {
+                                                    element.details ? (
+                                                        Object.entries(element.details).map(([key, value], id) => {
+                                                            return (
+                                                                <div className='w-[30%] flex flex-col m-2'>
+
+                                                                    <div className='ml-2'>
+                                                                        <input type="checkbox" value={value} name={key} defaultChecked={true} onChange={(e) => { handelOnChecked(index, element, e) }} />
+                                                                        <label className='pl-2 text-sm' name={key} value={value}>{key}:{value}</label>
+                                                                    </div>
+                                                                    <input className='mx-1 w-[90%] pl-2 text-sm outline-none py-0.5' name={key} value={element.detailsTobeShown[key]} onChange={(e) => { handelChangeFieldValue(index, element, e); }} />
+                                                                </div>
+                                                            )
+                                                        })
+                                                    ) : null
+
+                                                }
+
+
+                                            </div>
 
                                         </div>
 
@@ -450,7 +636,7 @@ function GenerateQoutation({ visible, close }) {
 
 
 
-                    <h1 className='text-heading pt-8 pb-2 text-green-500'>Terms and Conditions</h1>
+                    {/* <h1 className='text-heading pt-8 pb-2 text-green-500'>Terms and Conditions</h1> */}
 
                     <div className=''>
                         <div className='flex flex-col'>
@@ -460,19 +646,63 @@ function GenerateQoutation({ visible, close }) {
                     </div>
 
 
-                    <h1 className='text-heading pt-8 pb-2 text-green-500'>Currency</h1>
 
-                    <div>
 
-                        <div className='flex flex-col ml-2'>
-                            <label className='label'>Select Currency</label>
-                            <div>
-                                <input className="" type="radio" name="currency" value="₹ INR" id="INR" {...Currency === 'INR' ? "checked" : null} onClick={(e) => { HandelCurrency(e) }} />
-                                <label className='pl-2 text-[14px]' for="INR">₹ INR</label>
+                    {/* additinal thigs */}
+
+
+                    <div className='mt-5'>
+
+                        <div className='py-1'>
+                            <div className='flex justify-end items-center'>
+                                <label className='pr-2 text-sm'>Currency</label>
+                                <select id="transportation" name="currency" className='Qinput w-[200px] pr-3' onChange={e => { HandelMetadataInput(e) }} defaultValue={metadata.currency || "Select Option"} value={metadata.currency || "Select Option"} >
+
+                                    <option value="INR">INR</option>
+                                    <option value="USD">USD</option>
+
+                                </select>
                             </div>
-                            <div>
-                                <input className="" type="radio" name="currency" value="$ USD" id="USD" {...Currency === 'USD' ? "checked" : null} onClick={(e) => { HandelCurrency(e) }} />
-                                <label className='pl-2 text-[14px]' for="USD">$ USD</label>
+                        </div>
+
+                        <div className='py-1'>
+                            <div className='flex justify-end items-center'>
+                                <label className='pr-2 text-sm'>Transportation Cost</label>
+                                <input className='w-[200px] pl-3 text-sm outline-none py-1' type="text" name="transportation_cost" value={metadata.transportation_cost} onChange={(e) => { HandelMetadataInput(e) }} />
+                            </div>
+                        </div>
+
+                        <div className='py-1'>
+                            <div className='flex justify-end items-center'>
+                                <label className='pr-2 text-sm'>Packaging And forwarding Charges</label>
+                                <input className='w-[200px] pl-3 text-sm outline-none py-1' type="text" name="packaging_and_forwarding_charges" value={metadata.packaging_and_forwarding_charges} onChange={(e) => { HandelMetadataInput(e) }} />
+                            </div>
+                        </div>
+
+                        <div className='py-1'>
+                            <div className='flex justify-end items-center'>
+                                <label className='pr-2 text-sm'>GST</label>
+                                <select id="transportation" name="GST" className='Qinput w-[200px] pr-2' onChange={e => { HandelMetadataInput(e) }} defaultValue={metadata.GST || "Select Option"} value={metadata.GST || "Select Option"} >
+
+                                    <option value="18">18</option>
+                                    <option value="0.01">0.01%</option>
+                                    <option value="5">5</option>
+                                    <option value="12">12</option>
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className='py-1'>
+                            <div className='flex justify-end items-center'>
+                                <label className='pr-2 text-sm'>Transportation</label>
+                                <select id="transportation" name="transportation" className='Qinput w-[200px] pr-2' onChange={e => { HandelMetadataInput(e) }} defaultValue={metadata.transportation || "Select Option"} value={metadata.transportation || "Select Option"} >
+
+                                    <option value="To Pay Trasport Godown">To Pay Trasport Godown</option>
+                                    <option value="Paid Trasport Godown">Paid Trasport Godown</option>
+                                    <option value="Paid Door Delivery">Paid Door Delivery</option>
+
+                                </select>
                             </div>
                         </div>
 
@@ -503,7 +733,7 @@ function GenerateQoutation({ visible, close }) {
                     <div>
                         {/* <button className='py-2 px-6 mt-10 bg-sky-500 text-white font-medium rounded-md shadow-sm' onClick={() => { addFields() }}>Add</button> */}
                         <button className='py-2 px-6 mt-10 bg-blue-500 text-white font-medium rounded-[5px] shadow-sm mr-2'>Mail</button>
-                        <button className='py-2 px-6 mt-10 bg-green-500 text-white font-medium rounded-[5px] shadow-sm ml-2'>WhatsApp</button>
+                        <button className='py-2 px-6 mt-10 bg-green-500 text-white font-medium rounded-[5px] shadow-sm ml-2'><a target="_blank" href={`https://wa.me/send?phone=919664801998&attachment="https://drive.google.com/file/d/1CVb7GjHhw7EpI2IxgAtYO4taNOtxRYNI/view?usp=sharing"&text="https://drive.google.com/file/d/1CVb7GjHhw7EpI2IxgAtYO4taNOtxRYNI/view?usp=sharing"`}>WhatsApp</a></button>
 
                     </div>
 

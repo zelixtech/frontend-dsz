@@ -1,22 +1,64 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import Followup from './Followup'
 import { usePopups } from '../../PopupsContext'
 import SidebarClientinfo from './SidebarClientinfo';
 
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+
+
 function CloseSidebar() {
 
     const { chat } = usePopups();
-    const [ChatPopup, SetChatPopup] = chat
+    const [ChatPopup, SetChatPopup] = chat;
+
+    const [followups, setfollowups] = useState([]);
+
+    const Querys = useSelector((state) => state.query.CloseQuery);
+    const CQID = useSelector((state) => state.query.CQID);
+
+    useEffect(() => {
+        var config = {
+            method: 'get',
+            url: `http://localhost:5000/api/followup/all/${CQID}`,
+            headers: {}
+        };
+
+        axios(config)
+            .then(function (response) {
+                // console.log(JSON.stringify(response.data));
+                const resData = response.data;
+
+                if (resData.error) {
+                    console.log(resData.error);
+                } else {
+                    setfollowups(resData.data);
+                    console.log(resData)
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+    }, [CQID]);
+
+    if (!CQID || !Querys) {
+        return <div className='flex justify-center items-center text-blue-500 mt-20'>Loading Requerment Details </div>
+    }
+
+    const req = Querys.filter((obj) => {
+        return obj.query_id === parseInt(CQID);
+    })
 
     return (
         <div className='mx-6 mt-10 felx flex-col text-[14px] text-black'>
 
             <div>
 
-                <SidebarClientinfo Name={"vishal savaliya"} Email={"vsleitan.work@gmail.com"} Mobile={"91 9510342875"} Status="New" />
+                <SidebarClientinfo Name={req[0].client.client_name} Email={req[0].client.client_email} Mobile={req[0].client.client_mobile} Status="New" />
 
                 <div className='pt-5'>
-                    <h1 className='text-sm text-black'>Requirement for Heat Resistant Safety Cover</h1>
+                    <h1 className='text-sm text-black'>{req[0].query_subject}</h1>
                 </div>
             </div>
 
@@ -36,12 +78,12 @@ function CloseSidebar() {
 
                     <div>
                         <h1 className='text-gray-400'>Inquery on</h1>
-                        <p>7 nov 2022, 18:36:41</p>
+                        <p>{req[0].query_create_time.split("T")[0]} {req[0].query_create_time.split("T")[1].split(".")[0]}</p>
                     </div>
 
                     <div className='pt-2'>
                         <h1 className='text-gray-400'>Message</h1>
-                        <p className='text-[14px] text-justify pr-4'>My Requirement is for Heat Resistant Safety Cover. Kindly send me price and other details. Why do you need this : For Business Use Preferred Location : Suppliers from Pune will be Preferred</p>
+                        <p className='text-[14px] text-justify pr-4'>{req[0].query_message}</p>
                     </div>
 
 
@@ -55,23 +97,23 @@ function CloseSidebar() {
                     <div className='flex justify-between w-[90%] py-2'>
                         <div>
                             <h1 className='text-gray-400'>Location</h1>
-                            <p>Pune maharashtra</p>
+                            <p>{req[0].client.client_city}</p>
                         </div>
 
                         <div>
                             <h1 className='text-gray-400'>Source</h1>
-                            <p>India mart</p>
+                            <p>{req[0].query_source}</p>
                         </div>
                     </div>
 
                     <div className='pt-2'>
                         <h1 className='text-gray-400'>Company/Ind</h1>
-                        <p className='text-black'>Kinemach Engineering And Machines Private Limited</p>
+                        <p className='text-black'>{req[0].client.client_industry}</p>
                     </div>
 
                     <div className='py-2'>
                         <h1 className='text-gray-400'>Address</h1>
-                        <p className='text-black pr-4'>Ground Floor Gat Number 621 Borade Vasti Savata Mali Nagar, Pune, Maharashtra, 412105</p>
+                        <p className='text-black pr-4'>{req[0].client.client_address}</p>
                     </div>
                 </div>
 
@@ -83,9 +125,15 @@ function CloseSidebar() {
             <h1 className='text-primary font-medium py-3'>Follow Ups</h1>
 
             <div className='max-h-[350px] overflow-y-scroll'>
-                <Followup Date={"7 Nov 2022"} Detail={"Qoutation sended"} />
-                <Followup Date={"9 Nov 2022"} Detail={"will call later"} />
-                <Followup Date={"11 Nov 2022"} Detail={"the client is busy."} />
+
+                {
+                    followups.map((fup, id) => {
+                        return (
+                            <Followup Date={fup.createdAt.split("T")[0]} Detail={fup.followup_text} key={id} />
+                        )
+                    })
+                }
+
             </div>
 
             {/* <div className='flex flex-col mt-4'>

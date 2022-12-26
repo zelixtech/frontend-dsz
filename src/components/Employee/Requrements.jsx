@@ -14,6 +14,8 @@ import GenerateQoutation from "../Popups/GenerateQoutation";
 import CloseSidebar from "./Requirements/CloseSidebar";
 import NewRequrement from './Requirements/NewrRequrement';
 import Running from './Requirements/Running';
+import Lost from './Requirements/Lost';
+import Close from './Requirements/Close';
 
 
 
@@ -61,7 +63,7 @@ function Requrements({ Input, searchHandler }) {
                         isActive={selectedTab === "Close"}
                         onClick={() => setSelectedTab("Close")}
                     >
-                        Close
+                        Done
                     </TabSelector>
                 </nav>
 
@@ -72,8 +74,8 @@ function Requrements({ Input, searchHandler }) {
                 <div>
                     <TabPanel hidden={selectedTab !== "New"}><NewRequrement /></TabPanel>
                     <TabPanel hidden={selectedTab !== "Running"}><Running /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Lost"}><ClientQuery Status={"Lost"} /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Close"}><ClientQuery Status={"Close"} /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Lost"}><Lost /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Close"}><Close /></TabPanel>
                 </div>
 
             </div>

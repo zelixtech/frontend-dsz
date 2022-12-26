@@ -1,22 +1,24 @@
 import { useState, useEffect } from 'react';
 import Orders from '../Orders';
 import { useDispatch, useSelector } from 'react-redux';
-import { fechClients } from '../../../Reducer/clientSlice';
+import { fechActiveClients, fechBlockClients } from '../../../Reducer/clientSlice';
 import axios from 'axios';
 
 function ActiveClientSidebar() {
 
     const dispatch = useDispatch();
-    const ClientId = useSelector((state) => state.client.activeClientId);
+    const ClientId = useSelector((state) => state.client.activeAClientId);
     const data = useSelector((state) => state.client);
-    const clients = data.clients;
+    const clients = data.Activeclients;
+
+    console.log(ClientId);
 
     const [query, setquery] = useState([]);
 
     useEffect(() => {
         var config = {
             method: 'get',
-            url: `http://184.72.65.91:3000/api/query/all/client/${ClientId}`,
+            url: `http://localhost:5000/api/query/all/client/${ClientId}`,
             headers: {}
         };
 
@@ -28,8 +30,8 @@ function ActiveClientSidebar() {
                 if (resData.error) {
                     console.log(resData.error);
                 } else {
-                    setquery(resData.data);
-                    console.log(resData)
+                    setquery(resData.data.queries);
+                    console.log(resData.data)
                 }
             })
             .catch(function (error) {
@@ -40,7 +42,7 @@ function ActiveClientSidebar() {
 
 
     if (!clients || !ClientId) {
-        return "Loading"
+        return <div className='flex justify-center items-center mt-20 text-blue-500'>Loading...</div>
     }
 
     // selecting client clicked on view
@@ -52,17 +54,18 @@ function ActiveClientSidebar() {
 
     const HandelBlock = () => {
 
-
         var config = {
             method: 'patch',
-            url: `http://184.72.65.91:3000/api/client/${ClientId}/block`,
+            url: `http://localhost:5000/api/client/${ClientId}/block`,
             headers: {}
         };
 
         axios(config)
             .then(function (response) {
                 console.log(JSON.stringify(response.data));
-                dispatch(fechClients());
+
+                dispatch(fechActiveClients());
+                dispatch(fechBlockClients());
             })
             .catch(function (error) {
                 console.log(error);

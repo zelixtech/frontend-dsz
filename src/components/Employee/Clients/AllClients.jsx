@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import ClientDetails from '../ClientDetails';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { fechClients } from '../../../Reducer/clientSlice';
-import { setActiveClient } from '../../../Reducer/clientSlice';
+import { fechActiveClients } from '../../../Reducer/clientSlice';
+import { fechBlockClients } from '../../../Reducer/clientSlice';
+
 
 function AllClients({ Status }) {
 
@@ -13,22 +14,33 @@ function AllClients({ Status }) {
 
     useEffect(() => {
 
-        dispatch(fechClients());
+        if (Status === 0) {
+            dispatch(fechActiveClients());
+        } else {
+            dispatch(fechBlockClients());
+        }
+
+
         // console.log("fatching data");
 
     }, [])
 
 
-    const All_Clients = useSelector((state) => state.client.clients);
+    const All_Active_Clients = useSelector((state) => state.client.Activeclients);
+    const All_Block_Clients = useSelector((state) => state.client.Blockclients);
+    var All_Clients = undefined;
 
+    if (Status === 0) {
+        All_Clients = All_Active_Clients;
+    } else {
+        All_Clients = All_Block_Clients;
+    }
 
     // console.log(All_Clients);
 
     if (!All_Clients) {
-        return "Loading Clients..."
+        return <div className='flex justify-center items-center mt-20 text-blue-500'>Loading Clients...</div>
     }
-
-    var setBlocked = 0;
 
     // return null;
 
@@ -40,18 +52,10 @@ function AllClients({ Status }) {
 
                 All_Clients.map((c, index) => {
 
-                    if (parseInt(c.client_blocked) === parseInt(Status)) {
+                    return (
+                        < ClientDetails Username={c.client_name} Email={c.client_email} MobileNo={c.client_mobile} Company={c.client_industry} Status={"New"} IsActive={Status} key={index} ClientId={c.client_id} />
+                    )
 
-                        if (Status === 1 && setBlocked === 0) {
-                            dispatch(setActiveClient(c.client_id));
-                            console.log("set blocked client id");
-                            setBlocked = 1;
-                        }
-
-                        return (
-                            < ClientDetails Username={c.client_name} Email={c.client_email} MobileNo={c.client_mobile} Company={c.client_industry} Status={"New"} key={index} ClientId={c.client_id} />
-                        )
-                    }
 
                 })
             }

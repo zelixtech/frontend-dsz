@@ -5,8 +5,13 @@ import {
 import axios from 'axios';
 import { Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
+import { useDispatch } from 'react-redux';
+import { fechActiveClients } from '../../Reducer/clientSlice';
 
 function AddnewClient({ visible, close }) {
+
+
+    const dispatch = useDispatch()
 
 
     const errorMessages = {
@@ -18,6 +23,10 @@ function AddnewClient({ visible, close }) {
             title: "Client Already Exists",
             message: "Please Enter uniqe MobileNo and EmailId",
         },
+        "Server Error": {
+            title: "Server Error",
+            message: "Internal Server Error"
+        }
     }
 
 
@@ -25,9 +34,16 @@ function AddnewClient({ visible, close }) {
         "client_name": "",
         "client_mobile": "",
         "client_email": "",
-        "client_address": "",
+        "client_shipping_address": "",
+        "client_billing_address": "",
         "client_city": "",
-        "client_industry": ""
+        "client_industry": "",
+        "client_country_iso": "",
+        "client_state": "",
+        "client_gst_no": "",
+        "client_alternate_email": "",
+        "client_alternate_mobile": "",
+
     })
 
     const HandelClientDetailInput = (e) => {
@@ -51,7 +67,7 @@ function AddnewClient({ visible, close }) {
 
         var config = {
             method: 'post',
-            url: 'http://184.72.65.91:3000/api/client',
+            url: 'http://localhost:5000/api/client',
             headers: {
                 'Content-Type': 'application/json',
                 'Cookie': 'darshanSession=s%3AgIDiWuErG9DzIfFSZAA7vb3DJXrttbPk.qsQccDQ7Jit7ZIq3jyEDvZkSkIb0sYq%2FTUEvdrcWKuI'
@@ -108,6 +124,9 @@ function AddnewClient({ visible, close }) {
                         "client_industry": ""
                     })
 
+                    dispatch(fechActiveClients());
+
+
                 }
 
             })
@@ -152,7 +171,7 @@ function AddnewClient({ visible, close }) {
                         <input className='NewEmployeeinput' type="text" name="client_name" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_name} />
                     </div>
 
-                    <div className='flex justify-between py-3'>
+                    <div className='flex justify-between pt-3 pb-2'>
 
                         <div className='flex flex-col'>
                             <label className='label'>Email</label>
@@ -164,10 +183,32 @@ function AddnewClient({ visible, close }) {
                         </div>
 
                     </div>
+                    <div className='flex justify-between  pt-2 pb-3'>
+
+                        <div className='flex flex-col'>
+                            <label className='label'>Alternate Email</label>
+                            <input className='NewEmployeeinput w-[300px]' type="email" name="client_alternate_email" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_alternate_email} />
+                        </div>
+                        <div className='flex flex-col'>
+                            <label className='label'>Alternate Mobile No</label>
+                            <input className='NewEmployeeinput w-[300px]' type="tel" name="client_alternate_mobile" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_alternate_mobile} />
+                        </div>
+
+                    </div>
 
                     <div className='flex flex-col'>
                         <label className='label'>City</label>
                         <input className='NewEmployeeinput' type="text" name="client_city" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_city} />
+                    </div>
+
+                    <div className='flex flex-col'>
+                        <label className='label'>State</label>
+                        <input className='NewEmployeeinput' type="text" name="client_state" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_state} />
+                    </div>
+
+                    <div className='flex flex-col'>
+                        <label className='label'>Client Country ISO</label>
+                        <input className='NewEmployeeinput' type="text" name="client_country_iso" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_country_iso} />
                     </div>
 
                     <div className='flex flex-col'>
@@ -176,8 +217,17 @@ function AddnewClient({ visible, close }) {
                     </div>
 
                     <div className='flex flex-col'>
-                        <label className='label'>Address</label>
-                        <textarea className='NewEmployeeinput h-[100px]' type="text" name="client_address" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_address} ></textarea>
+                        <label className='label'>GSTN</label>
+                        <input className='NewEmployeeinput' type="text" name="client_gst_no" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_gst_no} />
+                    </div>
+
+                    <div className='flex flex-col'>
+                        <label className='label'>Shipping Address</label>
+                        <textarea className='NewEmployeeinput h-[100px]' type="text" name="client_shipping_address" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_shipping_address} ></textarea>
+                    </div>
+                    <div className='flex flex-col'>
+                        <label className='label'>Billing Address</label>
+                        <textarea className='NewEmployeeinput h-[100px]' type="text" name="client_billing_address" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_billing_address} ></textarea>
                     </div>
 
                     <div>

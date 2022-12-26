@@ -25,7 +25,7 @@ function AddNewRequest({ visible, close }) {
     useEffect(() => {
         var config = {
             method: 'get',
-            url: 'http://184.72.65.91:3000/api/client/all',
+            url: 'http://localhost:5000/api/client/all/active',
             headers: {}
         };
 
@@ -90,7 +90,7 @@ function AddNewRequest({ visible, close }) {
         {
             "client_id": "",
             "query_source": "",
-            "query_create_time": 1667788560,
+            "query_create_time": Math.round((new Date()).getTime() / 1000),
             "query_subject": "",
             "query_product": "",
             "query_message": "",
@@ -235,7 +235,7 @@ function AddNewRequest({ visible, close }) {
 
         var config = {
             method: 'post',
-            url: 'http://184.72.65.91:3000/api/query',
+            url: 'http://localhost:5000/api/query',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -361,6 +361,16 @@ function AddNewRequest({ visible, close }) {
                                 <div className='flex flex-col'>
                                     <label className='label'>Company/Ind</label>
                                     <input className='NewEmployeeinput' type="text" name="client_industry" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_industry} />
+                                </div>
+
+                                <div className='flex flex-col'>
+                                    <label className='label'>GSTN</label>
+                                    <input className='NewEmployeeinput' type="text" name="client_GSTN" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_GSTN} />
+                                </div>
+
+                                <div className='flex flex-col'>
+                                    <label className='label'>Address</label>
+                                    <textarea className='NewEmployeeinput h-[100px]' type="text" name="client_address" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_address} ></textarea>
                                 </div>
 
                                 <div className='flex flex-col'>

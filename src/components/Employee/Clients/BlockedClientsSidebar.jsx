@@ -2,22 +2,22 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import Orders from '../Orders';
 import { useDispatch, useSelector } from 'react-redux';
-import { fechClients } from '../../../Reducer/clientSlice';
+import { fechActiveClients, fechBlockClients } from '../../../Reducer/clientSlice';
 import axios from 'axios';
 
 function BlockedClientsSidebar() {
 
     const dispatch = useDispatch();
-    const ClientId = useSelector((state) => state.client.activeClientId);
+    const ClientId = useSelector((state) => state.client.activeBClientId);
     const data = useSelector((state) => state.client);
-    const clients = data.clients;
+    const clients = data.Blockclients;
 
     const [query, setquery] = useState([]);
 
     useEffect(() => {
         var config = {
             method: 'get',
-            url: `http://184.72.65.91:3000/api/query/all/client/${ClientId}`,
+            url: `http://localhost:5000/api/query/all/client/${ClientId}`,
             headers: {}
         };
 
@@ -48,6 +48,10 @@ function BlockedClientsSidebar() {
         return obj.client_id === parseInt(ClientId);
     })
 
+    if (!ClientData) {
+        return "Loading..."
+    }
+
 
 
     const HandelUnblock = () => {
@@ -55,14 +59,16 @@ function BlockedClientsSidebar() {
 
         var config = {
             method: 'patch',
-            url: `http://184.72.65.91:3000/api/client/${ClientId}/unblock`,
+            url: `http://localhost:5000/api/client/${ClientId}/unblock`,
             headers: {}
         };
 
         axios(config)
             .then(function (response) {
                 console.log(JSON.stringify(response.data));
-                dispatch(fechClients());
+
+                dispatch(fechBlockClients());
+                dispatch(fechActiveClients());
             })
             .catch(function (error) {
                 console.log(error);

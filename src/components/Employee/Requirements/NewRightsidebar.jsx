@@ -1,8 +1,13 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
 import { usePopups } from '../../PopupsContext'
+import { useDispatch } from 'react-redux';
+import { fechUnAssignQuery } from '../../../Reducer/querySclice';
+import axios from 'axios';
 
 function NewRightsidebar() {
+
+    const dispatch = useDispatch();
 
     const { qoutation } = usePopups();
     const [NewQoutation, SetNewQoutation] = qoutation;
@@ -19,6 +24,28 @@ function NewRightsidebar() {
         return obj.query_id === parseInt(UAQID);
     })
 
+    const ClientId = req[0].client.client_id;
+
+    const HandelBlock = () => {
+
+
+        var config = {
+            method: 'patch',
+            url: `http://localhost:5000/api/client/${ClientId}/block`,
+            headers: {}
+        };
+
+        axios(config)
+            .then(function (response) {
+                console.log(JSON.stringify(response.data));
+                dispatch(fechUnAssignQuery());
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+
 
     // console.log(req);/
 
@@ -29,13 +56,13 @@ function NewRightsidebar() {
             <div>
 
                 <span className='flex items-center'>
-                    <h1 className="headline">vishal savaliya</h1>
+                    <h1 className="headline">{req[0].client.client_name}</h1>
                     <p className='mx-6 bg-gray-400  text-white px-2 rounded-sm font-medium'>New</p>
                 </span>
 
                 <div className='pt-2 text-gray-400'>
-                    <p className=''>vsleitan@gmail.com</p>
-                    <p>+91 9510342875</p>
+                    <p className=''>{req[0].client.client_email}</p>
+                    <p>{req[0].client.client_mobile}</p>
                 </div>
 
                 <div className='pt-5'>
@@ -75,7 +102,7 @@ function NewRightsidebar() {
                     <div className='flex justify-between w-[90%] py-2'>
                         <div>
                             <h1 className='text-gray-400'>Location</h1>
-                            <p>Pune maharashtra</p>
+                            <p>{req[0].client.client_city}</p>
                         </div>
 
                         <div>
@@ -86,12 +113,12 @@ function NewRightsidebar() {
 
                     <div className='pt-2'>
                         <h1 className='text-gray-400'>Company/Ind</h1>
-                        <p className='text-black'>Kinemach Engineering And Machines Private Limited</p>
+                        <p className='text-black'>{req[0].client.client_industry}</p>
                     </div>
 
                     <div className='py-2'>
                         <h1 className='text-gray-400'>Address</h1>
-                        <p className='text-black pr-4'>Ground Floor Gat Number 621 Borade Vasti Savata Mali Nagar, Pune, Maharashtra, 412105</p>
+                        <p className='text-black pr-4'>{req[0].client.client_address}</p>
                     </div>
                 </div>
 
@@ -100,7 +127,7 @@ function NewRightsidebar() {
             <div className='mt-6 mb-20 text-[14px]'>
                 <div className='flex justify-center items-center'>
                     <button onClick={() => SetNewQoutation(true)} className='px-4 py-2 bg-primary text-white font-medium rounded-md shadow-md' >Create Quotation</button>
-                    <button className='ml-2 px-4 py-2 bg-rose-500 text-white font-medium rounded-md shadow-md'>Block Client</button>
+                    <button className='ml-2 px-4 py-2 bg-rose-500 text-white font-medium rounded-md shadow-md' onClick={() => { HandelBlock() }}>Block Client</button>
                 </div>
             </div>
 

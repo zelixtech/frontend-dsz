@@ -1,33 +1,32 @@
 import { useEffect } from 'react'
-import ClientRequest from '../ClientRequest';
-import { fechAssignQuery } from '../../../Reducer/querySclice';
-import { setAQID } from '../../../Reducer/querySclice';
+import { fechLostQuery } from '../../../Reducer/querySclice';
+import { setLQID } from '../../../Reducer/querySclice';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 
 
-function Running() {
+function Lost() {
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fechAssignQuery());
+        dispatch(fechLostQuery());
     }, [])
 
 
-    const AQuery = useSelector((state) => state.query.AssignQuery);
+    const LQuery = useSelector((state) => state.query.LostQuery);
 
-    if (!AQuery) {
+    if (!LQuery) {
         return "Loading Requrements...";
     }
 
-    // console.log(AQuery);
+    // console.log(LQuery);
 
     return (
         <div className='my-5 overflow-y-scroll h-screen'>
 
             {
-                AQuery.map((q, index) => {
+                LQuery.map((q, index) => {
                     return (
                         <div className='px-4 py-2 mx-4 my-2 flex justify-between bg-white shadow-md  rounded-md' key={index}>
                             <div className='w-[50%] pr-3'>
@@ -47,7 +46,7 @@ function Running() {
                             </div>
                             <div className='w-[10%] h-[99%] my-auto'>
                                 <button className='px-4 py-1 h-8 bg-blue-500 text-base font-[400] text-white rounded-[4px] shadow-sm' id={q.query_id} onClick={(e) => {
-                                    dispatch(setAQID(e.target.id))
+                                    dispatch(setLQID(e.target.id))
                                 }}> View </button>
                             </div>
 
@@ -60,4 +59,4 @@ function Running() {
     )
 }
 
-export default Running;
+export default Lost;

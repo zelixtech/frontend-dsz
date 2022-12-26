@@ -1,22 +1,227 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import Followup from './Followup';
 import { usePopups } from '../../PopupsContext';
 import SidebarClientinfo from './SidebarClientinfo';
+import { useSelector, useDispatch } from 'react-redux';
+import { fechAssignQuery, fechLostQuery, fechCloseQuery } from '../../../Reducer/querySclice';
+import axios from 'axios';
+import { Store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
 
 function LostSidebar() {
 
+    const dispatch = useDispatch();
+
     const { chat } = usePopups();
-    const [ChatPopup, SetChatPopup] = chat
+    const [ChatPopup, SetChatPopup] = chat;
+
+    const [followups, setfollowups] = useState([]);
+
+    const Querys = useSelector((state) => state.query.LostQuery);
+    const LQID = useSelector((state) => state.query.LQID);
+
+    useEffect(() => {
+        var config = {
+            method: 'get',
+            url: `http://localhost:5000/api/followup/all/${LQID}`,
+            headers: {}
+        };
+
+        axios(config)
+            .then(function (response) {
+                // console.log(JSON.stringify(response.data));
+                const resData = response.data;
+
+                if (resData.error) {
+                    console.log(resData.error);
+                } else {
+                    setfollowups(resData.data);
+                    console.log(resData)
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+    }, [LQID]);
+
+    const HandelSendToRunning = () => {
+
+        var data = JSON.stringify({
+            "data": {
+                "query_state": "running"
+            }
+        });
+
+        var config = {
+            method: 'patch',
+            url: `http://localhost:5000/api/query/status/${LQID}`,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+
+        axios(config)
+            .then(function (response) {
+                // console.log(JSON.stringify(response.data));
+
+                var resdata = response.data;
+
+                if (resdata.error) {
+
+                    Store.addNotification({
+                        title: "Not Able Updating Status Of Request",
+                        message: resdata.errorMessage,
+                        type: "warning",
+                        insert: "top",
+                        container: "top-right",
+                        animationIn: ["animate__animated", "animate__fadeIn"],
+                        animationOut: ["animate__animated", "animate__fadeOut"],
+                        dismiss: {
+                            duration: 5000,
+                            onScreen: true
+                        }
+                    });
+
+                } else {
+
+                    Store.addNotification({
+                        title: "Request Sended To Running Successfully",
+                        message: "Success",
+                        type: "success",
+                        insert: "top",
+                        container: "top-right",
+                        animationIn: ["animate__animated", "animate__fadeIn"],
+                        animationOut: ["animate__animated", "animate__fadeOut"],
+                        dismiss: {
+                            duration: 5000,
+                            onScreen: true
+                        }
+                    });
+                    dispatch(fechAssignQuery());
+                    dispatch(fechLostQuery());
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                Store.addNotification({
+                    title: "Somting Went Wrong...",
+                    message: "Server Side Error",
+                    type: "danger",
+                    insert: "top",
+                    container: "top-right",
+                    animationIn: ["animate__animated", "animate__fadeIn"],
+                    animationOut: ["animate__animated", "animate__fadeOut"],
+                    dismiss: {
+                        duration: 5000,
+                        onScreen: true
+                    }
+                });
+            });
+
+    }
+
+    const HandelSendToClose = () => {
+
+        var data = JSON.stringify({
+            "data": {
+                "query_state": "close"
+            }
+        });
+
+        var config = {
+            method: 'patch',
+            url: `http://localhost:5000/api/query/status/${LQID}`,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+
+        axios(config)
+            .then(function (response) {
+                // console.log(JSON.stringify(response.data));
+
+                var resdata = response.data;
+
+                if (resdata.error) {
+
+                    Store.addNotification({
+                        title: "Not Able Updating Status Of Request",
+                        message: resdata.errorMessage,
+                        type: "warning",
+                        insert: "top",
+                        container: "top-right",
+                        animationIn: ["animate__animated", "animate__fadeIn"],
+                        animationOut: ["animate__animated", "animate__fadeOut"],
+                        dismiss: {
+                            duration: 5000,
+                            onScreen: true
+                        }
+                    });
+
+                } else {
+
+                    Store.addNotification({
+                        title: "Request Sended To Close Successfully",
+                        message: "Success",
+                        type: "success",
+                        insert: "top",
+                        container: "top-right",
+                        animationIn: ["animate__animated", "animate__fadeIn"],
+                        animationOut: ["animate__animated", "animate__fadeOut"],
+                        dismiss: {
+                            duration: 5000,
+                            onScreen: true
+                        }
+                    });
+
+                    dispatch(fechLostQuery());
+                    dispatch(fechCloseQuery());
+
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                Store.addNotification({
+                    title: "Somting Went Wrong...",
+                    message: "Server Side Error",
+                    type: "danger",
+                    insert: "top",
+                    container: "top-right",
+                    animationIn: ["animate__animated", "animate__fadeIn"],
+                    animationOut: ["animate__animated", "animate__fadeOut"],
+                    dismiss: {
+                        duration: 5000,
+                        onScreen: true
+                    }
+                });
+            });
+
+    }
+
+    if (!LQID || !Querys) {
+        return <div className='flex justify-center items-center text-blue-500 mt-20'>Loading Requerment Details </div>
+    }
+
+    const req = Querys.filter((obj) => {
+        return obj.query_id === parseInt(LQID);
+    })
+
+    if (!req[0]) {
+        return <div className='flex justify-center items-center text-blue-500 mt-20'>Loading Requerment Details </div>
+    }
 
     return (
         <div className='mx-6 mt-10 felx flex-col text-[14px] text-black'>
 
             <div>
 
-                <SidebarClientinfo Name={"vishal savaliya"} Email={"vsleitan.work@gmail.com"} Mobile={"91 9510342875"} Status="New" />
+                <SidebarClientinfo Name={req[0].client.client_name} Email={req[0].client.client_email} Mobile={req[0].client.client_mobile} Status="New" />
 
                 <div className='pt-5'>
-                    <h1 className='text-sm text-black'>Requirement for Heat Resistant Safety Cover</h1>
+                    <h1 className='text-sm text-black'>{req[0].query_subject}</h1>
                 </div>
             </div>
 
@@ -36,12 +241,12 @@ function LostSidebar() {
 
                     <div>
                         <h1 className='text-gray-400'>Inquery on</h1>
-                        <p>7 nov 2022, 18:36:41</p>
+                        <p>{req[0].query_create_time.split("T")[0]} {req[0].query_create_time.split("T")[1].split(".")[0]}</p>
                     </div>
 
                     <div className='pt-2'>
                         <h1 className='text-gray-400'>Message</h1>
-                        <p className='text-[14px] text-justify pr-4'>My Requirement is for Heat Resistant Safety Cover. Kindly send me price and other details. Why do you need this : For Business Use Preferred Location : Suppliers from Pune will be Preferred</p>
+                        <p className='text-[14px] text-justify pr-4'>{req[0].query_message}</p>
                     </div>
 
 
@@ -55,23 +260,23 @@ function LostSidebar() {
                     <div className='flex justify-between w-[90%] py-2'>
                         <div>
                             <h1 className='text-gray-400'>Location</h1>
-                            <p>Pune maharashtra</p>
+                            <p>{req[0].client.client_city}</p>
                         </div>
 
                         <div>
                             <h1 className='text-gray-400'>Source</h1>
-                            <p>India mart</p>
+                            <p>{req[0].query_source}</p>
                         </div>
                     </div>
 
                     <div className='pt-2'>
                         <h1 className='text-gray-400'>Company/Ind</h1>
-                        <p className='text-black'>Kinemach Engineering And Machines Private Limited</p>
+                        <p className='text-black'>{req[0].client.client_industry}</p>
                     </div>
 
                     <div className='py-2'>
                         <h1 className='text-gray-400'>Address</h1>
-                        <p className='text-black pr-4'>Ground Floor Gat Number 621 Borade Vasti Savata Mali Nagar, Pune, Maharashtra, 412105</p>
+                        <p className='text-black pr-4'>{req[0].client.client_address}</p>
                     </div>
                 </div>
 
@@ -83,9 +288,15 @@ function LostSidebar() {
             <h1 className='text-primary font-medium py-3'>Follow Ups</h1>
 
             <div className='max-h-[350px] overflow-y-scroll'>
-                <Followup Date={"7 Nov 2022"} Detail={"Qoutation sended"} />
-                <Followup Date={"9 Nov 2022"} Detail={"will call later"} />
-                <Followup Date={"11 Nov 2022"} Detail={"The client is busy."} />
+
+                {
+                    followups.map((fup, id) => {
+                        return (
+                            <Followup Date={fup.createdAt.split("T")[0]} Detail={fup.followup_text} key={id} FollowupNo={id + 1} State="Lost" />
+                        )
+                    })
+                }
+
             </div>
 
             {/* <div className='flex flex-col mt-4'>
@@ -96,8 +307,8 @@ function LostSidebar() {
 
             <div className='mt-8 mb-5 text-[14px]'>
                 <div className='flex flex-col justify-center items-center'>
-                    <button className='w-[95%] px-4 py-2 mb-2 bg-primary text-white font-medium rounded-md shadow-md' >Send to Running</button>
-                    <button className='w-[95%] px-4 py-2 mb-2 bg-primary text-white font-medium rounded-md shadow-md' >Send to Close</button>
+                    <button className='w-[95%] px-4 py-2 mb-2 bg-primary text-white font-medium rounded-md shadow-md' onClick={() => { HandelSendToRunning() }} >Send to Running</button>
+                    <button className='w-[95%] px-4 py-2 mb-2 bg-primary text-white font-medium rounded-md shadow-md' onClick={() => { HandelSendToClose() }} >Send to Close</button>
                     <button onClick={() => SetChatPopup(true)} className='w-[95%] px-4 py-2 bg-green-500 text-white font-medium rounded-md shadow-md'>Chat</button>
                 </div>
             </div>

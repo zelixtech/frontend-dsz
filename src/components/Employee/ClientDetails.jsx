@@ -1,8 +1,8 @@
 import React from 'react'
 import { useDispatch } from 'react-redux';
-import { setActiveClient } from '../../Reducer/clientSlice';
+import { setActiveClientID, setBlockClientID } from '../../Reducer/clientSlice';
 
-function ClientDetails({ Username, MobileNo, Email, Company, Status, ClientId }) {
+function ClientDetails({ Username, MobileNo, Email, Company, Status, ClientId, IsActive }) {
 
     const dispatch = useDispatch();
 
@@ -23,7 +23,11 @@ function ClientDetails({ Username, MobileNo, Email, Company, Status, ClientId })
             </div>
             <div className='flex items-center px-2 w-[15%]'>
                 <button className='px-4 py-1 h-8 bg-primary text-base font-[400] text-white rounded-[4px] shadow-sm' id={ClientId} onClick={(e) => {
-                    dispatch(setActiveClient(e.target.id))
+                    if (IsActive === 0) {
+                        dispatch(setActiveClientID(e.target.id))
+                    } else {
+                        dispatch(setBlockClientID(e.target.id))
+                    }
                 }}
                 > View </button>
             </div>

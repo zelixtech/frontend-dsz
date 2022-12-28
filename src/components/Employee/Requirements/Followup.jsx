@@ -104,13 +104,13 @@ function Followup({ Date, Detail, FollowupId, setIsfollowup, FollowupNo, State }
     }
 
 
-    if (State === "Lost") {
+    if (State === "Lost" || State === "Close") {
         return (
-            <div className='shadow-md p-3 mx-4 my-2 rounded-sm' onClick={() => { HandelClick() }}>
+            <div className='shadow-sm p-3 mr-2 my-2 rounded-sm bg-gray-500 bg-opacity-5' onClick={() => { HandelClick() }}>
 
                 <div className='flex justify-between'>
-                    <p className='text-left  text-gray-400 text-sm'>#{FollowupNo}</p>
-                    <p className='text-right text-gray-400 text-sm'>{Date}</p>
+                    <p className='text-left  text-black text-xs'>#{FollowupNo}</p>
+                    <p className='text-right text-black text-xs'>{Date}</p>
                 </div>
 
                 <p className='p-3 text-black'>{Detail}</p>
@@ -125,17 +125,17 @@ function Followup({ Date, Detail, FollowupId, setIsfollowup, FollowupNo, State }
 
 
 
-        <div className='shadow-md p-3 mx-4 my-2 rounded-sm' onClick={() => { HandelClick() }}>
+        <div className='shadow-sm p-3 mr-2 my-2 rounded-sm bg-gray-500 bg-opacity-5' onClick={() => { HandelClick() }}>
 
             <div className='flex justify-between'>
-                <p className='text-left  text-gray-400 text-sm'>#{FollowupNo}</p>
-                <p className='text-right text-gray-400 text-sm'>{Date}</p>
+                <p className='text-left  text-black text-xs'>#{FollowupNo}</p>
+                <p className='text-right text-black text-xs'>{Date}</p>
             </div>
 
             {
                 IsEdit ? (<div>
                     <form onSubmit={(e) => { HandelSubmit(e) }}>
-                        <textarea className="m-2 my-3 py-1 outline-none pl-2 text-sm bg-gray-50 w-[95%] shadow-sm rounded-sm" value={Finput} onChange={(e) => { handelInputChange(e) }} onKeyDown={(e) => { HandelSubmit(e) }} ></textarea>
+                        <textarea className="m-2 my-3 py-1 outline-none pl-2 text-sm bg-white w-[95%] shadow-md rounded-sm" value={Finput} onChange={(e) => { handelInputChange(e) }} onKeyDown={(e) => { HandelSubmit(e) }} ></textarea>
                     </form>
                 </div>) : <p className='p-3 text-black'>{Detail}</p>
             }

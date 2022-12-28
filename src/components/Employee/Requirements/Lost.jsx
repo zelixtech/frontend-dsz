@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 
 
-function Lost() {
+function Lost({ SearchInput, SortType }) {
 
     const dispatch = useDispatch();
 
@@ -14,10 +14,57 @@ function Lost() {
     }, [])
 
 
-    const LQuery = useSelector((state) => state.query.LostQuery);
+    var LQuery = useSelector((state) => state.query.LostQuery);
 
-    if (!LQuery) {
-        return "Loading Requrements...";
+    if (SearchInput) {
+        LQuery = LQuery.filter(({ query_subject }) => query_subject && query_subject.toLowerCase().includes(SearchInput.toLowerCase()))
+    }
+
+    // console.log(SortType);
+
+    if (SortType) {
+
+        if (SortType === "A-Z") {
+
+            LQuery = LQuery.sort(function (a, b) {
+                const nameA = a.query_subject.toUpperCase();
+                const nameB = b.query_subject.toUpperCase();
+                if (nameA > nameB) {
+                    return -1;
+                }
+                if (nameA < nameB) {
+                    return 1;
+                }
+                return 0;
+            });
+
+        } else if (SortType === "N-O") {
+
+            LQuery = LQuery.slice().sort((x, y) => {
+                x = new Date(x.createdAt);
+                y = new Date(y.createdAt);
+                return y - x;
+            });
+
+        } else if (SortType === "O-N") {
+
+            LQuery = LQuery.filter(({ query_source }) => query_source && query_source === "tradeindia")
+
+        } else if (SortType === "TII") {
+
+            LQuery = LQuery.filter(({ query_source }) => query_source && query_source === "tradeindia")
+
+        } else if (SortType === "CST") {
+            LQuery = LQuery.filter(({ query_source }) => query_source && query_source !== "tradeindia")
+        }
+    }
+
+    if ((SearchInput || SortType) && (!LQuery || LQuery.length === 0)) {
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>No requrements with matching filter...</div>;
+    }
+
+    if (!LQuery || LQuery.length === 0) {
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>Loading Requrements...</div>;
     }
 
     // console.log(LQuery);

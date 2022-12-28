@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react';
 import Orders from '../Orders';
+import EditClientDitals from '../../Popups/EditClient';
 import { useDispatch, useSelector } from 'react-redux';
 import { fechActiveClients, fechBlockClients } from '../../../Reducer/clientSlice';
+import { usePopups } from '../../PopupsContext';
 import axios from 'axios';
+import {
+    EllipsisVerticalIcon,
+} from '@heroicons/react/24/outline'
 
 function ActiveClientSidebar() {
 
@@ -11,7 +16,10 @@ function ActiveClientSidebar() {
     const data = useSelector((state) => state.client);
     const clients = data.Activeclients;
 
-    console.log(ClientId);
+    const { EditClient } = usePopups();
+    const [EditClientDetails, SetEditClientDetails] = EditClient;
+
+    // console.log(ClientId);
 
     const [query, setquery] = useState([]);
 
@@ -80,8 +88,20 @@ function ActiveClientSidebar() {
 
             <div>
                 <span className='flex items-center'>
-                    <h1 className="headline">{ClientData[0].client_name}</h1>
-                    <p className='mx-6 bg-gray-400  text-white px-2 rounded-sm font-medium'>New</p>
+                    <div className='flex'>
+                        <h1 className="headline">{ClientData[0].client_name}</h1>
+                        <p className='mx-6 bg-gray-400  text-white px-2 rounded-sm font-medium'>New</p>
+                    </div>
+
+                    <div className='group relative' >
+                        <p className='w-5 mr-3 hover:cursor-pointer'><EllipsisVerticalIcon /> </p>
+                        <div className='hidden group-hover:block absolute top-2 right-3 bg-white shadow-md rounded-sm w-[150px]'>
+                            <div className='py-1'>
+                                <li className='hover:bg-blue-400 hover:text-white hover:cursor-pointer list-none px-2' onClick={() => SetEditClientDetails(true)}>Edit Client</li>
+                            </div>
+                        </div>
+                    </div>
+
                 </span>
 
                 <div className='pt-2 text-[14px] text-gray-400'>
@@ -116,6 +136,8 @@ function ActiveClientSidebar() {
                     <button className='ml-2 px-4 py-2 bg-rose-500 text-white font-medium rounded-md shadow-md' onClick={() => { HandelBlock() }}>Block Client</button>
                 </div>
             </div>
+
+            <EditClientDitals visible={EditClientDetails} close={SetEditClientDetails} />
 
         </div>
     )

@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-    EllipsisVerticalIcon,
-} from '@heroicons/react/24/outline'
+import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 
 function SidebarClientinfo({ Name, Email, Mobile, Status }) {
     return (
@@ -19,8 +17,8 @@ function SidebarClientinfo({ Name, Email, Mobile, Status }) {
                     <p className='w-5 mr-3 hover:cursor-pointer'><EllipsisVerticalIcon /> </p>
                     <div className='hidden group-hover:block absolute top-2 right-3 bg-white shadow-md rounded-sm w-[150px]'>
                         <div className='py-1'>
-                            <li className='hover:bg-blue-400 hover:text-white hover:cursor-pointer list-none px-2'>Send to Close</li>
-                            <li className='hover:bg-blue-400 hover:text-white hover:cursor-pointer list-none px-2'>Send to Running</li>
+                            <li className='hover:bg-blue-400 hover:text-white hover:cursor-pointer list-none px-2'>Send to Lost</li>
+                            <li className='hover:bg-blue-400 hover:text-white hover:cursor-pointer list-none px-2'>Send to Done</li>
                             <li className='hover:bg-blue-400 hover:text-white hover:cursor-pointer list-none px-2'>Send Quotaion</li>
                         </div>
                     </div>

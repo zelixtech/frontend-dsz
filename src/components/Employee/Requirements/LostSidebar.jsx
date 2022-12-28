@@ -7,11 +7,12 @@ import { fechAssignQuery, fechLostQuery, fechCloseQuery } from '../../../Reducer
 import axios from 'axios';
 import { Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
+import ReqDetails from './ReqDetails';
+import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 
 function LostSidebar() {
 
     const dispatch = useDispatch();
-
     const { chat } = usePopups();
     const [ChatPopup, SetChatPopup] = chat;
 
@@ -218,7 +219,34 @@ function LostSidebar() {
 
             <div>
 
-                <SidebarClientinfo Name={req[0].client.client_name} Email={req[0].client.client_email} Mobile={req[0].client.client_mobile} Status="New" />
+                <div>
+                    <span className='flex items-center justify-between'>
+
+                        <div className='flex'>
+                            <h1 className="headline">{req[0].client.client_name}</h1>
+                            <p className='mx-6 bg-gray-400  text-white px-2 rounded-sm font-medium'>
+                                New
+                            </p>
+                        </div>
+
+                        <div className='group relative' >
+                            <p className='w-5 mr-3 hover:cursor-pointer'><EllipsisVerticalIcon /> </p>
+                            <div className='hidden group-hover:block absolute top-2 right-3 bg-white shadow-md rounded-sm w-[150px]'>
+                                <div className='p-1'>
+                                    <li className='dropdownList' onClick={() => { HandelSendToRunning() }}>Send to Running</li>
+                                    <li className='dropdownList' onClick={() => { HandelSendToClose() }}>Send to Close</li>
+                                    <li className='dropdownList' onClick={() => { SetChatPopup(true) }}>Chat</li>
+                                </div>
+                            </div>
+                        </div>
+
+                    </span>
+
+                    <div className='pt-2 text-gray-400'>
+                        <p className=''>{req[0].client.client_email}</p>
+                        <p>{req[0].client.client_mobile}</p>
+                    </div>
+                </div>
 
                 <div className='pt-5'>
                     <h1 className='text-sm text-black'>{req[0].query_subject}</h1>
@@ -233,54 +261,7 @@ function LostSidebar() {
 
             {/* <h1 className='text-black font-medium py-2'>Query Details</h1> */}
 
-            <div className='max-h-[350px] overflow-y-scroll'>
-
-                {/* section No 2 */}
-
-                <div className='pb-1'>
-
-                    <div>
-                        <h1 className='text-gray-400'>Inquery on</h1>
-                        <p>{req[0].query_create_time.split("T")[0]} {req[0].query_create_time.split("T")[1].split(".")[0]}</p>
-                    </div>
-
-                    <div className='pt-2'>
-                        <h1 className='text-gray-400'>Message</h1>
-                        <p className='text-[14px] text-justify pr-4'>{req[0].query_message}</p>
-                    </div>
-
-
-                </div>
-
-                {/* section no 3 */}
-
-                {/* <hr className='mx-auto my-2 mb-3 w-[60%] bg-blue-500 h-[2px]' /> */}
-
-                <div>
-                    <div className='flex justify-between w-[90%] py-2'>
-                        <div>
-                            <h1 className='text-gray-400'>Location</h1>
-                            <p>{req[0].client.client_city}</p>
-                        </div>
-
-                        <div>
-                            <h1 className='text-gray-400'>Source</h1>
-                            <p>{req[0].query_source}</p>
-                        </div>
-                    </div>
-
-                    <div className='pt-2'>
-                        <h1 className='text-gray-400'>Company/Ind</h1>
-                        <p className='text-black'>{req[0].client.client_industry}</p>
-                    </div>
-
-                    <div className='py-2'>
-                        <h1 className='text-gray-400'>Address</h1>
-                        <p className='text-black pr-4'>{req[0].client.client_address}</p>
-                    </div>
-                </div>
-
-            </div>
+            <ReqDetails Date={req[0].query_create_time.split("T")[0]} Time={req[0].query_create_time.split("T")[1].split(".")[0]} Message={req[0].query_message} Location={req[0].client.client_city} Source={req[0].query_source} Company={req[0].client.client_company_name} Address={req[0].client.client_shipping_address} BillingAddress={req[0].client.client_billing_address} />
 
 
             <hr className='mx-auto my-2 mb-3 w-[60%] bg-blue-500 h-[2px]' />
@@ -290,11 +271,13 @@ function LostSidebar() {
             <div className='max-h-[350px] overflow-y-scroll'>
 
                 {
-                    followups.map((fup, id) => {
-                        return (
-                            <Followup Date={fup.createdAt.split("T")[0]} Detail={fup.followup_text} key={id} FollowupNo={id + 1} State="Lost" />
-                        )
-                    })
+                    followups.length === 0 ? <div className='flex justify-center items-center text-blue-500 h-[100px]'>No Followups...</div> :
+
+                        (followups.map((fup, id) => {
+                            return (
+                                <Followup Date={fup.createdAt.split("T")[0]} Detail={fup.followup_text} key={id} FollowupNo={id + 1} State="Lost" />
+                            )
+                        }))
                 }
 
             </div>

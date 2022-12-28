@@ -14,12 +14,9 @@ function AllClients({ Status }) {
 
     useEffect(() => {
 
-        if (Status === 0) {
-            dispatch(fechActiveClients());
-        } else {
-            dispatch(fechBlockClients());
-        }
 
+        dispatch(fechActiveClients());
+        dispatch(fechBlockClients());
 
         // console.log("fatching data");
 

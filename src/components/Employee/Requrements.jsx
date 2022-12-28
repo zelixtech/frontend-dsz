@@ -6,13 +6,13 @@ import NewRightsidebar from './Requirements/NewRightsidebar';
 import RunningSidebar from "./Requirements/RunningSidebar";
 import LostSidebar from "./Requirements/LostSidebar";
 import SearchBar from "./SearchBar";
-
+import { useSelector } from 'react-redux';
 
 import Chat from '../Popups/Chat'
 import { usePopups } from '../../components/PopupsContext'
 import GenerateQoutation from "../Popups/GenerateQoutation";
 import CloseSidebar from "./Requirements/CloseSidebar";
-import NewRequrement from './Requirements/NewrRequrement';
+import NewRequrement from './Requirements/NewRequrement';
 import Running from './Requirements/Running';
 import Lost from './Requirements/Lost';
 import Close from './Requirements/Close';
@@ -31,6 +31,8 @@ function Requrements({ Input, searchHandler }) {
     const { chat, qoutation } = usePopups();
     const [ChatPopup, SetChatPopup] = chat;
     const [NewQoutation, SetNewQoutation] = qoutation;
+    const SearchInput = useSelector((state) => state.filters.Input);
+    const SortType = useSelector((state) => state.filters.SortType);
 
 
     return (
@@ -72,10 +74,10 @@ function Requrements({ Input, searchHandler }) {
                 {/* requests  */}
 
                 <div>
-                    <TabPanel hidden={selectedTab !== "New"}><NewRequrement /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Running"}><Running /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Lost"}><Lost /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Close"}><Close /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "New"}><NewRequrement SearchInput={SearchInput} SortType={SortType} /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Running"}><Running SearchInput={SearchInput} SortType={SortType} /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Lost"}><Lost SearchInput={SearchInput} SortType={SortType} /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Close"}><Close SearchInput={SearchInput} SortType={SortType} /></TabPanel>
                 </div>
 
             </div>

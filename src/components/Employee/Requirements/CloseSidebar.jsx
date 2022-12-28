@@ -2,13 +2,17 @@ import { useState, useEffect } from 'react'
 import Followup from './Followup'
 import { usePopups } from '../../PopupsContext'
 import SidebarClientinfo from './SidebarClientinfo';
-
-import { useSelector } from 'react-redux';
+import { fechCloseQuery, fechAssignQuery, fechLostQuery } from '../../../Reducer/querySclice';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-
+import ReqDetails from './ReqDetails';
+import { Store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
+import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 
 function CloseSidebar() {
 
+    const dispatch = useDispatch();
     const { chat } = usePopups();
     const [ChatPopup, SetChatPopup] = chat;
 
@@ -42,20 +46,204 @@ function CloseSidebar() {
 
     }, [CQID]);
 
+    const HandelSendToRunning = () => {
+
+        var data = JSON.stringify({
+            "data": {
+                "query_state": "running"
+            }
+        });
+
+        var config = {
+            method: 'patch',
+            url: `http://localhost:5000/api/query/status/${CQID}`,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+
+        axios(config)
+            .then(function (response) {
+                // console.log(JSON.stringify(response.data));
+
+                var resdata = response.data;
+
+                if (resdata.error) {
+
+                    Store.addNotification({
+                        title: "Not Able Updating Status Of Request",
+                        message: resdata.errorMessage,
+                        type: "warning",
+                        insert: "top",
+                        container: "top-right",
+                        animationIn: ["animate__animated", "animate__fadeIn"],
+                        animationOut: ["animate__animated", "animate__fadeOut"],
+                        dismiss: {
+                            duration: 5000,
+                            onScreen: true
+                        }
+                    });
+
+                } else {
+
+                    Store.addNotification({
+                        title: "Request Sended To Running Successfully",
+                        message: "Success",
+                        type: "success",
+                        insert: "top",
+                        container: "top-right",
+                        animationIn: ["animate__animated", "animate__fadeIn"],
+                        animationOut: ["animate__animated", "animate__fadeOut"],
+                        dismiss: {
+                            duration: 5000,
+                            onScreen: true
+                        }
+                    });
+                    dispatch(fechCloseQuery());
+                    dispatch(fechAssignQuery());
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                Store.addNotification({
+                    title: "Somting Went Wrong...",
+                    message: "Server Side Error",
+                    type: "danger",
+                    insert: "top",
+                    container: "top-right",
+                    animationIn: ["animate__animated", "animate__fadeIn"],
+                    animationOut: ["animate__animated", "animate__fadeOut"],
+                    dismiss: {
+                        duration: 5000,
+                        onScreen: true
+                    }
+                });
+            });
+
+    }
+
+    const HandelSendToLost = () => {
+
+        var data = JSON.stringify({
+            "data": {
+                "query_state": "lost"
+            }
+        });
+
+        var config = {
+            method: 'patch',
+            url: `http://localhost:5000/api/query/status/${CQID}`,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+
+        axios(config)
+            .then(function (response) {
+                // console.log(JSON.stringify(response.data));
+
+                var resdata = response.data;
+
+                if (resdata.error) {
+
+                    Store.addNotification({
+                        title: "Not Able updating status of request",
+                        message: resdata.errorMessage,
+                        type: "warning",
+                        insert: "top",
+                        container: "top-right",
+                        animationIn: ["animate__animated", "animate__fadeIn"],
+                        animationOut: ["animate__animated", "animate__fadeOut"],
+                        dismiss: {
+                            duration: 5000,
+                            onScreen: true
+                        }
+                    });
+
+                } else {
+
+                    Store.addNotification({
+                        title: "Request sended in Lost Successfully",
+                        message: "Success",
+                        type: "success",
+                        insert: "top",
+                        container: "top-right",
+                        animationIn: ["animate__animated", "animate__fadeIn"],
+                        animationOut: ["animate__animated", "animate__fadeOut"],
+                        dismiss: {
+                            duration: 5000,
+                            onScreen: true
+                        }
+                    });
+                    dispatch(fechCloseQuery());
+                    dispatch(fechLostQuery());
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                Store.addNotification({
+                    title: "Somting Went Wrong...",
+                    message: "Server Side Error",
+                    type: "danger",
+                    insert: "top",
+                    container: "top-right",
+                    animationIn: ["animate__animated", "animate__fadeIn"],
+                    animationOut: ["animate__animated", "animate__fadeOut"],
+                    dismiss: {
+                        duration: 5000,
+                        onScreen: true
+                    }
+                });
+            });
+
+    }
+
     if (!CQID || !Querys) {
         return <div className='flex justify-center items-center text-blue-500 mt-20'>Loading Requerment Details </div>
     }
 
+
     const req = Querys.filter((obj) => {
         return obj.query_id === parseInt(CQID);
     })
+
+    // console.log(req[0].client);
 
     return (
         <div className='mx-6 mt-10 felx flex-col text-[14px] text-black'>
 
             <div>
 
-                <SidebarClientinfo Name={req[0].client.client_name} Email={req[0].client.client_email} Mobile={req[0].client.client_mobile} Status="New" />
+                <div>
+                    <span className='flex items-center justify-between'>
+
+                        <div className='flex'>
+                            <h1 className="headline">{req[0].client.client_name}</h1>
+                            <p className='mx-6 bg-gray-400  text-white px-2 rounded-sm font-medium'>
+                                New
+                            </p>
+                        </div>
+
+                        <div className='group relative' >
+                            <p className='w-5 mr-3 hover:cursor-pointer'><EllipsisVerticalIcon /> </p>
+                            <div className='hidden group-hover:block absolute top-2 right-3 bg-white shadow-md rounded-sm w-[150px]'>
+                                <div className='p-1'>
+                                    <li className='dropdownList' onClick={() => { HandelSendToRunning() }}>Send to Running</li>
+                                    <li className='dropdownList' onClick={() => { HandelSendToLost() }}>Send to Lost</li>
+                                    <li className='dropdownList' onClick={() => { SetChatPopup(true) }}>Chat</li>
+                                </div>
+                            </div>
+                        </div>
+
+                    </span>
+
+                    <div className='pt-2 text-gray-400'>
+                        <p className=''>{req[0].client.client_email}</p>
+                        <p>{req[0].client.client_mobile}</p>
+                    </div>
+                </div>
 
                 <div className='pt-5'>
                     <h1 className='text-sm text-black'>{req[0].query_subject}</h1>
@@ -70,54 +258,7 @@ function CloseSidebar() {
 
             {/* <h1 className='text-black font-medium py-2'>Query Details</h1> */}
 
-            <div className='max-h-[350px] overflow-y-scroll'>
-
-                {/* section No 2 */}
-
-                <div className='pb-1'>
-
-                    <div>
-                        <h1 className='text-gray-400'>Inquery on</h1>
-                        <p>{req[0].query_create_time.split("T")[0]} {req[0].query_create_time.split("T")[1].split(".")[0]}</p>
-                    </div>
-
-                    <div className='pt-2'>
-                        <h1 className='text-gray-400'>Message</h1>
-                        <p className='text-[14px] text-justify pr-4'>{req[0].query_message}</p>
-                    </div>
-
-
-                </div>
-
-                {/* section no 3 */}
-
-                {/* <hr className='mx-auto my-2 mb-3 w-[60%] bg-blue-500 h-[2px]' /> */}
-
-                <div>
-                    <div className='flex justify-between w-[90%] py-2'>
-                        <div>
-                            <h1 className='text-gray-400'>Location</h1>
-                            <p>{req[0].client.client_city}</p>
-                        </div>
-
-                        <div>
-                            <h1 className='text-gray-400'>Source</h1>
-                            <p>{req[0].query_source}</p>
-                        </div>
-                    </div>
-
-                    <div className='pt-2'>
-                        <h1 className='text-gray-400'>Company/Ind</h1>
-                        <p className='text-black'>{req[0].client.client_industry}</p>
-                    </div>
-
-                    <div className='py-2'>
-                        <h1 className='text-gray-400'>Address</h1>
-                        <p className='text-black pr-4'>{req[0].client.client_address}</p>
-                    </div>
-                </div>
-
-            </div>
+            <ReqDetails Date={req[0].query_create_time.split("T")[0]} Time={req[0].query_create_time.split("T")[1].split(".")[0]} Message={req[0].query_message} Location={req[0].client.client_city} Source={req[0].query_source} Company={req[0].client.client_company_name} Address={req[0].client.client_shipping_address} BillingAddress={req[0].client.client_billing_address} />
 
 
             <hr className='mx-auto my-2 mb-3 w-[60%] bg-blue-500 h-[2px]' />
@@ -127,11 +268,13 @@ function CloseSidebar() {
             <div className='max-h-[350px] overflow-y-scroll'>
 
                 {
-                    followups.map((fup, id) => {
-                        return (
-                            <Followup Date={fup.createdAt.split("T")[0]} Detail={fup.followup_text} key={id} />
-                        )
-                    })
+                    followups.length === 0 ? <div className='flex justify-center items-center text-blue-500 h-[100px]'>No Followups...</div> :
+
+                        (followups.map((fup, id) => {
+                            return (
+                                <Followup Date={fup.createdAt.split("T")[0]} Detail={fup.followup_text} key={id} FollowupNo={id + 1} State="Close" />
+                            )
+                        }))
                 }
 
             </div>

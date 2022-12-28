@@ -68,4 +68,8 @@
     .Qinput{
         @apply pl-3 py-1 outline-none text-sm;
     }
+
+    .dropdownList{
+        @apply hover:bg-blue-400 hover:text-white hover:cursor-pointer list-none px-2 hover:shadow-md;
+    }
 }

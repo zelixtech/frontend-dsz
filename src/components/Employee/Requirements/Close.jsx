@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 
 
-function Close() {
+function Close({ SearchInput, SortType }) {
 
     const dispatch = useDispatch();
 
@@ -14,10 +14,54 @@ function Close() {
     }, [])
 
 
-    const CQuery = useSelector((state) => state.query.CloseQuery);
+    var CQuery = useSelector((state) => state.query.CloseQuery);
+
+    if (SearchInput) {
+        CQuery = CQuery.filter(({ query_subject }) => query_subject && query_subject.toLowerCase().includes(SearchInput.toLowerCase()))
+    }
+
+    if (SortType) {
+
+        if (SortType === "A-Z") {
+
+            CQuery = CQuery.slice().sort(function (a, b) {
+                const nameA = a.query_subject.toUpperCase();
+                const nameB = b.query_subject.toUpperCase();
+                if (nameA < nameB) {
+                    return -1;
+                }
+                if (nameA > nameB) {
+                    return 1;
+                }
+                return 0;
+                // console.log(a.query_subject, b.query_subject)
+            });
+
+        } else if (SortType === "N-O") {
+
+            CQuery = CQuery.slice().sort((x, y) => {
+                x = new Date(x.createdAt);
+                y = new Date(y.createdAt);
+                return y - x;
+            });
+
+        } else if (SortType === "O-N") {
+
+        } else if (SortType === "TII") {
+
+            CQuery = CQuery.filter(({ query_source }) => query_source && query_source === "tradeindia")
+
+        } else if (SortType === "CST") {
+            CQuery = CQuery.filter(({ query_source }) => query_source && query_source !== "tradeindia")
+        }
+    }
+
+    if ((SearchInput || SortType) && (!CQuery || CQuery.length === 0)) {
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>No requrements with matching filter...</div>;
+    }
 
     if (!CQuery) {
-        return "Loading Requrements...";
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>Loading Requrements...</div>;
     }
 
     // console.log(LQuery);

@@ -4,6 +4,7 @@ import { usePopups } from '../../PopupsContext'
 import { useDispatch } from 'react-redux';
 import { fechUnAssignQuery } from '../../../Reducer/querySclice';
 import axios from 'axios';
+import ReqDetails from './ReqDetails';
 
 function NewRightsidebar() {
 
@@ -66,7 +67,7 @@ function NewRightsidebar() {
                 </div>
 
                 <div className='pt-5'>
-                    <h1 className='headline'>{req[0].query_subject}</h1>
+                    <h1 className='text-sm text-black'>{req[0].query_subject}</h1>
                 </div>
             </div>
 
@@ -74,60 +75,15 @@ function NewRightsidebar() {
             <hr className='mx-auto my-2 mb-3 w-[60%] bg-indigo-500 h-[2px]' />
 
 
-
-            <div className='h-[55vh] overflow-y-scroll'>
-
-                {/* section No 2 */}
-
-                <div className='pb-1'>
-
-                    <div>
-                        <h1 className='text-gray-400'>Inquery on</h1>
-                        <p>{req[0].query_create_time.split("T")[0]} {req[0].query_create_time.split("T")[1].split(".")[0]}</p>
-                    </div>
-
-                    <div className='pt-2'>
-                        <h1 className='text-gray-400'>Message</h1>
-                        <p className='text-[14px] text-justify pr-4'>{req[0].query_message}</p>
-                    </div>
+            <h1 className='text-primary font-medium py-3'>Requirement Details</h1>
 
 
-                </div>
-
-                {/* section no 3 */}
-
-                <hr className='mx-auto my-2 mb-3 w-[60%] bg-indigo-500 h-[2px]' />
-
-                <div>
-                    <div className='flex justify-between w-[90%] py-2'>
-                        <div>
-                            <h1 className='text-gray-400'>Location</h1>
-                            <p>{req[0].client.client_city}</p>
-                        </div>
-
-                        <div>
-                            <h1 className='text-gray-400'>Source</h1>
-                            <p>{req[0].query_source}</p>
-                        </div>
-                    </div>
-
-                    <div className='pt-2'>
-                        <h1 className='text-gray-400'>Company/Ind</h1>
-                        <p className='text-black'>{req[0].client.client_industry}</p>
-                    </div>
-
-                    <div className='py-2'>
-                        <h1 className='text-gray-400'>Address</h1>
-                        <p className='text-black pr-4'>{req[0].client.client_address}</p>
-                    </div>
-                </div>
-
-            </div>
+            <ReqDetails Date={req[0].query_create_time.split("T")[0]} Time={req[0].query_create_time.split("T")[1].split(".")[0]} Message={req[0].query_message} Location={req[0].client.client_city} Source={req[0].query_source} Company={req[0].client.client_company_name} Address={req[0].client.client_shipping_address} BillingAddress={req[0].client.client_billing_address} />
 
             <div className='mt-6 mb-20 text-[14px]'>
-                <div className='flex justify-center items-center'>
-                    <button onClick={() => SetNewQoutation(true)} className='px-4 py-2 bg-primary text-white font-medium rounded-md shadow-md' >Create Quotation</button>
-                    <button className='ml-2 px-4 py-2 bg-rose-500 text-white font-medium rounded-md shadow-md' onClick={() => { HandelBlock() }}>Block Client</button>
+                <div className='flex'>
+                    {/* <button onClick={() => SetNewQoutation(true)} className='px-4 py-2 bg-primary text-white font-medium rounded-md shadow-md' >Create Quotation</button> */}
+                    <button className='px-4 py-2 bg-rose-500 text-white font-medium rounded-md shadow-md' onClick={() => { HandelBlock() }}>Block Client</button>
                 </div>
             </div>
 

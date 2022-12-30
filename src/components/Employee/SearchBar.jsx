@@ -5,7 +5,7 @@ import { setInputFilter, setSortFilterType } from '../../Reducer/filtersSlice';
 
 import { usePopups } from '../PopupsContext';
 
-function SearchBar({ Input, searchHandler, Search }) {
+function SearchBar({ Input, searchHandler }) {
 
     const { newreq } = usePopups();
     const dispatch = useDispatch();

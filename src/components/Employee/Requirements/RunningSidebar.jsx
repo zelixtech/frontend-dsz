@@ -6,10 +6,12 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { fechAssignQuery, fechCloseQuery, fechLostQuery } from '../../../Reducer/querySclice';
+import { setClient } from '../../../Reducer/userSlice';
 import { Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import ReqDetails from './ReqDetails';
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
+import EditQuery from '../../Popups/EditQuery';
 
 
 function RunningSidebar() {
@@ -20,6 +22,8 @@ function RunningSidebar() {
     const [ChatPopup, SetChatPopup] = chat;
     const { qoutation } = usePopups();
     const [NewQoutation, SetNewQoutation] = qoutation;
+    const { EditReq } = usePopups();
+    const [EditReqDetails, SetEditReqDetails] = EditReq;
 
     const [followups, setfollowups] = useState([]);
     const [followup, setfollowup] = useState("");
@@ -311,12 +315,12 @@ function RunningSidebar() {
     })
 
 
+    disptch(setClient(req[0].client));
+
     return (
         <div className='mx-6 mt-10 felx flex-col text-[14px] text-black'>
 
             <div>
-
-                {/* <SidebarClientinfo Name= Email= Mobile= Status="New" /> */}
 
                 <div>
                     <span className='flex items-center justify-between'>
@@ -332,6 +336,7 @@ function RunningSidebar() {
                             <p className='w-5 mr-3 hover:cursor-pointer'><EllipsisVerticalIcon /> </p>
                             <div className='hidden group-hover:block absolute top-2 right-3 bg-white shadow-md rounded-sm w-[150px]'>
                                 <div className='p-1'>
+                                    <li className='dropdownList' onClick={() => { SetEditReqDetails(true) }}>Edit Requerment</li>
                                     <li className='dropdownList' onClick={() => { HandelSendToLost() }}>Send to Lost</li>
                                     <li className='dropdownList' onClick={() => { HandelSendToClose() }}>Send to Close</li>
                                     <li className='dropdownList' onClick={() => { SetNewQoutation(true) }}>Send Quotaion</li>
@@ -404,7 +409,7 @@ function RunningSidebar() {
                 </div>
             </div>
 
-
+            <EditQuery visible={EditReqDetails} close={SetEditReqDetails} ReqDetails={req[0]} />
 
 
         </div>

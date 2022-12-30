@@ -14,9 +14,10 @@ export function PopupProvider({ children }) {
     const [NewClient, SetNewClient] = useState(false);
     const [EditStaffDetails, SetEditStaffDetails] = useState(false);
     const [EditClientDetails, SetEditClientDetails] = useState(false);
+    const [EditReqDetails, SetEditReqDetails] = useState(false);
 
     return (
-        <PopupContext.Provider value={{ chat: [ChatPopup, SetChatPopup], newreq: [NewRequest, SetNewRequest], qoutation: [NewQoutation, SetNewQoutation], client: [NewClient, SetNewClient], employee: [EditStaffDetails, SetEditStaffDetails], EditClient: [EditClientDetails, SetEditClientDetails] }} >
+        <PopupContext.Provider value={{ chat: [ChatPopup, SetChatPopup], newreq: [NewRequest, SetNewRequest], qoutation: [NewQoutation, SetNewQoutation], client: [NewClient, SetNewClient], employee: [EditStaffDetails, SetEditStaffDetails], EditClient: [EditClientDetails, SetEditClientDetails], EditReq: [EditReqDetails, SetEditReqDetails] }} >
             {children}
         </PopupContext.Provider>
     )

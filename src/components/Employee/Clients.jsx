@@ -4,6 +4,9 @@ import AllClients from './Clients/AllClients';
 import BlockedClientsSidebar from './Clients/BlockedClientsSidebar';
 import ActiveClientSidebar from './Clients/ActiveClientSidebar';
 import ClientSerachbar from './Clients/ClientSerachbar';
+import { useSelector } from 'react-redux';
+
+
 
 
 
@@ -15,6 +18,8 @@ function Users({ Input, searchHandler }) {
         "Blocked",
     ]);
 
+    const SearchInput = useSelector((state) => state.filters.CInput);
+    const SortType = useSelector((state) => state.filters.CSortType);
 
     return (
 
@@ -46,8 +51,8 @@ function Users({ Input, searchHandler }) {
                 {/* requests  */}
 
                 <div>
-                    <TabPanel hidden={selectedTab !== "Active"}><AllClients Status={0} /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Blocked"}><AllClients Status={1} /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Active"}><AllClients SearchInput={SearchInput} SortType={SortType} Status={0} /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Blocked"}><AllClients SearchInput={SearchInput} SortType={SortType} Status={1} /></TabPanel>
 
                 </div>
 

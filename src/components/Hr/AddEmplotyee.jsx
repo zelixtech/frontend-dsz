@@ -30,7 +30,7 @@ function AddEmplotyee() {
         "employee_password": "",
         "employee_dob": "",
         "employee_address": "",
-        "employee_relieve_date": "2022-12-15",
+        "employee_relieve_date": "2022-12-29",
         "employee_department": "",
         "employee_isAdmin": false
     })
@@ -41,7 +41,8 @@ function AddEmplotyee() {
         "bank_info_branch_name": "",
         "bank_info_ifsc_code": "",
         "employee_name_as_in_bank": "",
-        "employee_id": 0,
+        "bank_account_no": "",
+        "employee_id": 3,
     })
 
     const HandelEmployeeDetailInput = (e) => {
@@ -74,7 +75,7 @@ function AddEmplotyee() {
 
         var config = {
             method: 'post',
-            url: 'http://184.72.65.91:3000/api/employee',
+            url: `${process.env.REACT_APP_HOST}/api/employee`,
             headers: {
                 'Content-Type': 'application/json',
                 'Cookie': 'darshanSession=s%3AgIDiWuErG9DzIfFSZAA7vb3DJXrttbPk.qsQccDQ7Jit7ZIq3jyEDvZkSkIb0sYq%2FTUEvdrcWKuI'
@@ -84,7 +85,7 @@ function AddEmplotyee() {
 
         axios(config)
             .then(function (response) {
-                // console.log(JSON.stringify(response.data));
+                console.log(JSON.stringify(response.data));
 
                 var resdata = response.data;
 
@@ -174,7 +175,7 @@ function AddEmplotyee() {
 
         var config = {
             method: 'put',
-            url: 'http://184.72.65.91:3000/api/employee/bankinfo/',
+            url: `${process.env.REACT_APP_HOST}/api/employee/bankinfo/`,
             headers: {
                 'Content-Type': 'application/json',
                 'Cookie': 'darshanSession=s%3AgIDiWuErG9DzIfFSZAA7vb3DJXrttbPk.qsQccDQ7Jit7ZIq3jyEDvZkSkIb0sYq%2FTUEvdrcWKuI'
@@ -184,7 +185,8 @@ function AddEmplotyee() {
 
         axios(config)
             .then(function (response) {
-                console.log(JSON.stringify(response.data));
+                console.log(response.status);
+                // console.log(JSON.stringify(response.data));
 
                 var resdata = response.data;
 
@@ -229,7 +231,8 @@ function AddEmplotyee() {
                         "bank_info_branch_name": "",
                         "bank_info_ifsc_code": "",
                         "employee_name_as_in_bank": "",
-                        "employee_id": 0,
+                        "bank_account_no": "",
+                        "employee_id": 3,
                     });
 
                     setData({
@@ -252,6 +255,9 @@ function AddEmplotyee() {
             })
             .catch(function (error) {
                 console.log(error);
+
+                console.log(error.response.data)
+                console.log(error.response.status)
 
                 Store.addNotification({
                     title: "Somting Went Wrong...",
@@ -376,7 +382,7 @@ function AddEmplotyee() {
                                 </div>
                                 <div className='flex flex-col'>
                                     <label className='label'>Account No</label>
-                                    <input className='NewEmployeeinput' type="text" name="" />
+                                    <input className='NewEmployeeinput' type="text" name="bank_account_no" onChange={(e) => { HandelBankDetailInput(e) }} value={BankData.bank_account_no} />
                                 </div>
                                 <div className='flex flex-col'>
                                     <label className='label'>ISFC Code</label>

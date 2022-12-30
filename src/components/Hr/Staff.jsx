@@ -1,45 +1,92 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import HrSearchbar from './HrSearchbar'
 import StaffDetails from './StaffDetails'
 import StaffSidebar from './StaffSidebar'
-import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux'
+import { fechEmployees, setEmployeeID } from '../../Reducer/employeeSlice'
 
 
 function Staff({ HrInput, HrSearchHandler }) {
 
-    const [Employee, setEmployee] = useState([]);
-    const [EmployeeId, setEmployeeId] = useState();
+
+    const SearchInput = useSelector((state) => state.filters.HrInput);
+    const SortType = useSelector((state) => state.filters.HrSortType);
+
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
 
-        var config = {
-            method: 'get',
-            url: 'http://184.72.65.91:3000/api/employee/all',
-            headers: {
-                'Cookie': 'darshanSession=s%3AgIDiWuErG9DzIfFSZAA7vb3DJXrttbPk.qsQccDQ7Jit7ZIq3jyEDvZkSkIb0sYq%2FTUEvdrcWKuI'
-            }
-        };
+        dispatch(fechEmployees())
 
-        axios(config)
-            .then(function (response) {
-                // console.log(JSON.stringify(response.data));
-                var resData = response.data;
-                setEmployee(resData.data);
-                // console.log(Employee);
-                setEmployeeId(resData.data[0].employee_id)
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }, []);
+    }, [])
 
 
-    const HandelView = (e) => {
-        var id = e.target.id;
-        setEmployeeId(id);
+    var Employee = useSelector((state) => state.employee.employees);
+
+    if (SearchInput) {
+        Employee = Employee.filter(({ employee_name }) => employee_name && employee_name.toLowerCase().includes(SearchInput.toLowerCase()))
+        dispatch(setEmployeeID(Employee[0].employee_id));
     }
 
+    if (SortType && Employee) {
 
+        if (SortType === "A-Z") {
+
+            Employee = Employee.slice().sort(function (a, b) {
+                const nameA = a.employee_name.toUpperCase();
+                const nameB = b.employee_name.toUpperCase();
+                if (nameA < nameB) {
+                    return -1;
+                }
+                if (nameA > nameB) {
+                    return 1;
+                }
+                return 0;
+                // console.log(a.employee_name, b.employee_name)
+            });
+
+            dispatch(setEmployeeID(Employee[0].employee_id));
+
+        } else if (SortType === "Z-A") {
+
+            Employee = Employee.slice().sort(function (a, b) {
+                const nameA = a.employee_name.toUpperCase();
+                const nameB = b.employee_name.toUpperCase();
+                if (nameA < nameB) {
+                    return 1;
+                }
+                if (nameA > nameB) {
+                    return -1;
+                }
+                return 0;
+                // console.log(a.employee_name, b.employee_name)
+            });
+
+            dispatch(setEmployeeID(Employee[0].employee_id));
+
+        } else if (SortType === "N-O") {
+
+            Employee = Employee.slice().sort((x, y) => {
+                x = new Date(x.createdAt);
+                y = new Date(y.createdAt);
+                return y - x;
+            });
+
+            dispatch(setEmployeeID(Employee[0].employee_id));
+
+        } else if (SortType === "O-N") {
+
+            Employee = Employee.slice().sort((x, y) => {
+                x = new Date(x.createdAt);
+                y = new Date(y.createdAt);
+                return x - y;
+            });
+
+            dispatch(setEmployeeID(Employee[0].employee_id));
+        }
+
+    }
 
     return (
         <div className='basis-[83%] flex'>
@@ -54,26 +101,16 @@ function Staff({ HrInput, HrSearchHandler }) {
 
                 <div className='my-5 overflow-y-scroll h-screen'>
 
-
                     {
-                        Employee.map((e, index) => {
-                            //console.log(e);
-                            return (
-                                <StaffDetails Name={e.employee_name} Position={e.employee_designation} Contact={e.employee_mobile} Email={e.employee_email} key={e.employee_id} EmployeeId={e.employee_id} HandelView={HandelView} />
-                            )
-                        })
+                        !Employee ? <div className='fex justify-center items-center text-blue-500 pt-20'>Loading Employees...</div> :
 
+                            Employee.map((e, index) => {
+                                //console.log(e);
+                                return (
+                                    <StaffDetails Name={e.employee_name} Position={e.employee_designation} Contact={e.employee_mobile} Email={e.employee_email} key={e.employee_id} EmployeeId={e.employee_id} />
+                                )
+                            })
                     }
-
-
-                    {/* <StaffDetails Name={"vs leitan"} Position={"Product Manager"} Contact={"+91 9510705040"} Email={"vsleitan@gmail.com"} />
-                    <StaffDetails Name={"vs leitan"} Position={"Product Manager"} Contact={"+91 9510705040"} Email={"vsleitan@gmail.com"} />
-                    <StaffDetails Name={"Shreeji sangani"} Position={"Manager"} Contact={"+91 9510705040"} Email={"Shreejisangani@gmail.com"} />
-                    <StaffDetails Name={"Shreeji sangani"} Position={"Manager"} Contact={"+91 9510705040"} Email={"Shreejisangani@gmail.com"} />
-                    <StaffDetails Name={"vs leitan"} Position={"Product Manager"} Contact={"+91 9510705040"} Email={"vsleitan@gmail.com"} />
-                    <StaffDetails Name={"vs leitan"} Position={"Product Manager"} Contact={"+91 9510705040"} Email={"vsleitan@gmail.com"} />
-                    <StaffDetails Name={"Shreeji sangani"} Position={"Manager"} Contact={"+91 9510705040"} Email={"Shreejisangani@gmail.com"} /> */}
-
 
                 </div>
 
@@ -84,17 +121,17 @@ function Staff({ HrInput, HrSearchHandler }) {
             {/* Rightsidebar  */}
 
 
-            {
-                EmployeeId && (
-                    <div className='basis-[30%] overflow-y-scroll h-screen'>
 
-                        <div>
-                            <StaffSidebar Data={Employee[EmployeeId - 1]} EmployeeId={EmployeeId} />
-                        </div>
 
-                    </div>
-                )
-            }
+            <div className='basis-[30%] overflow-y-scroll h-screen'>
+
+                <div>
+                    <StaffSidebar />
+                </div>
+
+            </div>
+
+
 
 
 

@@ -48,6 +48,12 @@ function Running({ SearchInput, SortType }) {
 
         } else if (SortType === "O-N") {
 
+            AQuery = AQuery.slice().sort((x, y) => {
+                x = new Date(x.createdAt);
+                y = new Date(y.createdAt);
+                return x - y;
+            });
+
         } else if (SortType === "TII") {
 
             AQuery = AQuery.filter(({ query_source }) => query_source && query_source === "tradeindia")

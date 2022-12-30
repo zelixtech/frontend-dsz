@@ -22,7 +22,7 @@ function EditClientDitals({ visible, close }) {
 
     var ClientDetails = Client[0];
 
-    console.log(ClientDetails);
+    // console.log(ClientDetails);
 
 
     const errorMessages = {

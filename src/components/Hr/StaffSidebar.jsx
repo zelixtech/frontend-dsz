@@ -5,25 +5,27 @@ import {
 import { usePopups } from '../PopupsContext';
 import EditEmployeeDetails from '../Popups/EditEmployeeDetails';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 
-function StaffSidebar({ Data = {}, EmployeeId }) {
+function StaffSidebar() {
 
 
     const { employee } = usePopups();
-
     const [EditStaffDetails, SetEditStaffDetails] = employee;
 
+
+
+    const EmployeeId = useSelector((state) => state.employee.employeeId)
+    const Employees = useSelector((state) => state.employee.employees);
+
     const [BankDetails, setBankDetails] = useState({})
-
-
-    // console.log(Data)
 
     useEffect(() => {
 
         var config = {
             method: 'get',
-            url: 'http://184.72.65.91:3000/api/employee/bankinfo/' + EmployeeId,
+            url: `${process.env.REACT_APP_HOST}/api/employee/bankinfo/` + EmployeeId,
             headers: {
                 'Cookie': 'darshanSession=s%3AgIDiWuErG9DzIfFSZAA7vb3DJXrttbPk.qsQccDQ7Jit7ZIq3jyEDvZkSkIb0sYq%2FTUEvdrcWKuI'
             }
@@ -43,9 +45,27 @@ function StaffSidebar({ Data = {}, EmployeeId }) {
             })
             .catch(function (error) {
                 console.log(error);
+                setBankDetails({});
             });
 
     }, [EmployeeId])
+
+
+    if (!EmployeeId || !Employees) {
+        return <div className='flex justify-center items-center text-blue-500 pt-20'>Loading Employees...</div>
+    }
+
+    const Employee = Employees.filter((obj) => {
+        return obj.employee_id === parseInt(EmployeeId);
+    })
+
+    const Data = Employee[0];
+
+    // console.log(Data)
+
+    if (!Data) {
+        return <div className='flex justify-center items-center text-blue-500 pt-20'>Loading Employees...</div>
+    }
 
 
     return (
@@ -129,28 +149,28 @@ function StaffSidebar({ Data = {}, EmployeeId }) {
 
                 <div className='mt-7 mb-8'>
 
-                    <div className='pt-2'>
+                    <div className='py-1'>
                         <h1 className='text-gray-400'>Name (Given in Bank)</h1>
                         <p className='text-black'>{BankDetails.employee_name_as_in_bank}</p>
                     </div>
 
-                    <div className='py-2'>
+                    <div className='py-1'>
                         <h1 className='text-gray-400'>Bank Name</h1>
-                        <p className='text-black pr-4'>{BankDetails.bank_info_name}</p>
+                        <p className='text-black'>{BankDetails.bank_info_name}</p>
                     </div>
 
-                    <div className='pt-2'>
+                    <div className='py-1'>
                         <h1 className='text-gray-400'>Branch Name</h1>
                         <p className='text-black'>{BankDetails.bank_info_branch_name}</p>
                     </div>
 
-                    <div className='py-2'>
+                    <div className='py-1'>
                         <h1 className='text-gray-400'>Account No</h1>
-                        <p className='text-black pr-4'>159510342875</p>
+                        <p className='text-black'>{BankDetails.bank_account_no}</p>
                     </div>
-                    <div className='py-2'>
+                    <div className='py-1'>
                         <h1 className='text-gray-400'>IFSC Code</h1>
-                        <p className='text-black pr-4'>{BankDetails.bank_info_ifsc_code}</p>
+                        <p className='text-black'>{BankDetails.bank_info_ifsc_code}</p>
                     </div>
                 </div>
 
@@ -162,7 +182,7 @@ function StaffSidebar({ Data = {}, EmployeeId }) {
 
             </div>
 
-            <EditEmployeeDetails visible={EditStaffDetails} close={SetEditStaffDetails} />
+            <EditEmployeeDetails visible={EditStaffDetails} close={SetEditStaffDetails} Employee={Data} Employee_Bank_info={BankDetails} />
 
 
         </div>

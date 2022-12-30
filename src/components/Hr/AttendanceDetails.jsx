@@ -1,6 +1,11 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import { setEmployeeAttendanceID } from '../../Reducer/employeeSlice';
 
-function AttendanceDetails({ Name, Position, Leave, Attendance, Halfleave }) {
+function AttendanceDetails({ Name, Position, Leave, Attendance, Halfleave, EmployeeId }) {
+
+    const dispatch = useDispatch();
+
     return (
         <div className='px-4 py-2 mx-4 my-2 flex items-center bg-white shadow-md  rounded-md'>
 
@@ -34,7 +39,7 @@ function AttendanceDetails({ Name, Position, Leave, Attendance, Halfleave }) {
 
             {/* <h1 className='border-l-2 h-10 w-5 border-gray-300'></h1> */}
             <div className='w-[12%]'>
-                <button className='px-4 py-1 h-8 text-white text-base font-[400] bg-primary rounded-[4px] shadow-sm'> View </button>
+                <button className='px-4 py-1 h-8 text-white text-base font-[400] bg-primary rounded-[4px] shadow-sm' onClick={() => { dispatch(setEmployeeAttendanceID(EmployeeId)) }}> View </button>
             </div>
 
 

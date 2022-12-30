@@ -52,7 +52,7 @@ function Login() {
             redirect: 'follow'
         };
 
-        fetch("http://184.72.65.91:3000/api/auth", requestOptions)
+        fetch(`${process.env.REACT_APP_HOST}/api/auth`, requestOptions)
             .then(response => response.text())
             .then((result) => {
 

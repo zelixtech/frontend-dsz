@@ -17,8 +17,8 @@ function App() {
 
   const UserDetails = useSelector((state) => state.user);
 
-  // const User = UserDetails.user;
-  const User = true;
+  const User = UserDetails.user;
+  // const User = true;
 
   return (
 

@@ -47,6 +47,12 @@ function Close({ SearchInput, SortType }) {
 
         } else if (SortType === "O-N") {
 
+            CQuery = CQuery.slice().sort((x, y) => {
+                x = new Date(x.createdAt);
+                y = new Date(y.createdAt);
+                return x - y;
+            });
+
         } else if (SortType === "TII") {
 
             CQuery = CQuery.filter(({ query_source }) => query_source && query_source === "tradeindia")

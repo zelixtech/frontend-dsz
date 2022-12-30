@@ -16,8 +16,6 @@ function AddNewRequest({ visible, close }) {
     const [Clients, setClients] = useState([]);
     const dispatch = useDispatch();
 
-    var d = new Date();
-
     const HandelAddNewClient = () => {
         setIsNewClient(!IsNewClient);
     }
@@ -25,7 +23,7 @@ function AddNewRequest({ visible, close }) {
     useEffect(() => {
         var config = {
             method: 'get',
-            url: 'http://localhost:5000/api/client/all/active',
+            url: `${process.env.REACT_APP_HOST}/api/client/all/active`,
             headers: {}
         };
 
@@ -119,7 +117,7 @@ function AddNewRequest({ visible, close }) {
 
         var config = {
             method: 'post',
-            url: 'http://184.72.65.91:3000/api/client',
+            url: `${process.env.REACT_APP_HOST}/api/client`,
             headers: {
                 'Content-Type': 'application/json',
                 'Cookie': 'darshanSession=s%3AgIDiWuErG9DzIfFSZAA7vb3DJXrttbPk.qsQccDQ7Jit7ZIq3jyEDvZkSkIb0sYq%2FTUEvdrcWKuI'
@@ -235,7 +233,7 @@ function AddNewRequest({ visible, close }) {
 
         var config = {
             method: 'post',
-            url: 'http://localhost:5000/api/query',
+            url: `${process.env.REACT_APP_HOST}/api/query`,
             headers: {
                 'Content-Type': 'application/json'
             },

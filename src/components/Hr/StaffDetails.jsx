@@ -1,8 +1,11 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import { setEmployeeID } from '../../Reducer/employeeSlice';
 
-function StaffDetails({ Name, Email, Position, Contact, EmployeeId, HandelView }) {
+function StaffDetails({ Name, Email, Position, Contact, EmployeeId }) {
 
 
+    const dispatch = useDispatch();
 
 
     return (
@@ -26,12 +29,8 @@ function StaffDetails({ Name, Email, Position, Contact, EmployeeId, HandelView }
             {/* <h1 className='border-l-2 h-10 w-5 border-gray-300'></h1> */}
 
             <div className='w-[15%]'>
-                <button className='px-4 py-1 h-8 bg-blue-500 text-base font-[400] text-white rounded-[4px] shadow-sm' onClick={(e) => { HandelView(e) }} id={EmployeeId}> View </button>
+                <button className='px-4 py-1 h-8 bg-blue-500 text-base font-[400] text-white rounded-[4px] shadow-sm' onClick={(e) => { dispatch(setEmployeeID(EmployeeId)) }} id={EmployeeId}> View </button>
             </div>
-
-
-
-
 
         </div>
     )

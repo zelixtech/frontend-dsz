@@ -48,7 +48,11 @@ function Lost({ SearchInput, SortType }) {
 
         } else if (SortType === "O-N") {
 
-            LQuery = LQuery.filter(({ query_source }) => query_source && query_source === "tradeindia")
+            LQuery = LQuery.slice().sort((x, y) => {
+                x = new Date(x.createdAt);
+                y = new Date(y.createdAt);
+                return x - y;
+            });
 
         } else if (SortType === "TII") {
 

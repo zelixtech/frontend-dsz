@@ -17,7 +17,7 @@ function App() {
 
   const UserDetails = useSelector((state) => state.user);
 
-  const User = UserDetails.user;
+  const User = UserDetails.auth;
   // const User = true;
 
   return (
@@ -30,8 +30,8 @@ function App() {
             <Routes>
               <Route path="/employee/*" element={<Employee />} />
               <Route path="/hr/*" element={<Hr />} />
-              <Route path="/admin" element={<Admin />} />
-            </Routes >
+              <Route path="/admin/*" element={<Admin />} />
+            </Routes>
           </div>)
 
         }

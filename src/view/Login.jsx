@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import logo from '../image/DSZ_LOGO.png'
 import { useDispatch } from 'react-redux';
-import { setUser, setDept } from '../Reducer/userSlice';
+import { setUser, setDept, setAuth } from '../Reducer/userSlice';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { setEmployeeID } from '../Reducer/employeeSlice';
 
 function Login() {
 
@@ -34,46 +36,60 @@ function Login() {
 
     const HandelSubmmit = () => {
 
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Cookie", "darshanSession=s%3AgIDiWuErG9DzIfFSZAA7vb3DJXrttbPk.qsQccDQ7Jit7ZIq3jyEDvZkSkIb0sYq%2FTUEvdrcWKuI");
-
-        var raw = JSON.stringify({
+        var data = JSON.stringify({
             "data": {
                 "email": LoginDetails.email,
                 "password": LoginDetails.password
             }
         });
 
-        var requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: raw,
-            redirect: 'follow'
+        var config = {
+            method: 'post',
+            url: `${process.env.REACT_APP_HOST}/api/auth`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            data: data
         };
 
-        fetch(`${process.env.REACT_APP_HOST}/api/auth`, requestOptions)
-            .then(response => response.text())
-            .then((result) => {
+        axios(config)
+            .then(function (response) {
+                console.log(JSON.stringify(response.data));
 
-                result = JSON.parse(result);
-                result = result.result;
+                console.log(response.headers)
+
+                var result = response.data;
 
                 if (result.error) {
                     setStatus("mismatch")
                 } else {
+
+                    result = result.data;
                     dispach(setUser(result));
                     dispach(setDept(result.employee_department));
+                    dispach(setEmployeeID(result.employee_id));
 
-                    if (result.employee_department === "Employee") {
+                    if (result.employee_isAdmin === 1) {
+                        dispach(setAuth("Admin"));
+                    } else if (result.employee_isHR === 1) {
+                        dispach(setAuth("Hr"));
+                    } else {
+                        dispach(setAuth("Employee"));
+                    }
+
+                    if (result.employee_isAdmin === 1) {
+                        navigate('/admin')
+                    }
+                    else if (result.employee_department === "Employee") {
                         navigate('/employee');
                     } else if (result.employee_department === "hr") {
                         navigate('/hr');
                     }
                 }
-
             })
-            .catch(error => setStatus("error"));
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     return (

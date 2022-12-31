@@ -5,6 +5,11 @@ import 'react-notifications-component/dist/theme.css';
 
 function AddEmplotyee() {
 
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var yyyy = today.getFullYear();
+    var date = yyyy + "-" + mm + "-" + dd;
 
     const [BankDetails, setBankDetails] = useState(false);
 
@@ -22,7 +27,7 @@ function AddEmplotyee() {
 
     const [Data, setData] = useState({
         "employee_name": "",
-        "employee_designation": "",
+        "employee_designation": "Managing Director",
         "employee_doj": "",
         "employee_mobile": "",
         "employee_office_email": "",
@@ -30,9 +35,10 @@ function AddEmplotyee() {
         "employee_password": "",
         "employee_dob": "",
         "employee_address": "",
-        "employee_relieve_date": "2022-12-29",
-        "employee_department": "",
-        "employee_isAdmin": false
+        "employee_relieve_date": date,
+        "employee_department": "Employee",
+        "employee_isAdmin": true,
+        "employee_isHR": false
     })
 
 
@@ -42,7 +48,7 @@ function AddEmplotyee() {
         "bank_info_ifsc_code": "",
         "employee_name_as_in_bank": "",
         "bank_account_no": "",
-        "employee_id": 3,
+        "employee_id": "",
     })
 
     const HandelEmployeeDetailInput = (e) => {
@@ -148,7 +154,7 @@ function AddEmplotyee() {
 
             })
             .catch(function (error) {
-                // console.log(error);
+                console.log(error);
                 Store.addNotification({
                     title: "Somting Went Wrong...",
                     message: "Server Side Error",
@@ -237,7 +243,7 @@ function AddEmplotyee() {
 
                     setData({
                         "employee_name": "",
-                        "employee_designation": "",
+                        "employee_designation": "Managing Director",
                         "employee_doj": "",
                         "employee_mobile": "",
                         "employee_office_email": "",
@@ -246,7 +252,7 @@ function AddEmplotyee() {
                         "employee_dob": "",
                         "employee_address": "",
                         "employee_relieve_date": "2022-12-15",
-                        "employee_department": "",
+                        "employee_department": "Employee",
                         "employee_isAdmin": false
                     });
 

@@ -6,7 +6,7 @@ import {
     TrashIcon
 } from '@heroicons/react/24/outline'
 
-import { products, productDetails } from '../../Data/Data'
+import { productDetails } from '../../Data/Data'
 import axios from 'axios'
 import { setUnassignQuery } from '../../Reducer/querySclice'
 
@@ -26,6 +26,7 @@ function GenerateQoutation({ visible, close }) {
     const DataBundel = useSelector((state) => state.user);
     const QueryId = useSelector((state) => state.query.AQID);
     const ClientMeta = DataBundel.client;
+    const EmployeeMeta = DataBundel.user;
 
 
     // states 
@@ -61,8 +62,8 @@ function GenerateQoutation({ visible, close }) {
     const [TACList, SetTACList] = useState("");
     const [Data, SetData] = useState({
         "sender": {
-            "name": "urvisha patel",
-            "mobile": "9510504070"
+            "name": "",
+            "mobile": ""
         },
         "client": {
             "name": "",
@@ -76,19 +77,6 @@ function GenerateQoutation({ visible, close }) {
 
 
     useEffect(() => {
-
-        if (ClientMeta) {
-            var preData = { ...Data };
-            preData.client = {
-                "name": ClientMeta.client_name,
-                "mobile": ClientMeta.client_mobile,
-                "company": ClientMeta.client_company_name,
-                "address": ClientMeta.client_billing_address,
-                "gst": ClientMeta.client_gst_no,
-                "email": ClientMeta.client_email,
-            }
-            SetData(preData);
-        }
 
         SetProduct([{}]);
         SetRProduct([{}]);
@@ -115,8 +103,34 @@ function GenerateQoutation({ visible, close }) {
 
         })
 
-    }, [QueryId])
+    }, [QueryId, DataBundel])
 
+    useEffect(() => {
+        if (ClientMeta) {
+            var preData = { ...Data };
+            preData.client = {
+                "name": ClientMeta.client_name,
+                "mobile": ClientMeta.client_mobile,
+                "company": ClientMeta.client_company_name,
+                "address": ClientMeta.client_billing_address,
+                "gst": ClientMeta.client_gst_no,
+                "email": ClientMeta.client_email,
+            }
+            SetData(preData);
+            console.log(ClientMeta)
+        }
+    }, [ClientMeta])
+
+    useEffect(() => {
+        if (EmployeeMeta) {
+            var preData = { ...Data };
+            preData.sender = {
+                "name": EmployeeMeta.employee_name,
+                "mobile": EmployeeMeta.employee_mobile,
+            }
+            SetData(preData);
+        }
+    }, [EmployeeMeta])
 
 
 
@@ -521,7 +535,7 @@ function GenerateQoutation({ visible, close }) {
 
                                             <select id="product" name="product" className='NewEmployeeinput' onChange={e => { HandelProdeutSelect(index, e) }} defaultValue={element.name || "Select Option"} value={element.name || "Select Option"} >
 
-                                                <option value="Select Option" disabled hidden >Choose here</option>
+                                                <option value="Select Option" disabled hidden selected >Choose here</option>
 
                                                 {
                                                     Object.keys(productDetails[0]).map((product, id) => {
@@ -578,7 +592,7 @@ function GenerateQoutation({ visible, close }) {
                                                 </div> */}
 
                                                 <label className='label'>Enter Rate</label>
-                                                <input className={element.rate < element.min ? 'w-[150px] Qinput text-red-500' : 'Qinput w-[180px]'} type="text" name="rate" value={element.rate} onChange={(e) => { HandelCustomInt(index, e) }} />
+                                                <input className={parseInt(element.rate) < parseInt(element.min) ? 'w-[150px] Qinput text-red-500' : 'Qinput w-[180px]'} type="text" name="rate" value={element.rate} onChange={(e) => { HandelCustomInt(index, e) }} />
 
                                             </div>
 
@@ -616,7 +630,7 @@ function GenerateQoutation({ visible, close }) {
                                                                         <input type="checkbox" value={value} name={key} defaultChecked={true} onChange={(e) => { handelOnChecked(index, element, e) }} />
                                                                         <label className='pl-2 text-sm' name={key} value={value}>{key}:{value}</label>
                                                                     </div>
-                                                                    <input className='mx-1 w-[90%] pl-2 text-sm outline-none py-0.5' name={key} value={element.detailsTobeShown[key]} onChange={(e) => { handelChangeFieldValue(index, element, e); }} />
+                                                                    <input className='mx-1 w-[90%] pl-2 text-sm outline-none py-0.5' name={key} value={element.detailsTobeShown[key]} onChange={(e) => { handelChangeFieldValue(index, e); }} />
                                                                 </div>
                                                             )
                                                         })
@@ -727,7 +741,7 @@ function GenerateQoutation({ visible, close }) {
                                                 </div> */}
 
                                                 <label className='label'>Enter Rate</label>
-                                                <input className={element.rate < element.min ? 'w-[150px] Qinput text-red-500' : 'Qinput w-[180px]'} type="text" name="rate" value={element.rate} onChange={(e) => { HandelRPCustomInt(index, e) }} />
+                                                <input className={parseInt(element.rate) < parseInt(element.min) ? 'w-[150px] Qinput text-red-500' : 'Qinput w-[180px]'} type="text" name="rate" value={element.rate} onChange={(e) => { HandelRPCustomInt(index, e) }} />
 
                                             </div>
 
@@ -765,7 +779,7 @@ function GenerateQoutation({ visible, close }) {
                                                                         <input type="checkbox" value={value} name={key} defaultChecked={true} onChange={(e) => { handelRPOnChecked(index, element, e) }} />
                                                                         <label className='pl-2 text-sm' name={key} value={value}>{key}:{value}</label>
                                                                     </div>
-                                                                    <input className='mx-1 w-[90%] pl-2 text-sm outline-none py-0.5' name={key} value={element.detailsTobeShown[key]} onChange={(e) => { handelChangeRPFieldValue(index, element, e); }} />
+                                                                    <input className='mx-1 w-[90%] pl-2 text-sm outline-none py-0.5' name={key} value={element.detailsTobeShown[key]} onChange={(e) => { handelChangeRPFieldValue(index, e); }} />
                                                                 </div>
                                                             )
                                                         })

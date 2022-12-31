@@ -26,6 +26,7 @@ function RunningSidebar() {
     const [EditReqDetails, SetEditReqDetails] = EditReq;
 
     const [followups, setfollowups] = useState([]);
+    const [Quotation, setQuotation] = useState([]);
     const [followup, setfollowup] = useState("");
     const [Isfollowup, setIsfollowup] = useState(true);
 
@@ -56,6 +57,34 @@ function RunningSidebar() {
             });
 
     }, [AQID, Isfollowup]);
+
+    useEffect(() => {
+        var config = {
+            method: 'get',
+            url: `${process.env.REACT_APP_HOST}/api/quotation/all/${AQID}`,
+            headers: {
+                'Cookie': 'darshanSession=s%3A1pHuUrUxP4VvI_q9PGtz-E7QGHQYB0bC.zID6MNIzgEpXQ8LL%2FylJsR8NfLPG8OSl6NzjnCatxDE'
+            }
+        };
+
+        axios(config)
+            .then(function (response) {
+                // console.log(JSON.stringify(response.data));
+
+                const resData = response.data;
+
+                if (resData.error) {
+                    // console.log(resData.error);
+                    setQuotation([]);
+                } else {
+                    setQuotation(resData.data);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                setQuotation([]);
+            });
+    }, [AQID])
 
 
     const HandelFollowupInput = (e) => {
@@ -381,6 +410,27 @@ function RunningSidebar() {
                         (followups.map((fup, id) => {
                             return (
                                 <Followup Date={fup.createdAt.split("T")[0]} Detail={fup.followup_text} FollowupId={fup.followup_id} setIsfollowup={setIsfollowup} key={id} FollowupNo={id + 1} />
+                            )
+                        }))
+                }
+
+            </div>
+
+            <h1 className='text-primary font-medium py-3'>Quotations</h1>
+
+            <div className='max-h-[350px] overflow-y-scroll'>
+
+                {
+                    Quotation.length === 0 ? <div className='flex justify-center items-center text-blue-500 h-[100px]'>No Quotation...</div> :
+
+                        (Quotation.map((q, id) => {
+                            return (
+                                <div className='text-sm flex flex-col bg-gray-500 text-white shadow-md rounded-md my-2 mr-4 px-4 py-1'>
+                                    <p className='py-1'>{q.createdAt.split("T")[0]}</p>
+                                    <div>
+                                        <p>{q.generatedQuotationNumber}</p>
+                                    </div>
+                                </div>
                             )
                         }))
                 }

@@ -12,9 +12,18 @@ const userSlice = createSlice({
         },
         setClient(state, action) {
             state.client = action.payload;
-        }
+        },
+        setEmployee(state, action) {
+            state.employee = action.payload;
+        },
+        setEmployeeId(state, action) {
+            state.employeeId = action.payload;
+        },
+        setAuth(state, action) {
+            state.auth = action.payload;
+        },
     }
 })
 
-export const { setUser, setDept, setClient } = userSlice.actions;
+export const { setUser, setDept, setClient, setEmployee, setAuth, setEmployeeId } = userSlice.actions;
 export default userSlice.reducer;

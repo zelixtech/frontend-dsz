@@ -33,6 +33,9 @@ function Requrements({ Input, searchHandler }) {
     const [NewQoutation, SetNewQoutation] = qoutation;
     const SearchInput = useSelector((state) => state.filters.Input);
     const SortType = useSelector((state) => state.filters.SortType);
+    const EmployeeId = useSelector((state) => state.user.employeeId);
+
+    // console.log(EmployeeId)
 
 
     return (
@@ -74,10 +77,10 @@ function Requrements({ Input, searchHandler }) {
                 {/* requests  */}
 
                 <div>
-                    <TabPanel hidden={selectedTab !== "New"}><NewRequrement SearchInput={SearchInput} SortType={SortType} /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Running"}><Running SearchInput={SearchInput} SortType={SortType} /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Lost"}><Lost SearchInput={SearchInput} SortType={SortType} /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Close"}><Close SearchInput={SearchInput} SortType={SortType} /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "New"}><NewRequrement SearchInput={SearchInput} SortType={SortType} EmployeeId={EmployeeId} /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Running"}><Running SearchInput={SearchInput} SortType={SortType} EmployeeId={EmployeeId} /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Lost"}><Lost SearchInput={SearchInput} SortType={SortType} EmployeeId={EmployeeId} /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Close"}><Close SearchInput={SearchInput} SortType={SortType} EmployeeId={EmployeeId} /></TabPanel>
                 </div>
 
             </div>
@@ -90,9 +93,9 @@ function Requrements({ Input, searchHandler }) {
 
                 <div>
                     <TabPanel hidden={selectedTab !== "New"}><NewRightsidebar /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Running"}><RunningSidebar /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Lost"}><LostSidebar /></TabPanel>
-                    <TabPanel hidden={selectedTab !== "Close"}><CloseSidebar /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Running"}><RunningSidebar EmployeeId={EmployeeId} /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Lost"}><LostSidebar EmployeeId={EmployeeId} /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Close"}><CloseSidebar EmployeeId={EmployeeId} /></TabPanel>
                 </div>
 
                 <Chat visible={ChatPopup} close={SetChatPopup} />

@@ -2,29 +2,38 @@ import { useState, useEffect } from 'react'
 import Followup from './Followup'
 import { usePopups } from '../../PopupsContext'
 import SidebarClientinfo from './SidebarClientinfo';
-import { fechCloseQuery, fechAssignQuery, fechLostQuery } from '../../../Reducer/querySclice';
+import { fechCloseQuery, fechAssignQuery, fechLostQuery, fetchQuotations } from '../../../Reducer/querySclice';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import ReqDetails from './ReqDetails';
 import { Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
-import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
+import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
+import ViewQuotation from '../../Popups/ViewQuotation';
 
-function CloseSidebar() {
+function CloseSidebar({ EmployeeId }) {
 
     const dispatch = useDispatch();
-    const { chat } = usePopups();
-    const [ChatPopup, SetChatPopup] = chat;
+    // const { chat } = usePopups();
+    // const [ChatPopup, SetChatPopup] = chat;
 
     const [followups, setfollowups] = useState([]);
 
+    // for view Quotation 
+    const [visible, setvisible] = useState(false);
+    const [QuotationFileName, setQuotationFileName] = useState("")
+
+
+
     const Querys = useSelector((state) => state.query.CloseQuery);
     const CQID = useSelector((state) => state.query.CQID);
+    const Quotation = useSelector((state) => state.query.Quotations);
 
     useEffect(() => {
+
         var config = {
             method: 'get',
-            url: `http://localhost:5000/api/followup/all/${CQID}`,
+            url: `${process.env.REACT_APP_HOST}/api/followup/all/${CQID}`,
             headers: {}
         };
 
@@ -34,17 +43,24 @@ function CloseSidebar() {
                 const resData = response.data;
 
                 if (resData.error) {
-                    console.log(resData.error);
+                    // console.log(resData.error);
+                    setfollowups([]);
                 } else {
                     setfollowups(resData.data);
-                    console.log(resData)
+                    // console.log(resData)
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                // console.log(error);
+                setfollowups([]);
             });
 
     }, [CQID]);
+
+    //fatching Quotaions
+    useEffect(() => {
+        dispatch(fetchQuotations(CQID));
+    }, [CQID])
 
     const HandelSendToRunning = () => {
 
@@ -56,7 +72,7 @@ function CloseSidebar() {
 
         var config = {
             method: 'patch',
-            url: `http://localhost:5000/api/query/status/${CQID}`,
+            url: `${process.env.REACT_APP_HOST}/api/query/status/${CQID}`,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -100,8 +116,8 @@ function CloseSidebar() {
                             onScreen: true
                         }
                     });
-                    dispatch(fechCloseQuery());
-                    dispatch(fechAssignQuery());
+                    dispatch(fechCloseQuery(EmployeeId));
+                    dispatch(fechAssignQuery(EmployeeId));
                 }
             })
             .catch(function (error) {
@@ -133,7 +149,7 @@ function CloseSidebar() {
 
         var config = {
             method: 'patch',
-            url: `http://localhost:5000/api/query/status/${CQID}`,
+            url: `${process.env.REACT_APP_HOST}/api/query/status/${CQID}`,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -177,8 +193,8 @@ function CloseSidebar() {
                             onScreen: true
                         }
                     });
-                    dispatch(fechCloseQuery());
-                    dispatch(fechLostQuery());
+                    dispatch(fechCloseQuery(EmployeeId));
+                    dispatch(fechLostQuery(EmployeeId));
                 }
             })
             .catch(function (error) {
@@ -201,7 +217,7 @@ function CloseSidebar() {
     }
 
     if (!CQID || !Querys) {
-        return <div className='flex justify-center items-center text-blue-500 mt-20'>Loading Requerment Details </div>
+        return <div className='flex justify-center items-center text-blue-500 mt-20'>Loading Requirement Details... </div>
     }
 
 
@@ -209,10 +225,14 @@ function CloseSidebar() {
         return obj.query_id === parseInt(CQID);
     })
 
+    if (req.length === 0) {
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>No Requirement...</div>;
+    }
+
     // console.log(req[0].client);
 
     return (
-        <div className='mx-6 mt-10 felx flex-col text-[14px] text-black'>
+        <div className='mx-6 mt-10 flex flex-col text-[14px] text-black'>
 
             <div>
 
@@ -232,7 +252,7 @@ function CloseSidebar() {
                                 <div className='p-1'>
                                     <li className='dropdownList' onClick={() => { HandelSendToRunning() }}>Send to Running</li>
                                     <li className='dropdownList' onClick={() => { HandelSendToLost() }}>Send to Lost</li>
-                                    <li className='dropdownList' onClick={() => { SetChatPopup(true) }}>Chat</li>
+                                    {/* <li className='dropdownList' onClick={() => { SetChatPopup(true) }}>Chat</li> */}
                                 </div>
                             </div>
                         </div>
@@ -279,18 +299,44 @@ function CloseSidebar() {
 
             </div>
 
+            <h1 className='text-primary font-medium py-3'>Quotations</h1>
+
+            <div className='max-h-[350px] overflow-y-scroll'>
+
+                {
+                    Quotation.length === 0 ? <div className='flex justify-center items-center text-blue-500 h-[100px]'>No Quotation...</div> :
+
+                        (Quotation.map((q, id) => {
+                            return (
+                                <div className='text-sm flex flex-col bg-gray-500 text-white shadow-md rounded-md my-2 mr-4 px-4 py-1' onClick={() => {
+                                    setvisible(true);
+                                    setQuotationFileName(q.generatedQuotationNumber.split("/")[0] + "-" + q.generatedQuotationNumber.split("/")[1]);
+
+                                }}>
+                                    <p className='py-1'>{q.createdAt.split("T")[0]}</p>
+                                    <div>
+                                        <p>{q.generatedQuotationNumber}</p>
+                                    </div>
+                                </div>
+                            )
+                        }))
+                }
+
+            </div>
+
             {/* <div className='flex flex-col mt-4'>
                 <label className='text-primary'>Follow Up</label>
                 <textarea className="my-2 pl-2 h-6 outline-none border-b-2 border-green-500" type="text" ></textarea>
                 <button className='px-4 py-2 mb-2 mx-2 bg-primary text-white font-medium rounded-md shadow-md' >Save</button>
             </div > */}
 
-            <div className='mt-8 mb-5 text-[14px]'>
+            {/* <div className='mt-8 mb-5 text-[14px]'>
                 <div className='flex flex-col justify-center items-center'>
-                    {/* <button className='w-[95%] px-4 py-2 mb-2 bg-primary text-white font-medium rounded-md shadow-md' >Send to Close</button> */}
                     <button onClick={() => SetChatPopup(true)} className='w-[95%] px-4 py-2 bg-green-500 text-white font-medium rounded-md shadow-md'>Chat</button>
                 </div>
-            </div>
+            </div> */}
+
+            <ViewQuotation visible={visible} file={QuotationFileName} close={setvisible} />
 
         </div>
     )

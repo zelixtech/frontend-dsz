@@ -36,7 +36,6 @@ export function fechEmployees() {
                 method: 'get',
                 url: `${process.env.REACT_APP_HOST}/api/employee/all`,
                 headers: {
-                    'Cookie': 'darshanSession=s%3AgIDiWuErG9DzIfFSZAA7vb3DJXrttbPk.qsQccDQ7Jit7ZIq3jyEDvZkSkIb0sYq%2FTUEvdrcWKuI'
                 }
             };
 

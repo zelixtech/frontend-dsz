@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react'
 import ClientRequest from '../ClientRequest';
-import { fechUnAssignQuery } from '../../../Reducer/querySclice';
+import { fechUnAssignQuery, setUAQID } from '../../../Reducer/querySclice';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 
 
-function NewRequrement({ SearchInput, SortType }) {
+function NewRequrement({ SearchInput, SortType, EmployeeId }) {
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fechUnAssignQuery());
+
+        setInterval(() => {
+            dispatch(fechUnAssignQuery());
+        }, 60000);
+
     }, [])
 
 
@@ -23,11 +27,11 @@ function NewRequrement({ SearchInput, SortType }) {
 
     // console.log(SortType);
 
-    if (SortType) {
+    if (SortType && UAQuery) {
 
         if (SortType === "A-Z") {
 
-            UAQuery = UAQuery.sort(function (a, b) {
+            UAQuery = UAQuery.slice().sort(function (a, b) {
                 const nameA = a.query_subject.toUpperCase();
                 const nameB = b.query_subject.toUpperCase();
                 if (nameA > nameB) {
@@ -39,6 +43,10 @@ function NewRequrement({ SearchInput, SortType }) {
                 return 0;
             });
 
+            if (UAQuery[0]) {
+                dispatch(setUAQID(UAQuery[0].query_id))
+            }
+
         } else if (SortType === "N-O") {
 
             UAQuery = UAQuery.slice().sort((x, y) => {
@@ -47,23 +55,51 @@ function NewRequrement({ SearchInput, SortType }) {
                 return y - x;
             });
 
+            if (UAQuery[0]) {
+                dispatch(setUAQID(UAQuery[0].query_id))
+            }
+
         } else if (SortType === "O-N") {
 
-            UAQuery = UAQuery.filter(({ query_source }) => query_source && query_source === "tradeindia")
+            UAQuery = UAQuery.slice().sort((x, y) => {
+                x = new Date(x.createdAt);
+                y = new Date(y.createdAt);
+                return x - y;
+            });
+
+            if (UAQuery[0]) {
+                dispatch(setUAQID(UAQuery[0].query_id))
+            }
 
         } else if (SortType === "TII") {
 
-            UAQuery = UAQuery.filter(({ query_source }) => query_source && query_source === "tradeindia")
+            UAQuery = UAQuery.filter(({ query_source }) => query_source && query_source === "indiamart")
+
+            if (UAQuery[0]) {
+                dispatch(setUAQID(UAQuery[0].query_id))
+            }
 
         } else if (SortType === "CST") {
-            UAQuery = UAQuery.filter(({ query_source }) => query_source && query_source !== "tradeindia")
+            UAQuery = UAQuery.filter(({ query_source }) => query_source && query_source !== "indiamart")
+
+            if (UAQuery[0]) {
+                dispatch(setUAQID(UAQuery[0].query_id))
+            }
         }
     }
 
 
 
-    if (!UAQuery || UAQuery.length === 0) {
-        return "Loading Requrements...";
+    if ((SearchInput || SortType) && (!UAQuery || UAQuery.length === 0)) {
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>No Requirement with matching filter...</div>;
+    }
+
+    if (!UAQuery) {
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>Loading Requirement...</div>;
+    }
+
+    if (UAQuery.length === 0) {
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>No Requirement...</div>;
     }
 
     // console.log(UAQuery);
@@ -79,7 +115,7 @@ function NewRequrement({ SearchInput, SortType }) {
                 UAQuery.map((q, index) => {
 
                     return (
-                        < ClientRequest request={q.query_subject} requestCatagory={q.query_product} date={q.createdAt.split("T")[0]} Status={"New"} Lastseen={q.updatedAt.split("T")[0]} key={index} QueryId={q.query_id} />
+                        < ClientRequest request={q.query_subject} requestCatagory={q.query_product} date={q.createdAt.split("T")[0]} Status={"New"} Lastseen={q.updatedAt.split("T")[0]} key={index} QueryId={q.query_id} EmployeeId={EmployeeId} />
                     )
 
                 })

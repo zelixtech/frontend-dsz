@@ -3,28 +3,36 @@ import Followup from './Followup';
 import { usePopups } from '../../PopupsContext';
 import SidebarClientinfo from './SidebarClientinfo';
 import { useSelector, useDispatch } from 'react-redux';
-import { fechAssignQuery, fechLostQuery, fechCloseQuery } from '../../../Reducer/querySclice';
+import { fechAssignQuery, fechLostQuery, fechCloseQuery, fetchQuotations } from '../../../Reducer/querySclice';
 import axios from 'axios';
 import { Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import ReqDetails from './ReqDetails';
-import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
+import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
+import ViewQuotation from '../../Popups/ViewQuotation';
 
-function LostSidebar() {
+function LostSidebar({ EmployeeId }) {
 
     const dispatch = useDispatch();
-    const { chat } = usePopups();
-    const [ChatPopup, SetChatPopup] = chat;
+    // const { chat } = usePopups();
+    // const [ChatPopup, SetChatPopup] = chat;
 
     const [followups, setfollowups] = useState([]);
 
     const Querys = useSelector((state) => state.query.LostQuery);
     const LQID = useSelector((state) => state.query.LQID);
+    const Quotation = useSelector((state) => state.query.Quotations);
+
+
+
+    // for view Quotation 
+    const [visible, setvisible] = useState(false);
+    const [QuotationFileName, setQuotationFileName] = useState("")
 
     useEffect(() => {
         var config = {
             method: 'get',
-            url: `http://localhost:5000/api/followup/all/${LQID}`,
+            url: `${process.env.REACT_APP_HOST}/api/followup/all/${LQID}`,
             headers: {}
         };
 
@@ -46,6 +54,11 @@ function LostSidebar() {
 
     }, [LQID]);
 
+    //fatching Quotaions
+    useEffect(() => {
+        dispatch(fetchQuotations(LQID));
+    }, [LQID])
+
     const HandelSendToRunning = () => {
 
         var data = JSON.stringify({
@@ -56,7 +69,7 @@ function LostSidebar() {
 
         var config = {
             method: 'patch',
-            url: `http://localhost:5000/api/query/status/${LQID}`,
+            url: `${process.env.REACT_APP_HOST}/api/query/status/${LQID}`,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -100,8 +113,8 @@ function LostSidebar() {
                             onScreen: true
                         }
                     });
-                    dispatch(fechAssignQuery());
-                    dispatch(fechLostQuery());
+                    dispatch(fechAssignQuery(EmployeeId));
+                    dispatch(fechLostQuery(EmployeeId));
                 }
             })
             .catch(function (error) {
@@ -133,7 +146,7 @@ function LostSidebar() {
 
         var config = {
             method: 'patch',
-            url: `http://localhost:5000/api/query/status/${LQID}`,
+            url: `${process.env.REACT_APP_HOST}/api/query/status/${LQID}`,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -165,7 +178,7 @@ function LostSidebar() {
                 } else {
 
                     Store.addNotification({
-                        title: "Request Sended To Close Successfully",
+                        title: "Request Sended To Done Successfully",
                         message: "Success",
                         type: "success",
                         insert: "top",
@@ -178,8 +191,8 @@ function LostSidebar() {
                         }
                     });
 
-                    dispatch(fechLostQuery());
-                    dispatch(fechCloseQuery());
+                    dispatch(fechLostQuery(EmployeeId));
+                    dispatch(fechCloseQuery(EmployeeId));
 
                 }
             })
@@ -203,7 +216,7 @@ function LostSidebar() {
     }
 
     if (!LQID || !Querys) {
-        return <div className='flex justify-center items-center text-blue-500 mt-20'>Loading Requerment Details </div>
+        return <div className='flex justify-center items-center text-blue-500 mt-20'>Loading Requirement Details </div>
     }
 
     const req = Querys.filter((obj) => {
@@ -211,11 +224,11 @@ function LostSidebar() {
     })
 
     if (!req[0]) {
-        return <div className='flex justify-center items-center text-blue-500 mt-20'>Loading Requerment Details </div>
+        return <div className='flex justify-center items-center text-blue-500 mt-20'>Loading Requirement Details </div>
     }
 
     return (
-        <div className='mx-6 mt-10 felx flex-col text-[14px] text-black'>
+        <div className='mx-6 mt-10 flex flex-col text-[14px] text-black'>
 
             <div>
 
@@ -234,8 +247,8 @@ function LostSidebar() {
                             <div className='hidden group-hover:block absolute top-2 right-3 bg-white shadow-md rounded-sm w-[150px]'>
                                 <div className='p-1'>
                                     <li className='dropdownList' onClick={() => { HandelSendToRunning() }}>Send to Running</li>
-                                    <li className='dropdownList' onClick={() => { HandelSendToClose() }}>Send to Close</li>
-                                    <li className='dropdownList' onClick={() => { SetChatPopup(true) }}>Chat</li>
+                                    <li className='dropdownList' onClick={() => { HandelSendToClose() }}>Send to Done</li>
+                                    {/* <li className='dropdownList' onClick={() => { SetChatPopup(true) }}>Chat</li> */}
                                 </div>
                             </div>
                         </div>
@@ -282,6 +295,31 @@ function LostSidebar() {
 
             </div>
 
+            <h1 className='text-primary font-medium py-3'>Quotations</h1>
+
+            <div className='max-h-[350px] overflow-y-scroll'>
+
+                {
+                    Quotation.length === 0 ? <div className='flex justify-center items-center text-blue-500 h-[100px]'>No Quotation...</div> :
+
+                        (Quotation.map((q, id) => {
+                            return (
+                                <div className='text-sm flex flex-col bg-gray-500 text-white shadow-md rounded-md my-2 mr-4 px-4 py-1' onClick={() => {
+                                    setvisible(true);
+                                    setQuotationFileName(q.generatedQuotationNumber.split("/")[0] + "-" + q.generatedQuotationNumber.split("/")[1]);
+
+                                }}>
+                                    <p className='py-1'>{q.createdAt.split("T")[0]}</p>
+                                    <div>
+                                        <p>{q.generatedQuotationNumber}</p>
+                                    </div>
+                                </div>
+                            )
+                        }))
+                }
+
+            </div>
+
             {/* <div className='flex flex-col mt-4'>
                 <label className='text-primary'>Follow Up</label>
                 <textarea className="my-2 pl-2 h-6 outline-none border-b-2 border-green-500" type="text" ></textarea>
@@ -292,9 +330,11 @@ function LostSidebar() {
                 <div className='flex flex-col justify-center items-center'>
                     <button className='w-[95%] px-4 py-2 mb-2 bg-primary text-white font-medium rounded-md shadow-md' onClick={() => { HandelSendToRunning() }} >Send to Running</button>
                     <button className='w-[95%] px-4 py-2 mb-2 bg-primary text-white font-medium rounded-md shadow-md' onClick={() => { HandelSendToClose() }} >Send to Close</button>
-                    <button onClick={() => SetChatPopup(true)} className='w-[95%] px-4 py-2 bg-green-500 text-white font-medium rounded-md shadow-md'>Chat</button>
+                    {/* <button onClick={() => SetChatPopup(true)} className='w-[95%] px-4 py-2 bg-green-500 text-white font-medium rounded-md shadow-md'>Chat</button> */}
                 </div>
             </div>
+
+            <ViewQuotation visible={visible} file={QuotationFileName} close={setvisible} />
 
         </div>
     )

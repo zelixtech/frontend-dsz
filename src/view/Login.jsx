@@ -4,7 +4,9 @@ import { useDispatch } from 'react-redux';
 import { setUser, setDept, setAuth } from '../Reducer/userSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { setEmployeeID } from '../Reducer/employeeSlice';
+import { setEmployeeId } from '../Reducer/userSlice';
+import { wrapper } from 'axios-cookiejar-support';
+import { CookieJar } from 'tough-cookie';
 
 function Login() {
 
@@ -36,6 +38,9 @@ function Login() {
 
     const HandelSubmmit = () => {
 
+        const jar = new CookieJar();
+        const client = wrapper(axios.create({ jar }));
+
         var data = JSON.stringify({
             "data": {
                 "email": LoginDetails.email,
@@ -46,13 +51,14 @@ function Login() {
         var config = {
             method: 'post',
             url: `${process.env.REACT_APP_HOST}/api/auth`,
+            // withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
             },
             data: data
         };
 
-        axios(config)
+        client(config)
             .then(function (response) {
                 console.log(JSON.stringify(response.data));
 
@@ -67,7 +73,7 @@ function Login() {
                     result = result.data;
                     dispach(setUser(result));
                     dispach(setDept(result.employee_department));
-                    dispach(setEmployeeID(result.employee_id));
+                    dispach(setEmployeeId(result.employee_id));
 
                     if (result.employee_isAdmin === 1) {
                         dispach(setAuth("Admin"));

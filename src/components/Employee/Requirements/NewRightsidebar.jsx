@@ -10,15 +10,15 @@ function NewRightsidebar() {
 
     const dispatch = useDispatch();
 
-    const { qoutation } = usePopups();
-    const [NewQoutation, SetNewQoutation] = qoutation;
+    // const { qoutation } = usePopups();
+    // const [NewQoutation, SetNewQoutation] = qoutation;
 
 
     const Querys = useSelector((state) => state.query.UnassignQuery);
     const UAQID = useSelector((state) => state.query.UAQID);
 
     if (!UAQID || !Querys) {
-        return "Loading Requerment Details"
+        return <div className='flex justify-center items-center mt-20 text-blue-500'>Loading Requirement Details...</div>
     }
 
     const req = Querys.filter((obj) => {
@@ -32,7 +32,7 @@ function NewRightsidebar() {
 
         var config = {
             method: 'patch',
-            url: `http://localhost:5000/api/client/${ClientId}/block`,
+            url: `${process.env.REACT_APP_HOST}/api/client/${ClientId}/block`,
             headers: {}
         };
 
@@ -52,7 +52,7 @@ function NewRightsidebar() {
 
 
     return (
-        <div className='mx-6 mt-10 felx flex-col text-[14px] text-black'>
+        <div className='mx-6 mt-10 flex flex-col text-[14px] text-black'>
 
             <div>
 

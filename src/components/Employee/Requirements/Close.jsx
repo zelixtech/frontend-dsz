@@ -5,12 +5,12 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 
 
-function Close({ SearchInput, SortType }) {
+function Close({ SearchInput, SortType, EmployeeId }) {
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fechCloseQuery());
+        dispatch(fechCloseQuery(EmployeeId));
     }, [])
 
 

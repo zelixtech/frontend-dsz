@@ -5,33 +5,53 @@ import SidebarClientinfo from './SidebarClientinfo';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { fechAssignQuery, fechCloseQuery, fechLostQuery } from '../../../Reducer/querySclice';
+import { fechAssignQuery, fechCloseQuery, fechLostQuery, fetchQuotations } from '../../../Reducer/querySclice';
 import { setClient } from '../../../Reducer/userSlice';
 import { Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import ReqDetails from './ReqDetails';
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 import EditQuery from '../../Popups/EditQuery';
+import ViewQuotation from '../../Popups/ViewQuotation';
 
 
-function RunningSidebar() {
+function RunningSidebar({ EmployeeId }) {
 
-    const disptch = useDispatch()
+    const dispatch = useDispatch()
 
     const { chat } = usePopups();
     const [ChatPopup, SetChatPopup] = chat;
+
     const { qoutation } = usePopups();
     const [NewQoutation, SetNewQoutation] = qoutation;
+
     const { EditReq } = usePopups();
     const [EditReqDetails, SetEditReqDetails] = EditReq;
 
+
+    //followups and Quotations
     const [followups, setfollowups] = useState([]);
-    const [Quotation, setQuotation] = useState([]);
     const [followup, setfollowup] = useState("");
     const [Isfollowup, setIsfollowup] = useState(true);
 
+
+    // for view Quotation 
+    const [visible, setvisible] = useState(false);
+    const [QuotationFileName, setQuotationFileName] = useState("")
+
+
+
+
+
+    // fatching data from reducers
     const Querys = useSelector((state) => state.query.AssignQuery);
     const AQID = useSelector((state) => state.query.AQID);
+    const Quotation = useSelector((state) => state.query.Quotations);
+
+    //fatching Quotaions
+    useEffect(() => {
+        dispatch(fetchQuotations(AQID));
+    }, [AQID])
 
 
     useEffect(() => {
@@ -48,43 +68,17 @@ function RunningSidebar() {
 
                 if (resData.error) {
                     // console.log(resData.error);
+                    setfollowups([]);
                 } else {
                     setfollowups(resData.data);
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                setfollowups([]);
+                // console.log(error);
             });
 
     }, [AQID, Isfollowup]);
-
-    useEffect(() => {
-        var config = {
-            method: 'get',
-            url: `${process.env.REACT_APP_HOST}/api/quotation/all/${AQID}`,
-            headers: {
-                'Cookie': 'darshanSession=s%3A1pHuUrUxP4VvI_q9PGtz-E7QGHQYB0bC.zID6MNIzgEpXQ8LL%2FylJsR8NfLPG8OSl6NzjnCatxDE'
-            }
-        };
-
-        axios(config)
-            .then(function (response) {
-                // console.log(JSON.stringify(response.data));
-
-                const resData = response.data;
-
-                if (resData.error) {
-                    // console.log(resData.error);
-                    setQuotation([]);
-                } else {
-                    setQuotation(resData.data);
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-                setQuotation([]);
-            });
-    }, [AQID])
 
 
     const HandelFollowupInput = (e) => {
@@ -230,8 +224,8 @@ function RunningSidebar() {
                             onScreen: true
                         }
                     });
-                    disptch(fechAssignQuery());
-                    disptch(fechLostQuery());
+                    dispatch(fechAssignQuery(EmployeeId));
+                    dispatch(fechLostQuery(EmployeeId));
                 }
             })
             .catch(function (error) {
@@ -263,7 +257,7 @@ function RunningSidebar() {
 
         var config = {
             method: 'patch',
-            url: `http://localhost:5000/api/query/status/${AQID}`,
+            url: `${process.env.REACT_APP_HOST}/api/query/status/${AQID}`,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -279,7 +273,7 @@ function RunningSidebar() {
                 if (resdata.error) {
 
                     Store.addNotification({
-                        title: "Not Able updating status of request",
+                        title: "Not Able updating status of Requirement",
                         message: resdata.errorMessage,
                         type: "warning",
                         insert: "top",
@@ -295,7 +289,7 @@ function RunningSidebar() {
                 } else {
 
                     Store.addNotification({
-                        title: "Request sended in Close Successfully",
+                        title: "Request sended in Done Successfully",
                         message: "Success",
                         type: "success",
                         insert: "top",
@@ -308,15 +302,15 @@ function RunningSidebar() {
                         }
                     });
 
-                    disptch(fechAssignQuery());
-                    disptch(fechCloseQuery());
+                    dispatch(fechAssignQuery(EmployeeId));
+                    dispatch(fechCloseQuery(EmployeeId));
 
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                // console.log(error);
                 Store.addNotification({
-                    title: "Somting Went Wrong...",
+                    title: "Something Went Wrong...",
                     message: "Server Side Error",
                     type: "danger",
                     insert: "top",
@@ -336,7 +330,7 @@ function RunningSidebar() {
 
 
     if (!AQID || !Querys) {
-        return "Loading Requerment Details"
+        return <div className='flex justify-center items-center mt-20 text-blue-500'>Loading Requirement Details...</div>
     }
 
     const req = Querys.filter((obj) => {
@@ -344,10 +338,10 @@ function RunningSidebar() {
     })
 
 
-    disptch(setClient(req[0].client));
+    dispatch(setClient(req[0].client));
 
     return (
-        <div className='mx-6 mt-10 felx flex-col text-[14px] text-black'>
+        <div className='mx-6 mt-10 flex flex-col text-[14px] text-black'>
 
             <div>
 
@@ -367,9 +361,9 @@ function RunningSidebar() {
                                 <div className='p-1'>
                                     <li className='dropdownList' onClick={() => { SetEditReqDetails(true) }}>Edit Requerment</li>
                                     <li className='dropdownList' onClick={() => { HandelSendToLost() }}>Send to Lost</li>
-                                    <li className='dropdownList' onClick={() => { HandelSendToClose() }}>Send to Close</li>
-                                    <li className='dropdownList' onClick={() => { SetNewQoutation(true) }}>Send Quotaion</li>
-                                    <li className='dropdownList' onClick={() => { SetChatPopup(true) }}>Chat</li>
+                                    <li className='dropdownList' onClick={() => { HandelSendToClose() }}>Send to Done</li>
+                                    <li className='dropdownList' onClick={() => { SetNewQoutation(true) }}>Send Quotation</li>
+                                    {/* <li className='dropdownList' onClick={() => { SetChatPopup(true) }}>Chat</li> */}
                                 </div>
                             </div>
                         </div>
@@ -425,7 +419,11 @@ function RunningSidebar() {
 
                         (Quotation.map((q, id) => {
                             return (
-                                <div className='text-sm flex flex-col bg-gray-500 text-white shadow-md rounded-md my-2 mr-4 px-4 py-1'>
+                                <div className='text-sm flex flex-col bg-gray-500 text-white shadow-md rounded-md my-2 mr-4 px-4 py-1' onClick={() => {
+                                    setvisible(true);
+                                    setQuotationFileName(q.generatedQuotationNumber.split("/")[0] + "-" + q.generatedQuotationNumber.split("/")[1]);
+
+                                }}>
                                     <p className='py-1'>{q.createdAt.split("T")[0]}</p>
                                     <div>
                                         <p>{q.generatedQuotationNumber}</p>
@@ -448,7 +446,7 @@ function RunningSidebar() {
 
 
 
-                    <button onClick={() => SetChatPopup(true)} className='w-[95%] px-4 py-2 bg-green-500 text-white font-medium rounded-md shadow-md'>Chat</button>
+                    <button onClick={() => SetNewQoutation(true)} className='w-[95%] px-4 py-2 bg-green-500 text-white font-medium rounded-md shadow-md'>Send Quotation</button>
 
                     {/* <div className='flex justify-between w-[95%] mt-3'>
 
@@ -460,7 +458,7 @@ function RunningSidebar() {
             </div>
 
             <EditQuery visible={EditReqDetails} close={SetEditReqDetails} ReqDetails={req[0]} />
-
+            <ViewQuotation visible={visible} file={QuotationFileName} close={setvisible} />
 
         </div>
     )

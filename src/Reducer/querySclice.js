@@ -29,12 +29,16 @@ const querySlice = createSlice({
         setCQID(state, action) {
             state.CQID = action.payload;
         },
+        setQuotations(state, action) {
+            state.Quotations = action.payload;
+        },
 
     }
 })
 
-export const { setAssignQuery, setUnassignQuery, setCloseQuery, setLostQuery, setUAQID, setAQID, setLQID, setCQID } = querySlice.actions;
+export const { setAssignQuery, setUnassignQuery, setCloseQuery, setLostQuery, setUAQID, setAQID, setLQID, setCQID, setQuotations } = querySlice.actions;
 export default querySlice.reducer;
+
 
 
 export function fechUnAssignQuery() {
@@ -44,18 +48,17 @@ export function fechUnAssignQuery() {
 
             var config = {
                 method: 'get',
-                url: `http://localhost:5000/api/query/all/unassigned/active`,
-                headers: {}
+                url: `${process.env.REACT_APP_HOST}/api/query/all/unassigned/active`,
+                // withCredentials: true,
             };
 
             axios(config)
                 .then(function (response) {
-                    // console.log(JSON.stringify(response.data));
+                    console.log(JSON.stringify(response.data));
                     var resData = response.data;
                     if (resData.error) {
-                        console.log("error while fatching querys");
+                        // console.log("error while fatching querys");
                     } else {
-
                         dispatch(setUnassignQuery(resData.data));
                         if (resData.data[0]) {
                             dispatch(setUAQID(resData.data[0].query_id))
@@ -77,7 +80,7 @@ export function fechUnAssignQuery() {
 }
 
 
-export function fechAssignQuery() {
+export function fechAssignQuery(EmployeeId) {
 
     return async function fechAssignQueryThunk(dispatch, getState) {
         try {
@@ -85,7 +88,7 @@ export function fechAssignQuery() {
             var config = {
                 method: 'get',
                 // url: `${process.env.REACT_APP_HOST}/api/query/all/employee/1`,
-                url: `http://localhost:5000/api/query/all/employee?employee_id=1&query_state=running`,
+                url: `${process.env.REACT_APP_HOST}/api/query/all/employee?employee_id=${EmployeeId}&query_state=running`,
                 headers: {}
             };
 
@@ -94,7 +97,7 @@ export function fechAssignQuery() {
                     // console.log(JSON.stringify(response.data));
                     var resData = response.data;
                     if (resData.error) {
-                        console.log("error while fatching querys assign to Employee");
+                        // console.log("error while fatching querys assign to Employee");
                     } else {
                         dispatch(setAssignQuery(resData.data));
                         if (resData.data[0]) {
@@ -117,7 +120,7 @@ export function fechAssignQuery() {
 }
 
 
-export function fechLostQuery() {
+export function fechLostQuery(EmployeeId) {
 
     return async function fechLostQueryThunk(dispatch, getState) {
         try {
@@ -125,7 +128,7 @@ export function fechLostQuery() {
             var config = {
                 method: 'get',
                 // url: `${process.env.REACT_APP_HOST}/api/query/all/employee/1`,
-                url: `http://localhost:5000/api/query/all/employee?employee_id=1&query_state=lost`,
+                url: `${process.env.REACT_APP_HOST}/api/query/all/employee?employee_id=${EmployeeId}&query_state=lost`,
                 headers: {}
             };
 
@@ -134,7 +137,7 @@ export function fechLostQuery() {
                     // console.log(JSON.stringify(response.data));
                     var resData = response.data;
                     if (resData.error) {
-                        console.log("error while fatching querys assign to Employee");
+                        // console.log("error while fatching querys assign to Employee");
                     } else {
                         dispatch(setLostQuery(resData.data));
                         if (resData.data[0]) {
@@ -157,7 +160,7 @@ export function fechLostQuery() {
 }
 
 
-export function fechCloseQuery() {
+export function fechCloseQuery(EmployeeId) {
 
     return async function fechCloseQueryThunk(dispatch, getState) {
         try {
@@ -165,7 +168,7 @@ export function fechCloseQuery() {
             var config = {
                 method: 'get',
                 // url: `${process.env.REACT_APP_HOST}/api/query/all/employee/1`,
-                url: `http://localhost:5000/api/query/all/employee?employee_id=1&query_state=close`,
+                url: `${process.env.REACT_APP_HOST}/api/query/all/employee?employee_id=${EmployeeId}&query_state=close`,
                 headers: {}
             };
 
@@ -174,7 +177,7 @@ export function fechCloseQuery() {
                     // console.log(JSON.stringify(response.data));
                     var resData = response.data;
                     if (resData.error) {
-                        console.log("error while fatching close querys assign to Employee");
+                        // console.log("error while fatching close querys assign to Employee");
                     } else {
                         dispatch(setCloseQuery(resData.data));
 
@@ -189,6 +192,42 @@ export function fechCloseQuery() {
                 })
                 .catch(function (error) {
                     console.log(error);
+                });
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+}
+
+export function fetchQuotations(AQID) {
+
+    return async function fetchQuotationsThunk(dispatch, getState) {
+        try {
+            var config = {
+                method: 'get',
+                url: `${process.env.REACT_APP_HOST}/api/quotation/all/${AQID}`,
+                headers: {
+                    'Cookie': 'darshanSession=s%3A1pHuUrUxP4VvI_q9PGtz-E7QGHQYB0bC.zID6MNIzgEpXQ8LL%2FylJsR8NfLPG8OSl6NzjnCatxDE'
+                }
+            };
+
+            axios(config)
+                .then(function (response) {
+                    // console.log(JSON.stringify(response.data));
+                    const resData = response.data;
+
+                    if (resData.error) {
+                        // console.log(resData.error);
+                        dispatch(setQuotations([]));
+                    } else {
+                        dispatch(setQuotations(resData.data));
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    dispatch(setQuotations([]));
                 });
 
         } catch (error) {

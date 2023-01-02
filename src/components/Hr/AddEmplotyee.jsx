@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios'
 import { Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
+import { useSelector } from 'react-redux';
 
 function AddEmplotyee() {
 
@@ -12,6 +13,7 @@ function AddEmplotyee() {
     var date = yyyy + "-" + mm + "-" + dd;
 
     const [BankDetails, setBankDetails] = useState(false);
+    const Auth = useSelector((state) => state.user.auth);
 
 
     const errorMessages = {
@@ -238,7 +240,7 @@ function AddEmplotyee() {
                         "bank_info_ifsc_code": "",
                         "employee_name_as_in_bank": "",
                         "bank_account_no": "",
-                        "employee_id": 3,
+                        "employee_id": "",
                     });
 
                     setData({
@@ -251,9 +253,10 @@ function AddEmplotyee() {
                         "employee_password": "",
                         "employee_dob": "",
                         "employee_address": "",
-                        "employee_relieve_date": "2022-12-15",
+                        "employee_relieve_date": date,
                         "employee_department": "Employee",
-                        "employee_isAdmin": false
+                        "employee_isAdmin": false,
+                        "employee_isHR": false
                     });
 
                 }
@@ -319,7 +322,7 @@ function AddEmplotyee() {
 
                         <div className='flex flex-col'>
                             <label className='label'>Designation</label>
-                            <select id="designation" name="employee_designation" className='NewEmployeeinput  w-[300px]' onChange={(e) => { HandelEmployeeDetailInput(e) }} value={Data.employee_designation}>
+                            {/* <select id="designation" name="employee_designation" className='NewEmployeeinput  w-[300px]' onChange={(e) => { HandelEmployeeDetailInput(e) }} value={Data.employee_designation}>
                                 <option value="Managing Director">Managing Director</option>
                                 <option value="Sales Manager">Sales Manager</option>
                                 <option value="Sales Executive">Sales Executive</option>
@@ -329,7 +332,8 @@ function AddEmplotyee() {
                                 <option value="Hr-Admin">Hr-Admin</option>
                                 <option value="Back offices">Back office </option>
                                 <option value="Sales/Field Executive">Sales/Field Executive</option>
-                            </select>
+                            </select> */}
+                            <input className='NewEmployeeinput' type="text" name="employee_designation" onChange={(e) => { HandelEmployeeDetailInput(e) }} value={Data.employee_designation} />
                         </div>
 
 

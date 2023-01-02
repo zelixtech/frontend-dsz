@@ -31,7 +31,7 @@ export function fechActiveClients() {
 
             var config = {
                 method: 'get',
-                url: `http://localhost:5000/api/client/all/active`,
+                url: `${process.env.REACT_APP_HOST}/api/client/all/active`,
                 headers: {}
             };
 
@@ -69,7 +69,7 @@ export function fechBlockClients() {
 
             var config = {
                 method: 'get',
-                url: `http://localhost:5000/api/client/all/blocked`,
+                url: `${process.env.REACT_APP_HOST}/api/client/all/blocked`,
                 headers: {}
             };
 

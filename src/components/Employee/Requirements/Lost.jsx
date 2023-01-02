@@ -5,28 +5,33 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 
 
-function Lost({ SearchInput, SortType }) {
+function Lost({ SearchInput, SortType, EmployeeId }) {
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fechLostQuery());
+        dispatch(fechLostQuery(EmployeeId));
     }, [])
 
 
     var LQuery = useSelector((state) => state.query.LostQuery);
 
-    if (SearchInput) {
+    if (LQuery && SearchInput) {
         LQuery = LQuery.filter(({ query_subject }) => query_subject && query_subject.toLowerCase().includes(SearchInput.toLowerCase()))
+
+        if (LQuery[0]) {
+            dispatch(setLQID(LQuery[0].query_id))
+        }
+
     }
 
     // console.log(SortType);
 
-    if (SortType) {
+    if (SortType && LQuery) {
 
         if (SortType === "A-Z") {
 
-            LQuery = LQuery.sort(function (a, b) {
+            LQuery = LQuery.slice().sort(function (a, b) {
                 const nameA = a.query_subject.toUpperCase();
                 const nameB = b.query_subject.toUpperCase();
                 if (nameA > nameB) {
@@ -38,6 +43,10 @@ function Lost({ SearchInput, SortType }) {
                 return 0;
             });
 
+            if (LQuery[0]) {
+                dispatch(setLQID(LQuery[0].query_id))
+            }
+
         } else if (SortType === "N-O") {
 
             LQuery = LQuery.slice().sort((x, y) => {
@@ -45,6 +54,10 @@ function Lost({ SearchInput, SortType }) {
                 y = new Date(y.createdAt);
                 return y - x;
             });
+
+            if (LQuery[0]) {
+                dispatch(setLQID(LQuery[0].query_id))
+            }
 
         } else if (SortType === "O-N") {
 
@@ -54,21 +67,37 @@ function Lost({ SearchInput, SortType }) {
                 return x - y;
             });
 
+            if (LQuery[0]) {
+                dispatch(setLQID(LQuery[0].query_id))
+            }
+
         } else if (SortType === "TII") {
 
-            LQuery = LQuery.filter(({ query_source }) => query_source && query_source === "tradeindia")
+            LQuery = LQuery.filter(({ query_source }) => query_source && query_source === "indiamart")
+
+            if (LQuery[0]) {
+                dispatch(setLQID(LQuery[0].query_id))
+            }
 
         } else if (SortType === "CST") {
-            LQuery = LQuery.filter(({ query_source }) => query_source && query_source !== "tradeindia")
+            LQuery = LQuery.filter(({ query_source }) => query_source && query_source !== "indiamart")
+
+            if (LQuery[0]) {
+                dispatch(setLQID(LQuery[0].query_id))
+            }
         }
     }
 
     if ((SearchInput || SortType) && (!LQuery || LQuery.length === 0)) {
-        return <div className='flex justify-center items-center pt-20 text-blue-500'>No requrements with matching filter...</div>;
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>No Requirement with matching filter...</div>;
     }
 
-    if (!LQuery || LQuery.length === 0) {
-        return <div className='flex justify-center items-center pt-20 text-blue-500'>Loading Requrements...</div>;
+    if (!LQuery) {
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>Loading Requirement...</div>;
+    }
+
+    if (LQuery.length === 0) {
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>No Requirement...</div>;
     }
 
     // console.log(LQuery);

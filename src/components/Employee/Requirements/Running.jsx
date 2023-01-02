@@ -4,24 +4,31 @@ import { fechAssignQuery } from '../../../Reducer/querySclice';
 import { setAQID } from '../../../Reducer/querySclice';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import { setSortFilterType } from '../../../Reducer/filtersSlice';
 
 
-function Running({ SearchInput, SortType }) {
+function Running({ SearchInput, SortType, EmployeeId }) {
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fechAssignQuery());
+        dispatch(fechAssignQuery(EmployeeId));
+        console.log(EmployeeId);
     }, [])
 
 
     var AQuery = useSelector((state) => state.query.AssignQuery);
 
-    if (SearchInput) {
+    if (AQuery && SearchInput) {
         AQuery = AQuery.filter(({ query_subject }) => query_subject && query_subject.toLowerCase().includes(SearchInput.toLowerCase()))
+
+        if (AQuery[0]) {
+            dispatch(setAQID(AQuery[0].query_id))
+        }
+
     }
 
-    if (SortType) {
+    if (AQuery && SortType) {
 
         if (SortType === "A-Z") {
 
@@ -37,41 +44,62 @@ function Running({ SearchInput, SortType }) {
                 return 0;
                 // console.log(a.query_subject, b.query_subject)
             });
+            if (AQuery[0]) {
+                dispatch(setAQID(AQuery[0].query_id))
+            }
 
         } else if (SortType === "N-O") {
 
             AQuery = AQuery.slice().sort((x, y) => {
-                x = new Date(x.createdAt);
-                y = new Date(y.createdAt);
+                x = new Date(x.updatedAt);
+                y = new Date(y.updatedAt);
                 return y - x;
             });
+            if (AQuery[0]) {
+                dispatch(setAQID(AQuery[0].query_id))
+            }
 
         } else if (SortType === "O-N") {
 
             AQuery = AQuery.slice().sort((x, y) => {
-                x = new Date(x.createdAt);
-                y = new Date(y.createdAt);
+                x = new Date(x.updatedAt);
+                y = new Date(y.updatedAt);
                 return x - y;
             });
+            if (AQuery[0]) {
+                dispatch(setAQID(AQuery[0].query_id))
+            }
 
         } else if (SortType === "TII") {
 
-            AQuery = AQuery.filter(({ query_source }) => query_source && query_source === "tradeindia")
+            AQuery = AQuery.filter(({ query_source }) => query_source && query_source === "indiamart")
+            if (AQuery[0]) {
+                dispatch(setAQID(AQuery[0].query_id))
+            }
 
         } else if (SortType === "CST") {
-            AQuery = AQuery.filter(({ query_source }) => query_source && query_source !== "tradeindia")
+            AQuery = AQuery.filter(({ query_source }) => query_source && query_source !== "indiamart")
+            if (AQuery[0]) {
+                dispatch(setAQID(AQuery[0].query_id))
+            }
         }
+
+        // dispatch(setSortFilterType(undefined));
     }
 
     if ((SearchInput || SortType) && (!AQuery || AQuery.length === 0)) {
-        return <div className='flex justify-center items-center pt-20 text-blue-500'>No requrements with matching filter...</div>;
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>No Requirement with matching filter...</div>;
     }
 
     if (!AQuery) {
-        return <div className='flex justify-center items-center pt-20 text-blue-500'>Loading Requrements...</div>;
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>Loading Requirement...</div>;
     }
 
-    console.log(AQuery);
+    if (AQuery.length === 0) {
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>No Requirement...</div>;
+    }
+
+    // console.log(AQuery);
 
     return (
         <div className='my-5 overflow-y-scroll h-screen'>

@@ -52,7 +52,7 @@ function SearchBar({ Input, searchHandler }) {
                             <li className='dropdownList' onClick={() => { dispatch(setSortFilterType("A-Z")) }}>A-Z</li>
                             <li className='dropdownList' onClick={() => { dispatch(setSortFilterType("N-O")) }}>⬇New-Old</li>
                             <li className='dropdownList' onClick={() => { dispatch(setSortFilterType("O-N")) }}>⬆Old-New</li>
-                            <li className='dropdownList' onClick={() => { dispatch(setSortFilterType("TII")) }}>Tread India Inquirys</li>
+                            <li className='dropdownList' onClick={() => { dispatch(setSortFilterType("TII")) }}>India Mart Inquirys</li>
                             <li className='dropdownList' onClick={() => { dispatch(setSortFilterType("CST")) }}>Custom Inquirys</li>
                             <li className='dropdownList' onClick={() => { dispatch(setSortFilterType(undefined)) }}>Clear Filter</li>
                         </div>

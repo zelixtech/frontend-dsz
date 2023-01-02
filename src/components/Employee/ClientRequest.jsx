@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { fechAssignQuery } from '../../Reducer/querySclice';
 import { fechUnAssignQuery } from '../../Reducer/querySclice';
 
-function ClientRequest({ request, requestCatagory, date, Status, Lastseen, QueryId }) {
+function ClientRequest({ request, requestCatagory, date, QueryId, EmployeeId }) {
 
 
     const dispatch = useDispatch();
@@ -16,14 +16,14 @@ function ClientRequest({ request, requestCatagory, date, Status, Lastseen, Query
 
         var data = JSON.stringify({
             "data": {
-                "employee_id": 1,
+                "employee_id": EmployeeId,
                 "query_id": QueryId
             }
         });
 
         var config = {
             method: 'patch',
-            url: 'http://localhost:5000/api/query/assign',
+            url: `${process.env.REACT_APP_HOST}/api/query/assign`,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -56,7 +56,7 @@ function ClientRequest({ request, requestCatagory, date, Status, Lastseen, Query
 
                 } else {
 
-                    dispatch(fechAssignQuery());
+                    dispatch(fechAssignQuery(EmployeeId));
                     dispatch(fechUnAssignQuery());
 
                     Store.addNotification({

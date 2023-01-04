@@ -1,11 +1,65 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import {
     XCircleIcon
 } from '@heroicons/react/24/outline'
 
-function ViewQuotation({ visible, file, close }) {
+function ViewQuotation({ visible, file, close, data }) {
 
-    // console.log('http://localhost:8000/docs/' + file + ".pdf")
+    if (data) {
+        var quotation_data = data.quotation_data ? JSON.parse(data.quotation_data) : {};
+        // quotation_data = {};
+    }
+
+    useEffect(() => {
+        setURL(`http://localhost:8000/docs/${file}.pdf`);
+    }, [file])
+
+
+    const [Loading, setLoading] = useState(false)
+    const [URL, setURL] = useState(`http://localhost:8000/docs/${file}.pdf`)
+    const [Error, setError] = useState("");
+
+    console.log(URL);
+
+    const handelGenerate = async () => {
+
+        if (!quotation_data[0]) {
+            setError("Quotation Data is Not Available");
+        } else {
+            let pevData = { ...quotation_data[0] };
+            pevData["generatedQuotationNumber"] = data.generatedQuotationNumber;
+            pevData["quotation"] = "old";
+
+
+            console.log(pevData);
+
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(pevData)
+            };
+
+
+            setLoading(true);
+
+            // console.log(Loading);
+
+            try {
+
+                setError("")
+
+                await fetch('http://localhost:8000/download', requestOptions)
+                    .then(response => response.text())
+                    .then(text => { setURL(text); });
+
+            } catch {
+                setError("Error while Generating Quotation!");
+            }
+            // console.log(URL)
+            setLoading(false);
+        }
+
+    }
 
     if (!visible) return null;
 
@@ -23,9 +77,10 @@ function ViewQuotation({ visible, file, close }) {
                 </div>
 
 
-                <object data={'http://localhost:8000/docs/' + file + ".pdf"} type="application/pdf" width="100%" height="100%" className='W-[90%] h-screen mx-auto'>
-                    <div className='flex justify-center items-center mt-10'>
-                        <button className=' py-2 px-4 bg-green-500 rounded-md shadow-sm text-white'>Regenerate Quotation</button>
+                <object data={URL} type="application/pdf" width="100%" height="100%" className='W-[90%] h-screen mx-auto'>
+                    <div className='flex justify-center items-center flex-col mt-10'>
+                        <button className=' py-2 px-4 bg-green-500 rounded-md shadow-sm text-white' onClick={() => { handelGenerate() }}>{Loading ? "Regenerate Quotation..." : "Regenerate Quotation"} </button>
+                        <p className='py-5 text-rose-500'>{Error !== "" ? Error : null}</p>
                     </div>
                 </object>
 

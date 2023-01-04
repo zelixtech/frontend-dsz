@@ -8,6 +8,7 @@ import axios from 'axios';
 import {
     EllipsisVerticalIcon,
 } from '@heroicons/react/24/outline'
+import QueryDetails from '../../Popups/QueryDetails';
 
 function ActiveClientSidebar() {
 
@@ -18,6 +19,11 @@ function ActiveClientSidebar() {
 
     const { EditClient } = usePopups();
     const [EditClientDetails, SetEditClientDetails] = EditClient;
+
+    //view Query Details
+    const [visible, setvisible] = useState(false);
+    const [QueryDetailsId, setQueryDetailsId] = useState(undefined);
+    const [QueryDetail, setQueryDetail] = useState(undefined);
 
     // console.log(ClientId);
 
@@ -121,8 +127,34 @@ function ActiveClientSidebar() {
 
                 {
                     query.length > 0 ? query.map((q, index) => {
+
                         return (
-                            < Orders OrderId={q.query_id} OrderDate={q.createdAt.split("T")[0]} OrderSatus={q.query_state} OrderDetails={q.query_subject} key={index} />
+                            <div className='shadow-md text-sm m-2 px-3 py-5 rounded-sm hover:cursor-pointer' key={index} onClick={
+                                () => {
+                                    setQueryDetailsId(q.query_id);
+                                    setQueryDetail(q);
+                                    setvisible(true);
+
+                                }
+                            }>
+                                <div className='flex justify-between'>
+                                    <div>
+                                        <h1 className=''>Inquiry Id</h1>
+                                        <p className='text-black font-medium'>{q.query_id}</p>
+                                    </div>
+                                    <div>
+                                        <h1 className=''>Inquiry Date</h1>
+                                        <p className='text-black font-medium'>{q.createdAt.split("T")[0]}</p>
+                                    </div>
+                                    <span className='bg-blue-100 text-primary px-2 py-1 h-[50%] rounded-sm'>{q.query_state}</span>
+                                </div>
+
+                                <div className='pt-2'>
+                                    <h1>Order Details</h1>
+                                    <p className='text-black font-medium'>{q.query_subject}</p>
+                                </div>
+
+                            </div>
                         )
                     }) : <p className='mt-[45%] text-center'>No Orders from clients</p>
                 }
@@ -138,6 +170,8 @@ function ActiveClientSidebar() {
             </div>
 
             <EditClientDitals visible={EditClientDetails} close={SetEditClientDetails} />
+
+            <QueryDetails visible={visible} close={setvisible} QueryId={QueryDetailsId} Query={QueryDetail} Client={ClientData[0]} />
 
         </div>
     )

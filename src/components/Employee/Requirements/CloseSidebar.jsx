@@ -28,6 +28,7 @@ function CloseSidebar({ EmployeeId }) {
     const Querys = useSelector((state) => state.query.CloseQuery);
     const CQID = useSelector((state) => state.query.CQID);
     const Quotation = useSelector((state) => state.query.Quotations);
+    const [QuotationData, setQuotationData] = useState({});
 
     useEffect(() => {
 
@@ -308,10 +309,10 @@ function CloseSidebar({ EmployeeId }) {
 
                         (Quotation.map((q, id) => {
                             return (
-                                <div className='text-sm flex flex-col bg-gray-500 text-white shadow-md rounded-md my-2 mr-4 px-4 py-1' onClick={() => {
+                                <div className='text-sm flex flex-col bg-blue-100 text-blue-500 shadow-sm rounded-md my-2 mr-4 px-4 py-1' onClick={() => {
                                     setvisible(true);
                                     setQuotationFileName(q.generatedQuotationNumber.split("/")[0] + "-" + q.generatedQuotationNumber.split("/")[1]);
-
+                                    setQuotationData(q);
                                 }}>
                                     <p className='py-1'>{q.createdAt.split("T")[0]}</p>
                                     <div>
@@ -336,7 +337,7 @@ function CloseSidebar({ EmployeeId }) {
                 </div>
             </div> */}
 
-            <ViewQuotation visible={visible} file={QuotationFileName} close={setvisible} />
+            <ViewQuotation visible={visible} file={QuotationFileName} close={setvisible} data={QuotationData} />
 
         </div>
     )

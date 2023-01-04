@@ -59,7 +59,7 @@ function EditEmployeeDetails({ visible, close, Employee, Employee_Bank_info }) {
             "employee_office_email": Employee.employee_office_email,
             "employee_email": Employee.employee_email,
             // "employee_password": Employee.employee_password,
-            "employee_password": "Admin@12345",
+            "employee_password": "",
             "employee_dob": Employee.employee_dob,
             "employee_address": Employee.employee_address,
             "employee_relieve_date": Employee.employee_relieve_date,
@@ -284,7 +284,7 @@ function EditEmployeeDetails({ visible, close, Employee, Employee_Bank_info }) {
                     <div className='flex justify-between px-20 pt-5 pb-2'>
                         <h1 className='heading'>Edit Employee Details</h1>
                         <XCircleIcon onClick={() => {
-                            dispatch(fechEmployees);
+                            dispatch(fechEmployees());
                             dispatch(setEmployeeID(Employee.employee_id));
                             close(false)
                         }}
@@ -358,6 +358,11 @@ function EditEmployeeDetails({ visible, close, Employee, Employee_Bank_info }) {
                     <div className='flex flex-col'>
                         <label className='label'>Resident Address</label>
                         <textarea className='NewEmployeeinput h-[100px]' type="text" name="employee_address" value={EmployeeDetails.employee_address} onChange={(e) => { HandelEmployeeDetailsInput(e) }}></textarea>
+                    </div>
+
+                    <div className='flex flex-col'>
+                        <label className='label'>Password</label>
+                        <input className='NewEmployeeinput' type="text" name="employee_password" value={EmployeeDetails.employee_password} onChange={(e) => { HandelEmployeeDetailsInput(e) }} />
                     </div>
 
                     <div>

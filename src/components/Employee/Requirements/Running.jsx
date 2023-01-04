@@ -22,9 +22,9 @@ function Running({ SearchInput, SortType, EmployeeId }) {
     if (AQuery && SearchInput) {
         AQuery = AQuery.filter(({ query_subject }) => query_subject && query_subject.toLowerCase().includes(SearchInput.toLowerCase()))
 
-        if (AQuery[0]) {
-            dispatch(setAQID(AQuery[0].query_id))
-        }
+        // if (AQuery[0]) {
+        //     dispatch(setAQID(AQuery[0].query_id))
+        // }
 
     }
 
@@ -44,9 +44,7 @@ function Running({ SearchInput, SortType, EmployeeId }) {
                 return 0;
                 // console.log(a.query_subject, b.query_subject)
             });
-            if (AQuery[0]) {
-                dispatch(setAQID(AQuery[0].query_id))
-            }
+
 
         } else if (SortType === "N-O") {
 
@@ -55,9 +53,7 @@ function Running({ SearchInput, SortType, EmployeeId }) {
                 y = new Date(y.updatedAt);
                 return y - x;
             });
-            if (AQuery[0]) {
-                dispatch(setAQID(AQuery[0].query_id))
-            }
+
 
         } else if (SortType === "O-N") {
 
@@ -66,24 +62,16 @@ function Running({ SearchInput, SortType, EmployeeId }) {
                 y = new Date(y.updatedAt);
                 return x - y;
             });
-            if (AQuery[0]) {
-                dispatch(setAQID(AQuery[0].query_id))
-            }
 
         } else if (SortType === "TII") {
 
             AQuery = AQuery.filter(({ query_source }) => query_source && query_source === "indiamart")
-            if (AQuery[0]) {
-                dispatch(setAQID(AQuery[0].query_id))
-            }
+
 
         } else if (SortType === "CST") {
             AQuery = AQuery.filter(({ query_source }) => query_source && query_source !== "indiamart")
-            if (AQuery[0]) {
-                dispatch(setAQID(AQuery[0].query_id))
-            }
-        }
 
+        }
         // dispatch(setSortFilterType(undefined));
     }
 
@@ -98,6 +86,10 @@ function Running({ SearchInput, SortType, EmployeeId }) {
     if (AQuery.length === 0) {
         return <div className='flex justify-center items-center pt-20 text-blue-500'>No Requirement...</div>;
     }
+
+    // if (AQuery[0]) {
+    //     dispatch(setAQID(AQuery[0].query_id))
+    // }
 
     // console.log(AQuery);
 
@@ -125,7 +117,7 @@ function Running({ SearchInput, SortType, EmployeeId }) {
                             </div>
                             <div className='w-[10%] h-[99%] my-auto'>
                                 <button className='px-4 py-1 h-8 bg-blue-500 text-base font-[400] text-white rounded-[4px] shadow-sm' id={q.query_id} onClick={(e) => {
-                                    dispatch(setAQID(e.target.id))
+                                    dispatch(setAQID(q.query_id))
                                 }}> View </button>
                             </div>
 

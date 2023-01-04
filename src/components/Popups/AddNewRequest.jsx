@@ -11,6 +11,8 @@ import { useDispatch } from 'react-redux';
 function AddNewRequest({ visible, close }) {
 
     const [IsNewClient, setIsNewClient] = useState(false)
+    const [MobileExist, setMobileExist] = useState(false)
+    const [EmailExist, setEmailExist] = useState(false)
     const [Client, setClient] = useState({});
     const [ClientName, setClientName] = useState();
     const [Clients, setClients] = useState([]);
@@ -20,13 +22,12 @@ function AddNewRequest({ visible, close }) {
         setIsNewClient(!IsNewClient);
     }
 
-    useEffect(() => {
+    const fetchClients = () => {
         var config = {
             method: 'get',
             url: `${process.env.REACT_APP_HOST}/api/client/all/active`,
             headers: {}
         };
-
         axios(config)
             .then(function (response) {
                 // console.log(JSON.stringify(response.data));
@@ -38,7 +39,7 @@ function AddNewRequest({ visible, close }) {
 
                     Store.addNotification({
                         title: "Not Able to load Clients",
-                        message: "Error while loading clients",
+                        message: "Please Open Popup Again",
                         type: "warning",
                         insert: "top",
                         container: "top-right",
@@ -57,8 +58,12 @@ function AddNewRequest({ visible, close }) {
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                // console.log(error);
             });
+    }
+
+    useEffect(() => {
+        fetchClients();
     }, [])
 
 
@@ -78,9 +83,15 @@ function AddNewRequest({ visible, close }) {
         "client_name": "",
         "client_mobile": "",
         "client_email": "",
-        "client_address": "",
+        "client_shipping_address": "",
+        "client_billing_address": "",
         "client_city": "",
-        "client_industry": ""
+        "client_company_name": "",
+        "client_country_iso": "",
+        "client_state": "",
+        "client_gst_no": "",
+        "client_alternate_email": "",
+        "client_alternate_mobile": "",
     })
 
 
@@ -99,6 +110,74 @@ function AddNewRequest({ visible, close }) {
     const HandelClientDetailInput = (e) => {
 
         var field = e.target.name;
+
+        if (field === "client_mobile") {
+            var config = {
+                method: 'get',
+                url: `${process.env.REACT_APP_HOST}/api/client/check?client_mobile=${e.target.value}`,
+
+            };
+
+            axios(config)
+                .then(function (response) {
+                    console.log(JSON.stringify(response.data));
+                    if (response.data.error) {
+                        if (response.data.errorType === "Conflict") {
+                            setMobileExist(true);
+                        } else {
+                            setMobileExist(false);
+                        }
+                    } else {
+                        setMobileExist(false);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error.response.data);
+                    if (error.response.data.error) {
+                        if (error.response.data.errorType === "Conflict") {
+                            setMobileExist(true);
+                        } else {
+                            setMobileExist(false);
+                        }
+                    } else {
+                        setMobileExist(false);
+                    }
+                });
+        }
+
+        if (field === "client_email") {
+            var config = {
+                method: 'get',
+                url: `${process.env.REACT_APP_HOST}/api/client/check?client_email=${e.target.value}`,
+
+            };
+
+            axios(config)
+                .then(function (response) {
+                    console.log(JSON.stringify(response.data));
+                    if (response.data.error) {
+                        if (response.data.errorType === "Conflict") {
+                            setEmailExist(true);
+                        } else {
+                            setEmailExist(false);
+                        }
+                    } else {
+                        setEmailExist(false);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error.response.data);
+                    if (error.response.data.error) {
+                        if (error.response.data.errorType === "Conflict") {
+                            setEmailExist(true);
+                        } else {
+                            setEmailExist(false);
+                        }
+                    } else {
+                        setEmailExist(false);
+                    }
+                });
+        }
 
         var preData = { ...ClientData };
         preData[field] = e.target.value;
@@ -120,7 +199,6 @@ function AddNewRequest({ visible, close }) {
             url: `${process.env.REACT_APP_HOST}/api/client`,
             headers: {
                 'Content-Type': 'application/json',
-                'Cookie': 'darshanSession=s%3AgIDiWuErG9DzIfFSZAA7vb3DJXrttbPk.qsQccDQ7Jit7ZIq3jyEDvZkSkIb0sYq%2FTUEvdrcWKuI'
             },
             data: data
         };
@@ -151,6 +229,9 @@ function AddNewRequest({ visible, close }) {
 
                 } else {
 
+
+                    fetchClients();
+
                     Store.addNotification({
                         title: "Client Created Successfully",
                         message: "Success",
@@ -164,15 +245,6 @@ function AddNewRequest({ visible, close }) {
                             onScreen: true
                         }
                     });
-
-                    // setClientData({
-                    //     "client_name": "",
-                    //     "client_mobile": "",
-                    //     "client_email": "",
-                    //     "client_address": "",
-                    //     "client_city": "",
-                    //     "client_industry": ""
-                    // })
 
                 }
 
@@ -341,12 +413,25 @@ function AddNewRequest({ visible, close }) {
                                 <div className='flex justify-between py-3'>
 
                                     <div className='flex flex-col'>
-                                        <label className='label'>Email</label>
-                                        <input className='NewEmployeeinput w-[300px]' type="email" name="client_email" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_email} />
+                                        <label className='label'>Email {EmailExist ? <span className='pl-3 text-xs text-red-500'>"Email Id Already Exists"</span> : null}</label>
+                                        <input className='NewEmployeeinput w-[300px]' type="email" name="client_email" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_email} required />
                                     </div>
                                     <div className='flex flex-col'>
-                                        <label className='label'>Mobile No</label>
-                                        <input className='NewEmployeeinput w-[300px]' type="tel" name="client_mobile" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_mobile} />
+                                        <label className='label'>Mobile No{MobileExist ? <span className='pl-3 text-xs text-red-500'>"Mobile No Already Exists"</span> : null}</label>
+                                        <input className='NewEmployeeinput w-[300px]' type="tel" name="client_mobile" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_mobile} required />
+                                    </div>
+
+                                </div>
+
+                                <div className='flex justify-between py-3'>
+
+                                    <div className='flex flex-col'>
+                                        <label className='label'>Alternate Email</label>
+                                        <input className='NewEmployeeinput w-[300px]' type="email" name="client_alternate_email" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_alternate_email} />
+                                    </div>
+                                    <div className='flex flex-col'>
+                                        <label className='label'>Alternate Mobile No</label>
+                                        <input className='NewEmployeeinput w-[300px]' type="tel" name="client_alternate_mobile" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_alternate_mobile} />
                                     </div>
 
                                 </div>
@@ -357,23 +442,33 @@ function AddNewRequest({ visible, close }) {
                                 </div>
 
                                 <div className='flex flex-col'>
-                                    <label className='label'>Company/Ind</label>
-                                    <input className='NewEmployeeinput' type="text" name="client_industry" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_industry} />
+                                    <label className='label'>State</label>
+                                    <input className='NewEmployeeinput' type="text" name="client_state" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_state} />
+                                </div>
+
+                                <div className='flex flex-col'>
+                                    <label className='label'>Client Country ISO</label>
+                                    <input className='NewEmployeeinput' type="text" name="client_country_iso" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_country_iso} />
+                                </div>
+
+                                <div className='flex flex-col'>
+                                    <label className='label'>Company Name</label>
+                                    <input className='NewEmployeeinput' type="text" name="client_company_name" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_company_name} />
                                 </div>
 
                                 <div className='flex flex-col'>
                                     <label className='label'>GSTN</label>
-                                    <input className='NewEmployeeinput' type="text" name="client_GSTN" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_GSTN} />
+                                    <input className='NewEmployeeinput' type="text" name="client_gst_no" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_gst_no} />
                                 </div>
 
                                 <div className='flex flex-col'>
-                                    <label className='label'>Address</label>
-                                    <textarea className='NewEmployeeinput h-[100px]' type="text" name="client_address" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_address} ></textarea>
+                                    <label className='label'>Shipping Address</label>
+                                    <textarea className='NewEmployeeinput h-[100px]' type="text" name="client_shipping_address" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_shipping_address} ></textarea>
                                 </div>
 
                                 <div className='flex flex-col'>
-                                    <label className='label'>Address</label>
-                                    <textarea className='NewEmployeeinput h-[100px]' type="text" name="client_address" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_address} ></textarea>
+                                    <label className='label'>Billing Address</label>
+                                    <textarea className='NewEmployeeinput h-[100px]' type="text" name="client_billing_address" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_billing_address} ></textarea>
                                 </div>
 
                                 <div>

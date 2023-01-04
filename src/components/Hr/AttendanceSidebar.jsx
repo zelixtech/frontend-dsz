@@ -46,10 +46,18 @@ function AttendanceSidebar() {
 
     const HandelEditAttendace = (e) => {
 
+        var date_of_attendace = e.target.value;
+
+        if (parseInt(date_of_attendace) < 11) {
+            date_of_attendace = "0" + date_of_attendace;
+            console.log(date_of_attendace);
+        }
+
         var data = JSON.stringify({
+
             "data": {
                 "attendance_status": `${e.target.innerText}`,
-                "date_of_attendance": `${Interval.yyyy}-${Interval.mm}-${e.target.value}`,
+                "date_of_attendance": `${Interval.yyyy}-${Interval.mm}-${date_of_attendace}`,
             }
         });
 

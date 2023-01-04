@@ -10,7 +10,7 @@ import { fechAssignQuery, setAQID } from '../../Reducer/querySclice';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 
-function EditQuery({ visible, close, ReqDetails }) {
+function EditQuery({ visible, close, ReqDetails, EmployeeId }) {
 
     const dispatch = useDispatch();
 
@@ -152,7 +152,7 @@ function EditQuery({ visible, close, ReqDetails }) {
                     <div className='sticky top-0 backdrop-blur-sm bg-bg bg-opacity-20'>
                         <div className='flex justify-between px-20 pt-5 pb-2'>
                             <h1 className='heading'>Edit Requirement</h1>
-                            <XCircleIcon onClick={() => { dispatch(fechAssignQuery()); dispatch(setAQID(AQID)); close(false) }} className="w-8" />
+                            <XCircleIcon onClick={() => { dispatch(fechAssignQuery(EmployeeId)); dispatch(setAQID(AQID)); close(false) }} className="w-8" />
                         </div>
                     </div>
 

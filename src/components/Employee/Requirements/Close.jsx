@@ -40,37 +40,41 @@ function Close({ SearchInput, SortType, EmployeeId }) {
         } else if (SortType === "N-O") {
 
             CQuery = CQuery.slice().sort((x, y) => {
-                x = new Date(x.createdAt);
-                y = new Date(y.createdAt);
+                x = new Date(x.updatedAt);
+                y = new Date(y.updatedAt);
                 return y - x;
             });
 
         } else if (SortType === "O-N") {
 
             CQuery = CQuery.slice().sort((x, y) => {
-                x = new Date(x.createdAt);
-                y = new Date(y.createdAt);
+                x = new Date(x.updatedAt);
+                y = new Date(y.updatedAt);
                 return x - y;
             });
 
         } else if (SortType === "TII") {
 
-            CQuery = CQuery.filter(({ query_source }) => query_source && query_source === "tradeindia")
+            CQuery = CQuery.filter(({ query_source }) => query_source && query_source === "indiamart")
 
         } else if (SortType === "CST") {
-            CQuery = CQuery.filter(({ query_source }) => query_source && query_source !== "tradeindia")
+            CQuery = CQuery.filter(({ query_source }) => query_source && query_source !== "indiamart")
         }
     }
 
     if ((SearchInput || SortType) && (!CQuery || CQuery.length === 0)) {
-        return <div className='flex justify-center items-center pt-20 text-blue-500'>No requrements with matching filter...</div>;
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>No requirements with matching filter...</div>;
     }
 
     if (!CQuery) {
-        return <div className='flex justify-center items-center pt-20 text-blue-500'>Loading Requrements...</div>;
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>Loading Requirements...</div>;
     }
 
-    // console.log(LQuery);
+    if (CQuery.length === 0) {
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>No Requirement...</div>;
+    }
+
+
 
     return (
         <div className='my-5 overflow-y-scroll h-screen'>

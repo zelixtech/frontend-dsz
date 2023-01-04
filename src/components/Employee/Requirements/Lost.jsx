@@ -19,72 +19,56 @@ function Lost({ SearchInput, SortType, EmployeeId }) {
     if (LQuery && SearchInput) {
         LQuery = LQuery.filter(({ query_subject }) => query_subject && query_subject.toLowerCase().includes(SearchInput.toLowerCase()))
 
-        if (LQuery[0]) {
-            dispatch(setLQID(LQuery[0].query_id))
-        }
-
     }
 
     // console.log(SortType);
 
-    if (SortType && LQuery) {
+    if (LQuery && SortType) {
 
         if (SortType === "A-Z") {
 
             LQuery = LQuery.slice().sort(function (a, b) {
                 const nameA = a.query_subject.toUpperCase();
                 const nameB = b.query_subject.toUpperCase();
-                if (nameA > nameB) {
+                if (nameA < nameB) {
                     return -1;
                 }
-                if (nameA < nameB) {
+                if (nameA > nameB) {
                     return 1;
                 }
                 return 0;
             });
 
-            if (LQuery[0]) {
-                dispatch(setLQID(LQuery[0].query_id))
-            }
+
 
         } else if (SortType === "N-O") {
 
             LQuery = LQuery.slice().sort((x, y) => {
-                x = new Date(x.createdAt);
-                y = new Date(y.createdAt);
+                x = new Date(x.updatedAt);
+                y = new Date(y.updatedAt);
                 return y - x;
             });
 
-            if (LQuery[0]) {
-                dispatch(setLQID(LQuery[0].query_id))
-            }
+
 
         } else if (SortType === "O-N") {
 
             LQuery = LQuery.slice().sort((x, y) => {
-                x = new Date(x.createdAt);
-                y = new Date(y.createdAt);
+                x = new Date(x.updatedAt);
+                y = new Date(y.updatedAt);
                 return x - y;
             });
 
-            if (LQuery[0]) {
-                dispatch(setLQID(LQuery[0].query_id))
-            }
+
 
         } else if (SortType === "TII") {
 
             LQuery = LQuery.filter(({ query_source }) => query_source && query_source === "indiamart")
 
-            if (LQuery[0]) {
-                dispatch(setLQID(LQuery[0].query_id))
-            }
+
 
         } else if (SortType === "CST") {
             LQuery = LQuery.filter(({ query_source }) => query_source && query_source !== "indiamart")
-
-            if (LQuery[0]) {
-                dispatch(setLQID(LQuery[0].query_id))
-            }
         }
     }
 
@@ -100,7 +84,7 @@ function Lost({ SearchInput, SortType, EmployeeId }) {
         return <div className='flex justify-center items-center pt-20 text-blue-500'>No Requirement...</div>;
     }
 
-    // console.log(LQuery);
+
 
     return (
         <div className='my-5 overflow-y-scroll h-screen'>

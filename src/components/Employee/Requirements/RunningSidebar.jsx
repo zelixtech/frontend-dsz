@@ -38,9 +38,7 @@ function RunningSidebar({ EmployeeId }) {
     // for view Quotation 
     const [visible, setvisible] = useState(false);
     const [QuotationFileName, setQuotationFileName] = useState("")
-
-
-
+    const [QuotationData, setQuotationData] = useState({});
 
 
     // fatching data from reducers
@@ -327,7 +325,7 @@ function RunningSidebar({ EmployeeId }) {
     }
 
 
-
+    console.log(Quotation);
 
     if (!AQID || !Querys) {
         return <div className='flex justify-center items-center mt-20 text-blue-500'>Loading Requirement Details...</div>
@@ -419,10 +417,10 @@ function RunningSidebar({ EmployeeId }) {
 
                         (Quotation.map((q, id) => {
                             return (
-                                <div className='text-sm flex flex-col bg-gray-500 text-white shadow-md rounded-md my-2 mr-4 px-4 py-1' onClick={() => {
+                                <div className='text-sm flex flex-col bg-blue-100 text-blue-500 shadow-md rounded-sm my-2 mr-4 px-4 py-1' onClick={() => {
                                     setvisible(true);
                                     setQuotationFileName(q.generatedQuotationNumber.split("/")[0] + "-" + q.generatedQuotationNumber.split("/")[1]);
-
+                                    setQuotationData(q);
                                 }}>
                                     <p className='py-1'>{q.createdAt.split("T")[0]}</p>
                                     <div>
@@ -457,8 +455,8 @@ function RunningSidebar({ EmployeeId }) {
                 </div>
             </div>
 
-            <EditQuery visible={EditReqDetails} close={SetEditReqDetails} ReqDetails={req[0]} />
-            <ViewQuotation visible={visible} file={QuotationFileName} close={setvisible} />
+            <EditQuery visible={EditReqDetails} close={SetEditReqDetails} ReqDetails={req[0]} EmployeeId={EmployeeId} />
+            <ViewQuotation visible={visible} file={QuotationFileName} close={setvisible} data={QuotationData} />
 
         </div>
     )

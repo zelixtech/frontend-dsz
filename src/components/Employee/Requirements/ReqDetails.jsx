@@ -9,7 +9,7 @@ function ReqDetails({ Date, Time, Message, Location, Source, Company, Address, B
             <div className='pb-1'>
 
                 <div>
-                    <h1 className='text-gray-400'>Inquery on</h1>
+                    <h1 className='text-gray-400'>Inquiry on</h1>
                     <p>{Date} {Time}</p>
                 </div>
 
@@ -39,7 +39,7 @@ function ReqDetails({ Date, Time, Message, Location, Source, Company, Address, B
                 </div>
 
                 <div className='pt-2'>
-                    <h1 className='text-gray-400'>Company/Ind</h1>
+                    <h1 className='text-gray-400'>Company</h1>
                     <p className='text-black'>{Company}</p>
                 </div>
 

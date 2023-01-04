@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import {
     XCircleIcon,
     Square2StackIcon,
@@ -7,8 +7,9 @@ import {
 } from '@heroicons/react/24/outline'
 
 import { productDetails } from '../../Data/Data'
-import axios from 'axios'
-import { setUnassignQuery } from '../../Reducer/querySclice'
+import { fetchQuotations, setUnassignQuery } from '../../Reducer/querySclice'
+import { Store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
 
 function GenerateQoutation({ visible, close }) {
 
@@ -19,6 +20,12 @@ function GenerateQoutation({ visible, close }) {
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
     var date = dd + '-' + mm + '-' + yyyy;
+
+
+
+    // dispatch
+
+    const dispatch = useDispatch();
 
 
     // loading data from reducers and other place
@@ -34,11 +41,19 @@ function GenerateQoutation({ visible, close }) {
     const [Loading, setLoading] = useState(false);
     const [Link, setLink] = useState("")
     const [Preview, SetPreview] = useState(false);
+    const [IsEmployeeLoaded, SetIsEmployeeLoaded] = useState(false);
+    const [IsClientLoaded, SetIsClientLoaded] = useState(false);
+
+
+    console.log(parseInt(mm) > 3);
+
+    const FY = parseInt(mm) > 3 ? `${yyyy}-${yyyy + 1}` : `${yyyy - 1}-${yyyy}`;
+    console.log(FY);
 
 
     const [metadata, setmetadata] = useState({
         date: date,
-        suppliers_ref_no: `${yyyy - 1}-${yyyy}`,
+        suppliers_ref_no: FY,
         offer_validity: "30 Days",
         payment_terms: "100% Advanced payment",
         dispatch_through: "As Per Your Suggestion",
@@ -84,7 +99,7 @@ function GenerateQoutation({ visible, close }) {
 
         setmetadata({
             date: date,
-            suppliers_ref_no: `${yyyy - 1}-${yyyy}`,
+            suppliers_ref_no: FY,
             offer_validity: "30 Days",
             payment_terms: "100% Advanced payment",
             dispatch_through: "As Per Your Suggestion",
@@ -119,7 +134,7 @@ function GenerateQoutation({ visible, close }) {
             SetData(preData);
             console.log(ClientMeta)
         }
-    }, [ClientMeta])
+    }, [ClientMeta, IsClientLoaded])
 
     useEffect(() => {
         if (EmployeeMeta) {
@@ -130,7 +145,7 @@ function GenerateQoutation({ visible, close }) {
             }
             SetData(preData);
         }
-    }, [EmployeeMeta])
+    }, [EmployeeMeta, IsEmployeeLoaded])
 
 
 
@@ -186,6 +201,15 @@ function GenerateQoutation({ visible, close }) {
         // console.log(val);
         // console.log(ProductList)
 
+
+
+        if (Data.client.name === "") {
+            SetIsClientLoaded(!IsClientLoaded);
+        }
+
+        if (Data.sender.name === "") {
+            SetIsEmployeeLoaded(!IsEmployeeLoaded);
+        }
     }
 
     const HandelModelSelect = (i, element, e) => {
@@ -407,7 +431,7 @@ function GenerateQoutation({ visible, close }) {
 
 
 
-    const HandelSubmit = () => {
+    const HandelSubmit = async () => {
 
 
 
@@ -430,15 +454,54 @@ function GenerateQoutation({ visible, close }) {
         };
 
 
-        setLoading(true);
+        var error = "";
+        var message = "";
 
-        // console.log(Loading);
 
-        fetch('http://localhost:8000/download', requestOptions)
-            .then(response => response.text())
-            .then(text => { setLink(text); console.log(Link) });
+        if (pevData.client.name === "") {
+            error = "Client Details are not set!"
+            message = "Please reopen popup..."
+        } else if (pevData.sender.name === "") {
+            error = "Employee Details are not set!"
+            message = "Please reopen popup..."
+        }
+        else if (!pevData.products[0].name) {
+            error = "No product!"
+            message = "Please Select Product First"
+        }
 
-        setLoading(false);
+
+        if (error !== "") {
+            Store.addNotification({
+                title: error,
+                message: message,
+                type: "warning",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated", "animate__fadeIn"],
+                animationOut: ["animate__animated", "animate__fadeOut"],
+                dismiss: {
+                    duration: 5000,
+                    onScreen: true
+                }
+            });
+        } else {
+            setLoading(true);
+
+            // console.log(Loading);
+
+            await fetch('http://localhost:8000/download', requestOptions)
+                .then(response => response.text())
+                .then(text => {
+                    setLink(text);
+                    dispatch(fetchQuotations(QueryId))
+                });
+
+            setLoading(false);
+        }
+
+
+
         // console.log(1, Loading[1]);
     }
 

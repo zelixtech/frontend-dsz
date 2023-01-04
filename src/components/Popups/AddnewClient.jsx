@@ -14,6 +14,8 @@ function AddnewClient({ visible, close }) {
     const dispatch = useDispatch()
 
 
+
+
     const errorMessages = {
         "Validation Error": {
             title: "Validation Error",
@@ -29,7 +31,8 @@ function AddnewClient({ visible, close }) {
         }
     }
 
-
+    const [MobileExist, setMobileExist] = useState(false)
+    const [EmailExist, setEmailExist] = useState(false)
     const [ClientData, setClientData] = useState({
         "client_name": "",
         "client_mobile": "",
@@ -37,7 +40,7 @@ function AddnewClient({ visible, close }) {
         "client_shipping_address": "",
         "client_billing_address": "",
         "client_city": "",
-        "client_industry": "",
+        "client_company_name": "",
         "client_country_iso": "",
         "client_state": "",
         "client_gst_no": "",
@@ -49,6 +52,74 @@ function AddnewClient({ visible, close }) {
     const HandelClientDetailInput = (e) => {
 
         var field = e.target.name;
+
+        if (field === "client_mobile") {
+            var config = {
+                method: 'get',
+                url: `${process.env.REACT_APP_HOST}/api/client/check?client_mobile=${e.target.value}`,
+
+            };
+
+            axios(config)
+                .then(function (response) {
+                    console.log(JSON.stringify(response.data));
+                    if (response.data.error) {
+                        if (response.data.errorType === "Conflict") {
+                            setMobileExist(true);
+                        } else {
+                            setMobileExist(false);
+                        }
+                    } else {
+                        setMobileExist(false);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error.response.data);
+                    if (error.response.data.error) {
+                        if (error.response.data.errorType === "Conflict") {
+                            setMobileExist(true);
+                        } else {
+                            setMobileExist(false);
+                        }
+                    } else {
+                        setMobileExist(false);
+                    }
+                });
+        }
+
+        if (field === "client_email") {
+            var config = {
+                method: 'get',
+                url: `${process.env.REACT_APP_HOST}/api/client/check?client_email=${e.target.value}`,
+
+            };
+
+            axios(config)
+                .then(function (response) {
+                    console.log(JSON.stringify(response.data));
+                    if (response.data.error) {
+                        if (response.data.errorType === "Conflict") {
+                            setEmailExist(true);
+                        } else {
+                            setEmailExist(false);
+                        }
+                    } else {
+                        setEmailExist(false);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error.response.data);
+                    if (error.response.data.error) {
+                        if (error.response.data.errorType === "Conflict") {
+                            setEmailExist(true);
+                        } else {
+                            setEmailExist(false);
+                        }
+                    } else {
+                        setEmailExist(false);
+                    }
+                });
+        }
 
         var preData = { ...ClientData };
         preData[field] = e.target.value;
@@ -67,7 +138,7 @@ function AddnewClient({ visible, close }) {
 
         var config = {
             method: 'post',
-            url: 'http://localhost:5000/api/client',
+            url: `${process.env.REACT_APP_HOST}/api/client`,
             headers: {
                 'Content-Type': 'application/json',
                 'Cookie': 'darshanSession=s%3AgIDiWuErG9DzIfFSZAA7vb3DJXrttbPk.qsQccDQ7Jit7ZIq3jyEDvZkSkIb0sYq%2FTUEvdrcWKuI'
@@ -119,9 +190,15 @@ function AddnewClient({ visible, close }) {
                         "client_name": "",
                         "client_mobile": "",
                         "client_email": "",
-                        "client_address": "",
+                        "client_shipping_address": "",
+                        "client_billing_address": "",
                         "client_city": "",
-                        "client_industry": ""
+                        "client_industry": "",
+                        "client_country_iso": "",
+                        "client_state": "",
+                        "client_gst_no": "",
+                        "client_alternate_email": "",
+                        "client_alternate_mobile": "",
                     })
 
                     dispatch(fechActiveClients());
@@ -174,11 +251,11 @@ function AddnewClient({ visible, close }) {
                     <div className='flex justify-between pt-3 pb-2'>
 
                         <div className='flex flex-col'>
-                            <label className='label'>Email</label>
+                            <label className='label'>Email {EmailExist ? <span className='pl-3 text-xs text-red-500'>"Email Id Already Exists"</span> : null}</label>
                             <input className='NewEmployeeinput w-[300px]' type="email" name="client_email" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_email} />
                         </div>
                         <div className='flex flex-col'>
-                            <label className='label'>Mobile No</label>
+                            <label className='label'>Mobile No {MobileExist ? <span className='pl-3 text-xs text-red-500'>"Mobile No Already Exists"</span> : null}</label>
                             <input className='NewEmployeeinput w-[300px]' type="tel" name="client_mobile" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_mobile} />
                         </div>
 
@@ -212,8 +289,8 @@ function AddnewClient({ visible, close }) {
                     </div>
 
                     <div className='flex flex-col'>
-                        <label className='label'>Company/Ind</label>
-                        <input className='NewEmployeeinput' type="text" name="client_industry" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_industry} />
+                        <label className='label'>Company Name</label>
+                        <input className='NewEmployeeinput' type="text" name="client_company_name" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_company_name} />
                     </div>
 
                     <div className='flex flex-col'>

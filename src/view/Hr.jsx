@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import AddEmplotyee from '../components/Hr/AddEmplotyee'
 import Attendance from '../components/Hr/Attendance'
 import HrSidebar from '../components/Hr/HrSidebar'
-import Settings from '../components/Hr/Settings'
+import LeaveReq from '../components/Hr/LeaveReq'
 import Staff from '../components/Hr/Staff'
 
 import { PopupProvider } from '../components/PopupsContext'
@@ -30,7 +30,7 @@ function Hr() {
                     <Route path="/Staff" element={<Staff HrInput={HrInput} HrSearchHandler={HrSearchHandler} />} />
                     <Route path="/Addmember" element={<AddEmplotyee />} />
                     <Route path="/Attendance" element={<Attendance HrInput={HrInput} HrSearchHandler={HrSearchHandler} />} />
-                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/leave" element={<LeaveReq />} />
                 </Routes>
             </div>
         </PopupProvider>

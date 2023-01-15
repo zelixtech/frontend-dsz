@@ -105,7 +105,7 @@ function EditQuery({ visible, close, ReqDetails, EmployeeId }) {
                 } else {
 
                     Store.addNotification({
-                        title: "Requrement Updated Successfully",
+                        title: "Requirement Updated Successfully",
                         message: "Success",
                         type: "success",
                         insert: "top",

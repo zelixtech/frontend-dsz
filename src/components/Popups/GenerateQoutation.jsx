@@ -965,7 +965,7 @@ function GenerateQoutation({ visible, close }) {
                     <div>
                         {/* <button className='py-2 px-6 mt-10 bg-sky-500 text-white font-medium rounded-md shadow-sm' onClick={() => { addFields() }}>Add</button> */}
                         <button className='py-2 px-6 mt-10 bg-green-500 text-white font-medium rounded-md shadow-sm' onClick={() => { HandelSubmit() }}>{
-                            Loading ? "Generating Quotaion..." : "Generate Quotation"
+                            Loading ? "Generating Quotation..." : "Generate Quotation"
                         }</button>
                         {/* {
                             !Loading && !Preview && <button className='py-2 px-6 mt-10 bg-green-500 text-white font-medium rounded-[5px] shadow-sm ml-2' onClick={() => { SetPreview(!Preview) }}>Preview Quotaion</button>

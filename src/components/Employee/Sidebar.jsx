@@ -60,8 +60,8 @@ function Sidebar() {
                     <div>
                         <select id="panel" name="panel" className='bg-gray-50 w-full p-2.5 outline-none border-blue-500  focus:ring-blue-500 rounded-md text-sm focus:border-blue-500 block' onChange={(e) => { HandelPanelSelection(e) }} defaultValue={Panel}>
                             <option value="Select Option" hidden selected >Employee Panel</option>
-                            <option className='tetx-sm' value="Hr">HR Department</option>
-                            <option className='tetx-sm' value="Admin">Admin Panel</option>
+                            <option className='text-sm' value="Hr">HR Department</option>
+                            <option className='text-sm' value="Admin">Admin Panel</option>
                         </select>
                     </div>
                 </div> : null
@@ -71,7 +71,7 @@ function Sidebar() {
                 <SidebarOption link={"requirements"} Icon={Squares2X2Icon} Title={"DashBoard"} />
                 <SidebarOption link={"clients"} Icon={UserGroupIcon} Title={"Clients"} />
                 <SidebarOption link={"notification"} Icon={BellAlertIcon} Title={"Notifications"} />
-                <SidebarOption link={"settings"} Icon={Cog8ToothIcon} Title={"Settings"} />
+                <SidebarOption link={"Leave"} Icon={Cog8ToothIcon} Title={"Request For Leave"} />
             </div>
 
         </div>

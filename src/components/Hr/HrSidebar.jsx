@@ -62,8 +62,8 @@ function HrSidebar() {
                     <div>
                         <select id="panel" name="panel" className='bg-gray-50 w-full p-2.5 outline-none border-blue-500  focus:ring-blue-500 rounded-md text-sm focus:border-blue-500 block' onChange={(e) => { HandelPanelSelection(e) }} defaultValue={Panel}>
                             <option value="Select Option" hidden selected >HR Panel</option>
-                            <option className='tetx-sm' value="Employee">Employee</option>
-                            <option className='tetx-sm' value="Admin">Admin Panel</option>
+                            <option className='text-sm' value="Employee">Employee</option>
+                            <option className='text-sm' value="Admin">Admin Panel</option>
                         </select>
                     </div>
                 </div> : null
@@ -73,7 +73,7 @@ function HrSidebar() {
                 <SidebarOption link={"Staff"} Icon={Squares2X2Icon} Title={"DashBoard"} />
                 <SidebarOption link={"Addmember"} Icon={UserPlusIcon} Title={"Add Member"} />
                 <SidebarOption link={"Attendance"} Icon={CalendarDaysIcon} Title={"Attendance"} />
-                <SidebarOption link={"settings"} Icon={Cog8ToothIcon} Title={"Settings"} />
+                <SidebarOption link={"leave"} Icon={Cog8ToothIcon} Title={"Leave Management"} />
             </div>
 
         </div>

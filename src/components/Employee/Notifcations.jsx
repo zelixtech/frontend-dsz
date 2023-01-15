@@ -34,8 +34,8 @@ function Notifcations() {
 
 
     return (
-        <div className='w-[100%] bg-bg'>
-            <h1 className='pt-14 pl-10 text-lg'>Notifcations</h1>
+        <div className='basis-[83%] bg-bg overflow-y-scroll h-screen'>
+            <h1 className='pt-14 pl-10 text-lg'>Notifications</h1>
 
             <p className='pl-10 py-5 mt-6'>Following Inquiry is pending from 15 Days</p>
 

@@ -2,7 +2,7 @@ import React from 'react'
 import Sidebar from '../components/Employee/Sidebar';
 import { Route, Routes } from 'react-router-dom';
 import { useState } from 'react'
-import Settings from '../components/Employee/Settings';
+import Leave from '../components/Employee/Leave';
 import Notifcations from '../components/Employee/Notifcations';
 import Clients from '../components/Employee/Clients';
 import Requrements from '../components/Employee/Requrements';
@@ -34,7 +34,7 @@ function Employee() {
                     <Route path="/requirements" element={<Requrements Input={Input} searchHandler={searchHandler} />} />
                     <Route path="/" element={<Requrements Input={Input} searchHandler={searchHandler} />} />
                     <Route path="/notification" element={<Notifcations />} />
-                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/Leave" element={<Leave />} />
                 </Routes>
 
             </div>

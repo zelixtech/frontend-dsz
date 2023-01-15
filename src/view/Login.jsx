@@ -14,7 +14,7 @@ function Login() {
     const navigate = useNavigate();
 
     const message = {
-        error: "Somthing Went Wrong...",
+        error: "Something Went Wrong...",
         mismatch: "Wrong Email Or Password",
     }
 
@@ -38,86 +38,94 @@ function Login() {
 
     const HandelSubmmit = () => {
 
-        const jar = new CookieJar();
-        const client = wrapper(axios.create({ jar }));
+        // const jar = new CookieJar();
+        // const client = wrapper(axios.create({ jar }));
 
-        var data = JSON.stringify({
-            "data": {
-                "email": LoginDetails.email,
-                "password": LoginDetails.password
-            }
-        });
+        if (window.matchMedia("(max-width: 600px)")) {
+            // console.log("hiii");
+            document.documentElement.requestFullscreen();
+        }
 
-        var config = {
-            method: 'post',
-            url: `${process.env.REACT_APP_HOST}/api/auth`,
-            // withCredentials: true,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            data: data
-        };
+        dispach(setAuth("Admin"));
+        navigate('/admin')
 
-        client(config)
-            .then(function (response) {
-                console.log(JSON.stringify(response.data));
+        // var data = JSON.stringify({
+        //     "data": {
+        //         "email": LoginDetails.email,
+        //         "password": LoginDetails.password
+        //     }
+        // });
 
-                console.log(response.headers)
+        // var config = {
+        //     method: 'post',
+        //     url: `${process.env.REACT_APP_HOST}/api/auth`,
+        //     // withCredentials: true,
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     data: data
+        // };
 
-                var result = response.data;
+        // axios(config)
+        //     .then(function (response) {
+        //         console.log(JSON.stringify(response.data));
 
-                if (result.error) {
-                    setStatus("mismatch")
-                } else {
+        //         console.log(response.headers)
 
-                    result = result.data;
-                    dispach(setUser(result));
-                    dispach(setDept(result.employee_department));
-                    dispach(setEmployeeId(result.employee_id));
+        //         var result = response.data;
 
-                    if (result.employee_isAdmin === 1) {
-                        dispach(setAuth("Admin"));
-                    } else if (result.employee_isHR === 1) {
-                        dispach(setAuth("Hr"));
-                    } else {
-                        dispach(setAuth("Employee"));
-                    }
+        //         if (result.error) {
+        //             setStatus("mismatch")
+        //         } else {
 
-                    if (result.employee_isAdmin === 1) {
-                        navigate('/admin')
-                    }
-                    else if (result.employee_department === "Employee") {
-                        navigate('/employee');
-                    } else if (result.employee_department === "hr") {
-                        navigate('/hr');
-                    }
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        //             result = result.data;
+        //             dispach(setUser(result));
+        //             dispach(setDept(result.employee_department));
+        //             dispach(setEmployeeId(result.employee_id));
+
+        //             if (result.employee_isAdmin === 1) {
+        //                 dispach(setAuth("Admin"));
+        //             } else if (result.employee_isHR === 1) {
+        //                 dispach(setAuth("Hr"));
+        //             } else {
+        //                 dispach(setAuth("Employee"));
+        //             }
+
+        //             if (result.employee_isAdmin === 1) {
+        //                 navigate('/admin')
+        //             }
+        //             else if (result.employee_department === "Employee") {
+        //                 navigate('/employee');
+        //             } else if (result.employee_department === "hr") {
+        //                 navigate('/hr');
+        //             }
+        //         }
+        //     })
+        //     .catch(function (error) {
+        //         console.log(error);
+        //     });
     }
 
     return (
         <div className='flex justify-center items-center h-screen bg-bg'>
 
-            <div className='w-[500px] shadow-md rounded-md bg-white py-10'>
+            <div className='w-[90%] py-5  md:w-[500px] shadow-md rounded-md bg-white md:py-10'>
 
-                <img src={logo} alt="Darshan Safety Zone" className='mx-auto my-4 w-[380px]' />
+                <img src={logo} alt="Darshan Safety Zone" className='w-[280px] mx-5 my-2 md:w-[380px] md:mx-auto md:my-4' />
 
-                <div className='mt-10'>
+                <div className='mt-7 md:mt-10'>
 
-                    <div className='flex flex-col mx-10 mb-5'>
+                    <div className='flex flex-col mx-5 md:mx-10 mb-5'>
                         <label className='text-base font-medium text-black pb-3'>Email</label>
                         <input type="Email" className='border-none outline-none bg-gray-100 rounded-sm shadow-sm px-2 py-[0.4rem]' value={LoginDetails.email} onChange={(e) => { HandelEmail(e) }} />
                     </div>
-                    <div className='flex flex-col mx-10 mb-5'>
+                    <div className='flex flex-col mx-5 md:mx-10 mb-5'>
                         <label className='text-base font-medium text-black pb-3'>Password</label>
                         <input type="Password" className='border-none outline-none bg-gray-100 rounded-sm shadow-sm px-2 py-[0.4rem]' value={LoginDetails.password} onChange={(e) => { HandelPassword(e) }} />
                     </div>
 
 
-                    <div className='flex flex-col mx-10 my-5 mt-10'>
+                    <div className='flex flex-col mx-5 md:mx-10 my-5 mt-10'>
                         <button className='px-4 py-2 bg-green-500 text-white rounded-sm' onClick={() => { HandelSubmmit() }}>Login</button>
                     </div>
 

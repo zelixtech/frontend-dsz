@@ -5,13 +5,13 @@ import {
   Square2StackIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-
 import { productDetails } from "../../Data/Data";
 import { fetchQuotations, setUnassignQuery } from "../../Reducer/querySclice";
 import { Store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
+import axios from "axios";
 
-function GenerateQoutation({ visible, close }) {
+function GenerateInvoice() {
   // generate todays date
 
   var today = new Date();
@@ -38,6 +38,18 @@ function GenerateQoutation({ visible, close }) {
   const [Preview, SetPreview] = useState(false);
   const [IsEmployeeLoaded, SetIsEmployeeLoaded] = useState(false);
   const [IsClientLoaded, SetIsClientLoaded] = useState(false);
+  const [Client, setClient] = useState({});
+  const [ClientName, setClientName] = useState();
+  const [ReqData, setReqData] = useState({
+    client_id: "",
+    query_source: "",
+    query_create_time: Math.round(new Date().getTime() / 1000),
+    query_subject: "",
+    query_product: "",
+    query_message: "",
+    query_state: "new",
+  });
+  const [Clients, setClients] = useState([]);
 
   console.log(parseInt(mm) > 3);
 
@@ -53,20 +65,30 @@ function GenerateQoutation({ visible, close }) {
     destination: "As Per Your Suggestion",
     terms_of_deliver: "Available in Ready Stock",
     total_bundel: "As per Actual",
-    transportation_cost: "To Pay",
+    transportation_cost: 0,
     transportation: "To pay : Trasport Godown",
     packaging_and_forwarding_charges: 0,
     GST: 18,
     currency: "INR",
     custom_field1: "Bank charges",
     custom_field2: "Freight Charges",
-    custom_field1_value: "",
-    custom_field2_value: "",
+    extraCharges: "",
+    custom_field1_value: 0,
+    custom_field2_value: 0,
+    quotation_no: "",
   });
 
   const [ProductList, SetProduct] = useState([{}]);
   const [RProductList, SetRProduct] = useState([{}]);
   const [TACList, SetTACList] = useState("");
+  const [sellerDetail, SetSellerDetail] = useState({
+    name: "",
+    mobile: "",
+  });
+  const [buyerDetail, SetBuyerDetail] = useState({
+    name: "",
+    mobile: "",
+  });
   const [Data, SetData] = useState({
     sender: {
       name: "",
@@ -96,15 +118,16 @@ function GenerateQoutation({ visible, close }) {
       destination: "As Per Your Suggestion",
       terms_of_deliver: "Available in Ready Stock",
       total_bundel: "As per Actual",
-      transportation_cost: "To Pay",
+      transportation_cost: 0,
       transportation: "To pay : Trasport Godown",
       packaging_and_forwarding_charges: 0,
       GST: 18,
       currency: "INR",
       custom_field1: "Bank charges",
       custom_field2: "Freight Charges",
-      custom_field1_value: "",
-      custom_field2_value: "",
+      custom_field1_value: 0,
+      custom_field2_value: 0,
+      quotation_no: "",
     });
   }, [QueryId, DataBundel]);
 
@@ -135,6 +158,46 @@ function GenerateQoutation({ visible, close }) {
     }
   }, [EmployeeMeta, IsEmployeeLoaded]);
 
+  const fetchClients = () => {
+    var config = {
+      method: "get",
+      url: `${process.env.REACT_APP_HOST}/api/client/all/active`,
+      headers: {},
+    };
+    axios(config)
+      .then(function (response) {
+        // console.log(JSON.stringify(response.data));
+        var resData = response.data;
+
+        if (resData.error) {
+          // var errordata = errorMessages[resdata.errorMessage];
+
+          Store.addNotification({
+            title: "Not Able to load Clients",
+            message: "Please Open Popup Again",
+            type: "warning",
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 5000,
+              onScreen: true,
+            },
+          });
+        } else {
+          setClients(resData.data);
+        }
+      })
+      .catch(function (error) {
+        // console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    fetchClients();
+  }, []);
+
   // handel select metadata
 
   const HandelMetadataInput = (e) => {
@@ -146,6 +209,42 @@ function GenerateQoutation({ visible, close }) {
     setmetadata(Premetadata);
 
     console.log(metadata);
+  };
+
+  // handel select seller detail
+
+  const HandelSellerInput = (e) => {
+    var field = e.target.name;
+    var val = e.target.value;
+
+    var sellerData = { ...sellerDetail };
+    sellerData[field] = val;
+    SetSellerDetail(sellerData);
+  };
+  // handel select buyer detail
+
+  const HandelBuyerInput = (e) => {
+    var field = e.target.name;
+    var val = e.target.value;
+
+    var buyerData = { ...buyerDetail };
+    buyerData[field] = val;
+    SetBuyerDetail(buyerData);
+  };
+
+  // select client
+  const HandelClient = (e) => {
+    // console.log(e.target.value);
+    var client = Clients[e.target.value];
+
+    var preData = { ...ReqData };
+
+    preData["client_id"] = parseInt(client.client_id);
+    setReqData(preData);
+
+    setClient(client);
+    setClientName(e.target.value);
+    // console.log(ClientName);
   };
 
   // -------------------------------------------------------------- Product Handeler -----------------------------------------------
@@ -297,140 +396,6 @@ function GenerateQoutation({ visible, close }) {
     let preProduct = [...ProductList];
     preProduct[i][field] = val;
     SetProduct(preProduct);
-
-    console.log(ProductList);
-  };
-
-  //------------------------------------------------------ recommended products handels ---------------------------------------
-
-  // CRUD
-
-  const RemoveRProdctFields = (i) => {
-    let rproductFileds = [...RProductList];
-    rproductFileds.splice(i, 1);
-    SetRProduct(rproductFileds);
-  };
-
-  const addRFields = () => {
-    SetRProduct([...RProductList, {}]);
-  };
-
-  const HandelRProdeutSelect = (i, e) => {
-    let val = e.target.value;
-
-    let preProduct = [...RProductList];
-    preProduct[i]["name"] = val;
-    preProduct[i]["product"] = undefined;
-    preProduct[i]["details"] = {};
-    preProduct[i]["detailsTobeShown"] = {};
-    SetRProduct(preProduct);
-  };
-
-  const HandelRModelSelect = (i, element, e) => {
-    let val = e.target.value;
-    // let id = e.target.selectedIndex;
-
-    let preProduct = [...RProductList];
-    preProduct[i]["product"] = val;
-    preProduct[i]["details"] = {
-      ...productDetails[0][element.name].products[val].data,
-    };
-    preProduct[i]["width"] = productDetails[0][element.name].products[val].Width
-      ? productDetails[0][element.name].products[val].Width.split(" ")[0]
-      : "NA";
-    preProduct[i]["length"] = productDetails[0][element.name].products[val]
-      .Length
-      ? productDetails[0][element.name].products[val].Length.split(" ")[0]
-      : "NA";
-
-    preProduct[i]["wxlunit"] =
-      preProduct[i]["width"] !== "NA"
-        ? productDetails[0][element.name].products[val].Width.split(" ")[1]
-        : preProduct[i]["length"] !== "NA"
-        ? productDetails[0][element.name].products[val].Length.split(" ")[1]
-        : "NA";
-
-    preProduct[i]["min"] =
-      productDetails[0][element.name].products[val]["Min Rate"];
-    preProduct[i]["rate"] =
-      productDetails[0][element.name].products[val]["Standard Rate"];
-    preProduct[i]["unit"] =
-      productDetails[0][element.name].products[val]["Selling Unit"];
-    preProduct[i]["HSNCode"] =
-      productDetails[0][element.name].products[val]["HSN Code"];
-    preProduct[i]["ModleNo"] =
-      productDetails[0][element.name].products[val]["ModleNo"];
-    preProduct[i]["detailsTobeShown"] = {
-      ...productDetails[0][element.name].products[val].data,
-    };
-
-    if (preProduct[i]["width"] === "NA" && preProduct[i]["length"] === "NA") {
-      preProduct[i]["detailsTobeShown"]["size"] = "NA";
-      preProduct[i]["details"]["size"] = "NA";
-    } else if (preProduct[i]["width"] === "NA") {
-      preProduct[i]["detailsTobeShown"][
-        "size"
-      ] = `${preProduct[i]["length"]} ${preProduct[i]["wxlunit"]}`;
-      preProduct[i]["details"][
-        "size"
-      ] = `${preProduct[i]["length"]} ${preProduct[i]["wxlunit"]}`;
-    } else if (preProduct[i]["length"] === "NA") {
-      preProduct[i]["detailsTobeShown"][
-        "size"
-      ] = `${preProduct[i]["width"]} ${preProduct[i]["wxlunit"]}`;
-      preProduct[i]["details"][
-        "size"
-      ] = `${preProduct[i]["width"]} ${preProduct[i]["wxlunit"]}`;
-    } else {
-      preProduct[i]["detailsTobeShown"][
-        "size"
-      ] = `${preProduct[i]["width"]} x ${preProduct[i]["length"]} ${preProduct[i]["wxlunit"]}`;
-      preProduct[i]["details"][
-        "size"
-      ] = `${preProduct[i]["width"]} x ${preProduct[i]["length"]} ${preProduct[i]["wxlunit"]}`;
-    }
-
-    SetRProduct(preProduct);
-  };
-
-  // ------ for details to be shown --------
-
-  const handelRPOnChecked = (i, e) => {
-    var field = e.target.name;
-    var val = e.target.value;
-
-    let preProduct = [...RProductList];
-    console.log(preProduct[i]["detailsTobeShown"][field]);
-
-    if (preProduct[i]["detailsTobeShown"][field]) {
-      delete preProduct[i]["detailsTobeShown"][field];
-    } else {
-      preProduct[i]["detailsTobeShown"][field] = val;
-    }
-    SetRProduct(preProduct);
-
-    // console.log(ProductList);
-  };
-
-  const handelChangeRPFieldValue = (i, e) => {
-    var field = e.target.name;
-    var val = e.target.value;
-
-    let preProduct = [...RProductList];
-
-    preProduct[i]["detailsTobeShown"][field] = val;
-
-    SetRProduct(preProduct);
-  };
-
-  // Input Handel for additional things ex width, height, rate, unit
-
-  const HandelRPCustomInt = (i, e) => {
-    let field = e.target.name;
-    let val = e.target.value;
-    let preProduct = [...RProductList];
-    preProduct[i][field] = val;
-    SetRProduct(preProduct);
   };
 
   // Term and Condition Handel
@@ -448,13 +413,17 @@ function GenerateQoutation({ visible, close }) {
     pevData["IsRP"] = Object.keys(RProductList[0]).length === 0 ? 0 : 1;
     pevData["metadata"] = metadata;
     pevData["query_id"] = QueryId;
+    pevData["client"] = Client;
+    pevData["sellerDetail"] = sellerDetail;
+    pevData["buyerDetail"] = buyerDetail;
     pevData["quotation"] = "new";
     SetData(pevData);
-    console.log(Data);
 
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(pevData),
     };
 
@@ -491,7 +460,7 @@ function GenerateQoutation({ visible, close }) {
 
       // console.log(Loading);
 
-      await fetch("http://localhost:8000/download", requestOptions)
+      await fetch("http://localhost:8000/createInvoice", requestOptions)
         .then((response) => response.text())
         .then((text) => {
           setLink(text);
@@ -504,22 +473,45 @@ function GenerateQoutation({ visible, close }) {
     // console.log(1, Loading[1]);
   };
 
-  if (!visible) return null;
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-10 backdrop-blur-sm flex items-center justify-center">
-      <div className="w-[1100px] h-[85%] overflow-y-scroll  bg-bg rounded-md">
+    <div className="my-5 overflow-y-scroll h-screen">
+      <div className="w-[1100px] h-[100%] overflow-y-scroll  bg-bg rounded-md">
         <div className="sticky top-0 backdrop-blur-sm bg-bg bg-opacity-20">
           <div className="flex justify-between px-20 pt-5 pb-2">
-            <h1 className="heading">Generate Quotation</h1>
-            <XCircleIcon
+            <h1 className="heading">Generate Invoice</h1>
+            {/* <XCircleIcon
               onClick={() => close(false)}
               className="w-8 hover:cursor-pointer"
-            />
+            /> */}
           </div>
         </div>
 
         <div className="px-28 pb-20 w-[95%]">
+          <div className="flex flex-col pb-2">
+            <label className="label">Select Client</label>
+            <select
+              name="clients"
+              className="NewEmployeeinput"
+              onChange={(e) => {
+                HandelClient(e);
+              }}
+              defaultValue={ClientName || "Select Option"}
+              value={ClientName || "Select Option"}
+            >
+              <option value="Select Option" disabled hidden>
+                Choose here
+              </option>
+
+              {Clients.map((c, id) => {
+                return (
+                  <option id={id} value={id}>
+                    {c.client_name}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+
           <h1 className="text-heading pt-8 pb-2 text-green-500">Meta Data</h1>
 
           <div className="">
@@ -605,7 +597,199 @@ function GenerateQoutation({ visible, close }) {
                   }}
                 />
               </div>
+              <div className="flex flex-col w-1/2">
+                <label className="label">Quotaion No</label>
+                <input
+                  className="Qinput w-[96%]"
+                  type="text"
+                  name="quotation_no"
+                  value={metadata.quotation_no}
+                  onChange={(e) => {
+                    HandelMetadataInput(e);
+                  }}
+                />
+              </div>
             </div>
+          </div>
+
+          <h1 className="text-heading pt-8 pb-2 text-green-500">
+            Seller's Details
+          </h1>
+
+          <div className="">
+            <div className="flex py-0.5 items-end">
+              <div className="flex flex-col w-1/2">
+                <label className="label">Seller's Name</label>
+                <input
+                  className="Qinput w-[96%]"
+                  type="text"
+                  name="name"
+                  value={sellerDetail.name}
+                  onChange={(e) => {
+                    HandelSellerInput(e);
+                  }}
+                />
+              </div>
+
+              <div className="flex flex-col w-1/2">
+                <label className="label">Seller's Mobile No.</label>
+                <input
+                  className="Qinput w-[96%]"
+                  type="text"
+                  name="mobile"
+                  value={sellerDetail.mobile}
+                  onChange={(e) => {
+                    HandelSellerInput(e);
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* <div className="flex py-0.5 items-end">
+              <div className="flex flex-col w-1/2">
+                <label className="label">Seller's Company</label>
+                <input
+                  className="Qinput w-[96%]"
+                  type="text"
+                  name="company"
+                  value={sellerDetail.company}
+                  onChange={(e) => {
+                    HandelSellerInput(e);
+                  }}
+                />
+              </div>
+
+              <div className="flex flex-col w-1/2">
+                <label className="label">Seller's Address</label>
+                <input
+                  className="Qinput w-[96%]"
+                  type="text"
+                  name="address"
+                  value={sellerDetail.address}
+                  onChange={(e) => {
+                    HandelSellerInput(e);
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="flex py-0.5 items-end">
+              <div className="flex flex-col w-1/2">
+                <label className="label">Seller's GST</label>
+                <input
+                  className="Qinput w-[96%]"
+                  type="text"
+                  name="gst"
+                  value={sellerDetail.gst}
+                  onChange={(e) => {
+                    HandelSellerInput(e);
+                  }}
+                />
+              </div>
+
+              <div className="flex flex-col w-1/2">
+                <label className="label">Seller's email</label>
+                <input
+                  className="Qinput w-[96%]"
+                  type="text"
+                  name="email"
+                  value={sellerDetail.email}
+                  onChange={(e) => {
+                    HandelSellerInput(e);
+                  }}
+                />
+              </div>
+            </div> */}
+          </div>
+
+          <h1 className="text-heading pt-8 pb-2 text-green-500">
+            Buyer's Details
+          </h1>
+
+          <div className="">
+            <div className="flex py-0.5 items-end">
+              <div className="flex flex-col w-1/2">
+                <label className="label">Buyer's Name</label>
+                <input
+                  className="Qinput w-[96%]"
+                  type="text"
+                  name="name"
+                  value={buyerDetail.name}
+                  onChange={(e) => {
+                    HandelBuyerInput(e);
+                  }}
+                />
+              </div>
+
+              <div className="flex flex-col w-1/2">
+                <label className="label">Buyer's Mobile No.</label>
+                <input
+                  className="Qinput w-[96%]"
+                  type="text"
+                  name="mobile"
+                  value={buyerDetail.mobile}
+                  onChange={(e) => {
+                    HandelBuyerInput(e);
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* <div className="flex py-0.5 items-end">
+              <div className="flex flex-col w-1/2">
+                <label className="label">Buyer's Company</label>
+                <input
+                  className="Qinput w-[96%]"
+                  type="text"
+                  name="company"
+                  value={buyerDetail.company}
+                  onChange={(e) => {
+                    HandelBuyerInput(e);
+                  }}
+                />
+              </div>
+
+              <div className="flex flex-col w-1/2">
+                <label className="label">Buyer's Address</label>
+                <input
+                  className="Qinput w-[96%]"
+                  type="text"
+                  name="address"
+                  value={buyerDetail.address}
+                  onChange={(e) => {
+                    HandelBuyerInput(e);
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="flex py-0.5 items-end">
+              <div className="flex flex-col w-1/2">
+                <label className="label">Buyer's GST</label>
+                <input
+                  className="Qinput w-[96%]"
+                  type="text"
+                  name="gst"
+                  value={buyerDetail?.gst}
+                  onChange={(e) => {
+                    HandelBuyerInput(e);
+                  }}
+                />
+              </div>
+
+              <div className="flex flex-col w-1/2">
+                <label className="label">Buyer's email</label>
+                <input
+                  className="Qinput w-[96%]"
+                  type="text"
+                  name="email"
+                  value={buyerDetail.email}
+                  onChange={(e) => {
+                    HandelBuyerInput(e);
+                  }}
+                />
+              </div>
+            </div> */}
           </div>
 
           <h1 className="text-heading pt-8 pb-2 text-green-500">
@@ -845,242 +1029,9 @@ function GenerateQoutation({ visible, close }) {
             ))}
           </div>
 
-          <h1 className="text-heading pt-8 pb-2 text-green-500">
+          {/* <h1 className="text-heading pt-8 pb-2 text-green-500">
             Recommended Products
-          </h1>
-
-          <div className="">
-            {RProductList.map((element, index) => (
-              <div className="mt-2 mb-3" key={index}>
-                <div className="flex justify-between pt-2 pb-1 mx-5">
-                  <p className="text-black">Product - {index + 1}</p>
-
-                  <div className="flex">
-                    <Square2StackIcon
-                      className="w-5"
-                      onClick={() => {
-                        addRFields();
-                      }}
-                    />
-
-                    {index ? (
-                      <TrashIcon
-                        className="ml-2 w-5"
-                        onClick={() => {
-                          RemoveRProdctFields(index);
-                        }}
-                      />
-                    ) : null}
-                  </div>
-                </div>
-
-                <div className="border-gray-100 border-2 rounded-md px-8 py-4">
-                  <div className="flex flex-col pb-2">
-                    <label className="label">Select Product</label>
-
-                    <select
-                      id="product"
-                      name="product"
-                      className="NewEmployeeinput"
-                      onChange={(e) => {
-                        HandelRProdeutSelect(index, e);
-                      }}
-                      defaultValue={element.name || "Select Option"}
-                      value={element.name || "Select Option"}
-                    >
-                      <option value="Select Option" disabled hidden>
-                        Choose here
-                      </option>
-
-                      {Object.keys(productDetails[0]).map((product, id) => {
-                        return (
-                          <option value={product} id={id}>
-                            {product}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
-
-                  <div className="flex flex-col py-2">
-                    <label className="label">Select Product Type</label>
-
-                    <select
-                      id="thikness"
-                      name="thikness"
-                      className="NewEmployeeinput"
-                      onChange={(e) => {
-                        HandelRModelSelect(index, element, e);
-                      }}
-                      defaultValue={element.product || "Select Option"}
-                      value={element.product || "Select Option"}
-                    >
-                      <option value="Select Option" disabled hidden>
-                        Choose here
-                      </option>
-
-                      {element.name
-                        ? Object.keys(
-                            productDetails[0][element.name].products
-                          ).map((product, id) => {
-                            return (
-                              <option value={product} id={id}>
-                                {product}
-                              </option>
-                            );
-                          })
-                        : null}
-                    </select>
-                  </div>
-
-                  <div className="flex justify-between py-1 items-center">
-                    <div className="flex flex-col py-2">
-                      <label className="label">
-                        Width
-                        <span className="text-xs">
-                          {element.wxlunit ? ` ( ${element.wxlunit} )` : ""}
-                        </span>
-                      </label>
-                      <input
-                        className="w-[100px] Qinput"
-                        type="text"
-                        name="width"
-                        value={element.width || ""}
-                        onChange={(e) => {
-                          HandelRPCustomInt(index, e);
-                        }}
-                      />
-                    </div>
-
-                    <div className="flex flex-col py-2">
-                      <label className="label">
-                        length
-                        <span className="text-xs">
-                          {element.wxlunit ? ` ( ${element.wxlunit} )` : ""}
-                        </span>
-                      </label>
-                      <input
-                        className="w-[100px] Qinput"
-                        type="text"
-                        name="length"
-                        value={element.length || ""}
-                        onChange={(e) => {
-                          HandelRPCustomInt(index, e);
-                        }}
-                      />
-                    </div>
-
-                    <div className="flex flex-col py-2">
-                      <label className="label">Unit</label>
-                      <input
-                        className="w-[100px] Qinput"
-                        type="text"
-                        name="unit"
-                        value={element.unit || ""}
-                        onChange={(e) => {
-                          HandelRPCustomInt(index, e);
-                        }}
-                      />
-                    </div>
-
-                    <div className="flex flex-col py-2">
-                      {/* <div className='flex flex-col justify-end'>
-                                                    <p className='text-[11px]'>Min: {element.min || 0}</p>
-                                                    <p className='text-[11px]'>Std: {element.max || 0}</p>
-                                                </div> */}
-
-                      <label className="label">Enter Rate</label>
-                      <input
-                        className={
-                          parseInt(element.rate) < parseInt(element.min)
-                            ? "w-[150px] Qinput text-red-500"
-                            : "Qinput w-[180px]"
-                        }
-                        type="text"
-                        name="rate"
-                        value={element.rate}
-                        onChange={(e) => {
-                          HandelRPCustomInt(index, e);
-                        }}
-                      />
-                    </div>
-
-                    <div className="flex flex-col py-2">
-                      <label className="label">Enter Quantity</label>
-                      <input
-                        className="w-[180px] Qinput"
-                        type="text"
-                        name="quantity"
-                        onChange={(e) => {
-                          HandelRPCustomInt(index, e);
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col py-2">
-                    <label className="label">Note</label>
-                    <textarea
-                      className="NewEmployeeinput text-sm w-[100%]"
-                      type="text"
-                      name="note"
-                      onChange={(e) => {
-                        HandelRPCustomInt(index, e);
-                      }}
-                    ></textarea>
-                  </div>
-
-                  <div className="flex flex-col py-2">
-                    <label className="label">Select Product Details</label>
-
-                    {/* <select id="product" name="product" className='NewEmployeeinput' onChange={e => { HandelProdeutDetailSelect(index, e) }} defaultValue={element.name || "Select Option"} value={element.name || "Select Option"} > */}
-
-                    {/* <option value="Select Option" disabled hidden >Choose here</option> */}
-                    {/* </select> */}
-
-                    <div className="flex flex-wrap mt-2">
-                      {element.details
-                        ? Object.entries(element.details).map(
-                            ([key, value], id) => {
-                              return (
-                                <div className="w-[30%] flex flex-col m-2">
-                                  <div className="ml-2">
-                                    <input
-                                      type="checkbox"
-                                      value={value}
-                                      name={key}
-                                      defaultChecked={true}
-                                      onChange={(e) => {
-                                        handelRPOnChecked(index, element, e);
-                                      }}
-                                    />
-                                    <label
-                                      className="pl-2 text-sm"
-                                      name={key}
-                                      value={value}
-                                    >
-                                      {key}:{value}
-                                    </label>
-                                  </div>
-                                  <input
-                                    className="mx-1 w-[90%] pl-2 text-sm outline-none py-0.5"
-                                    name={key}
-                                    value={element.detailsTobeShown[key]}
-                                    onChange={(e) => {
-                                      handelChangeRPFieldValue(index, e);
-                                    }}
-                                  />
-                                </div>
-                              );
-                            }
-                          )
-                        : null}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          </h1> */}
 
           {/* <h1 className='text-heading pt-8 pb-2 text-green-500'>Terms and Conditions</h1> */}
 
@@ -1147,15 +1098,7 @@ function GenerateQoutation({ visible, close }) {
               <>
                 <div className="py-1">
                   <div className="flex justify-end items-center">
-                    <input
-                      className="w-[200px] pl-3 text-sm outline-none py-1 mr-3"
-                      type="text"
-                      name="custom_field1"
-                      value={metadata.custom_field1}
-                      onChange={(e) => {
-                        HandelMetadataInput(e);
-                      }}
-                    />
+                    <label className="pr-2 text-sm">Bank charges</label>
                     <input
                       className="w-[200px] pl-3 text-sm outline-none py-1"
                       type="text"
@@ -1169,15 +1112,7 @@ function GenerateQoutation({ visible, close }) {
                 </div>
                 <div className="py-1">
                   <div className="flex justify-end items-center">
-                    <input
-                      className="w-[200px] pl-3 text-sm outline-none py-1 mr-3"
-                      type="text"
-                      name="custom_field2"
-                      value={metadata.custom_field2}
-                      onChange={(e) => {
-                        HandelMetadataInput(e);
-                      }}
-                    />
+                    <label className="pr-2 text-sm">Freight Charges</label>
                     <input
                       className="w-[200px] pl-3 text-sm outline-none py-1"
                       type="text"
@@ -1217,12 +1152,13 @@ function GenerateQoutation({ visible, close }) {
                   onChange={(e) => {
                     HandelMetadataInput(e);
                   }}
+                  disabled={metadata.currency === "USD" ? true : false}
                   defaultValue={metadata.GST || "Select Option"}
                   value={metadata.GST || "Select Option"}
                 >
                   <option value="18">18%</option>
                   <option value="0">0%</option>
-                  <option value="0.01">0.01%</option>
+                  <option value="0.1">0.1%</option>
                   <option value="5">5%</option>
                   <option value="12">12%</option>
                 </select>
@@ -1262,7 +1198,7 @@ function GenerateQoutation({ visible, close }) {
                 HandelSubmit();
               }}
             >
-              {Loading ? "Generating Quotaion..." : "Generate Quotation"}
+              {Loading ? "Generating Invoice..." : "Generate Invoice"}
             </button>
             {/* {
                             !Loading && !Preview && <button className='py-2 px-6 mt-10 bg-green-500 text-white font-medium rounded-[5px] shadow-sm ml-2' onClick={() => { SetPreview(!Preview) }}>Preview Quotaion</button>
@@ -1293,4 +1229,4 @@ function GenerateQoutation({ visible, close }) {
   );
 }
 
-export default GenerateQoutation;
+export default GenerateInvoice;

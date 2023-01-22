@@ -40,6 +40,71 @@ function IPsetup() {
     }, [])
 
 
+    const AddIp = () => {
+        var data = JSON.stringify({
+            "data": {
+                "ip_address": Ip
+            }
+        });
+
+        var config = {
+            method: 'post',
+            url: `${process.env.REACT_APP_HOST}/api/admin/ipAddress`,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+
+        axios(config)
+            .then(function (response) {
+                // console.log(JSON.stringify(response.data));
+                var resdata = response.data;
+
+                if (resdata.error) {
+
+                    // var errordata = errorMessages[resdata.errorMessage];
+
+                    Store.addNotification({
+                        title: resdata.errorType,
+                        message: resdata.errorMessage,
+                        type: "warning",
+                        insert: "top",
+                        container: "top-right",
+                        animationIn: ["animate__animated", "animate__fadeIn"],
+                        animationOut: ["animate__animated", "animate__fadeOut"],
+                        dismiss: {
+                            duration: 5000,
+                            onScreen: true
+                        }
+                    });
+
+                } else {
+
+                    Store.addNotification({
+                        title: "Ip Added Successfully",
+                        message: "Success",
+                        type: "success",
+                        insert: "top",
+                        container: "top-right",
+                        animationIn: ["animate__animated", "animate__fadeIn"],
+                        animationOut: ["animate__animated", "animate__fadeOut"],
+                        dismiss: {
+                            duration: 5000,
+                            onScreen: true
+                        }
+                    });
+
+                    setIp("");
+                    fetchIps();
+                }
+
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
     const HandelRemoveIp = (id) => {
 
         var config = {
@@ -112,7 +177,7 @@ function IPsetup() {
                     <label className='label'>Add Ip Address</label>
                     <div>
                         <input className='md:w-[300px] Qinput' type="text" name="Ip" value={Ip} onChange={(e) => { setIp(e.target.value) }} />
-                        <button className='px-4 py-1 bg-blue-500 text-white shadow-sm rounded-sm ml-2'>Add</button>
+                        <button className='px-4 py-1 bg-blue-500 text-white shadow-sm rounded-sm ml-2' onClick={() => { AddIp() }}>Add</button>
                     </div>
                 </div>
 

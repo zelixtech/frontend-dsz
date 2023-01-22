@@ -6,6 +6,7 @@ import queryReducer from './querySclice';
 import filtersReducer from './filtersSlice';
 import employeeReducer from './employeeSlice';
 import leaveReducer from './leaveSlice';
+import productReducer from './productSlice';
 
 
 const reducer = configureStore({
@@ -15,7 +16,8 @@ const reducer = configureStore({
         query: queryReducer,
         employee: employeeReducer,
         filters: filtersReducer,
-        leave: leaveReducer
+        leave: leaveReducer,
+        product: productReducer,
     },
 });
 

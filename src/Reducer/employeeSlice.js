@@ -19,11 +19,17 @@ const employeeSlice = createSlice({
         },
         setAttendance(state, action) {
             state.Attendance = action.payload;
-        }
+        },
+        setMDESidebar(state, action) {
+            state.MDESidebar = action.payload;
+        },
+        setMDEASidebar(state, action) {
+            state.MDEASidebar = action.payload;
+        },
     }
 })
 
-export const { setEployees, setEmployeeID, setEployeesAttendance, setEmployeeAttendanceID, setAttendance } = employeeSlice.actions;
+export const { setEployees, setEmployeeID, setEployeesAttendance, setEmployeeAttendanceID, setAttendance, setMDESidebar, setMDEASidebar } = employeeSlice.actions;
 export default employeeSlice.reducer;
 
 

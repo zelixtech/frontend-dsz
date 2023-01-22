@@ -94,13 +94,13 @@ function NewRequrement({ SearchInput, SortType, EmployeeId }) {
         return <div className='flex justify-center items-center pt-20 text-blue-500'>No Requirement with matching filter...</div>;
     }
 
-    if (!UAQuery) {
-        return <div className='flex justify-center items-center pt-20 text-blue-500'>Loading Requirement...</div>;
-    }
+    // if (!UAQuery) {
+    //     return <div className='flex justify-center items-center pt-20 text-blue-500'>Loading Requirement...</div>;
+    // }
 
-    if (UAQuery.length === 0) {
-        return <div className='flex justify-center items-center pt-20 text-blue-500'>No Requirement...</div>;
-    }
+    // if (UAQuery.length === 0) {
+    //     return <div className='flex justify-center items-center pt-20 text-blue-500'>No Requirement...</div>;
+    // }
 
     // console.log(UAQuery);
 
@@ -112,10 +112,10 @@ function NewRequrement({ SearchInput, SortType, EmployeeId }) {
 
 
 
-                UAQuery.map((q, index) => {
+                UAQuery && UAQuery.map((q, index) => {
 
                     return (
-                        < ClientRequest request={q.query_subject} requestCatagory={q.query_product} date={q.createdAt.split("T")[0]} Status={"New"} Lastseen={q.updatedAt.split("T")[0]} key={index} QueryId={q.query_id} EmployeeId={EmployeeId} />
+                        <ClientRequest request={q.query_subject} requestCatagory={q.query_product} date={q.createdAt.split("T")[0]} Status={"New"} Lastseen={q.updatedAt.split("T")[0]} key={index} QueryId={q.query_id} EmployeeId={EmployeeId} />
                     )
 
                 })
@@ -124,6 +124,15 @@ function NewRequrement({ SearchInput, SortType, EmployeeId }) {
 
             }
 
+            {/* <ClientRequest request={"need something that shown up here this is lengthy request"} requestCatagory={"fiber glass cata"} date={"12-1-11"} Status={"New"} Lastseen={""} key={2} QueryId={1} EmployeeId={1} />
+            <ClientRequest request={"need something that shown up here this is lengthy request"} requestCatagory={"fiber glass cata"} date={"12-1-11"} Status={"New"} Lastseen={""} key={2} QueryId={1} EmployeeId={1} />
+            <ClientRequest request={"need something that shown up here this is lengthy request"} requestCatagory={"fiber glass cata"} date={"12-1-11"} Status={"New"} Lastseen={""} key={2} QueryId={1} EmployeeId={1} />
+            <ClientRequest request={"need something that shown up here this is lengthy request"} requestCatagory={"fiber glass cata"} date={"12-1-11"} Status={"New"} Lastseen={""} key={2} QueryId={1} EmployeeId={1} />
+            <ClientRequest request={"need something that shown up here this is lengthy request"} requestCatagory={"fiber glass cata"} date={"12-1-11"} Status={"New"} Lastseen={""} key={2} QueryId={1} EmployeeId={1} />
+            <ClientRequest request={"need something that shown up here this is lengthy request"} requestCatagory={"fiber glass cata"} date={"12-1-11"} Status={"New"} Lastseen={""} key={2} QueryId={1} EmployeeId={1} />
+            <ClientRequest request={"need something that shown up here this is lengthy request"} requestCatagory={"fiber glass cata"} date={"12-1-11"} Status={"New"} Lastseen={""} key={2} QueryId={1} EmployeeId={1} />
+            <ClientRequest request={"need something that shown up here this is lengthy request"} requestCatagory={"fiber glass cata"} date={"12-1-11"} Status={"New"} Lastseen={""} key={2} QueryId={1} EmployeeId={1} />
+            <ClientRequest request={"need something that shown up here this is lengthy request"} requestCatagory={"fiber glass cata"} date={"12-1-11"} Status={"New"} Lastseen={""} key={2} QueryId={1} EmployeeId={1} /> */}
 
         </div>
     )

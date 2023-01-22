@@ -14,8 +14,6 @@ function AddnewClient({ visible, close }) {
     const dispatch = useDispatch()
 
 
-
-
     const errorMessages = {
         "Validation Error": {
             title: "Validation Error",
@@ -231,44 +229,43 @@ function AddnewClient({ visible, close }) {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-10 backdrop-blur-sm flex items-center justify-center">
 
-            <div className='w-[1000px] h-[85%] overflow-y-scroll bg-bg rounded-md'>
-
+            <div className='w-[95%] md:w-[1000px] h-[80%] md:h-[85%] overflow-y-scroll bg-bg rounded-md'>
 
                 <div className='sticky top-0 backdrop-blur-sm bg-bg bg-opacity-20'>
-                    <div className='flex justify-between px-20 pt-5 pb-2'>
+                    <div className='flex justify-between px-3 md:px-20 pt-5 pb-2'>
                         <h1 className='heading'>Add New Client</h1>
                         <XCircleIcon onClick={() => close(false)} className="w-8" />
                     </div>
                 </div>
 
-                <div className='px-28 pb-20 w-[950px]'>
+                <div className='w-[95%] px-5 md:px-28 pb-20 md:w-[950px]'>
 
                     <div className='flex flex-col'>
                         <label className='label'>Client Name</label>
                         <input className='NewEmployeeinput' type="text" name="client_name" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_name} />
                     </div>
 
-                    <div className='flex justify-between pt-3 pb-2'>
+                    <div className='flex flex-col md:flex-row md:justify-between pt-3 pb-2'>
 
                         <div className='flex flex-col'>
                             <label className='label'>Email {EmailExist ? <span className='pl-3 text-xs text-red-500'>"Email Id Already Exists"</span> : null}</label>
-                            <input className='NewEmployeeinput w-[300px]' type="email" name="client_email" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_email} />
+                            <input className='NewEmployeeinput md:w-[300px]' type="email" name="client_email" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_email} />
                         </div>
                         <div className='flex flex-col'>
                             <label className='label'>Mobile No {MobileExist ? <span className='pl-3 text-xs text-red-500'>"Mobile No Already Exists"</span> : null}</label>
-                            <input className='NewEmployeeinput w-[300px]' type="tel" name="client_mobile" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_mobile} />
+                            <input className='NewEmployeeinput md:w-[300px]' type="tel" name="client_mobile" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_mobile} />
                         </div>
 
                     </div>
-                    <div className='flex justify-between  pt-2 pb-3'>
+                    <div className='flex flex-col md:flex-row md:justify-between  pt-2 pb-3'>
 
                         <div className='flex flex-col'>
                             <label className='label'>Alternate Email</label>
-                            <input className='NewEmployeeinput w-[300px]' type="email" name="client_alternate_email" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_alternate_email} />
+                            <input className='NewEmployeeinput md:w-[300px]' type="email" name="client_alternate_email" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_alternate_email} />
                         </div>
                         <div className='flex flex-col'>
                             <label className='label'>Alternate Mobile No</label>
-                            <input className='NewEmployeeinput w-[300px]' type="tel" name="client_alternate_mobile" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_alternate_mobile} />
+                            <input className='NewEmployeeinput md:w-[300px]' type="tel" name="client_alternate_mobile" onChange={(e) => { HandelClientDetailInput(e) }} value={ClientData.client_alternate_mobile} />
                         </div>
 
                     </div>

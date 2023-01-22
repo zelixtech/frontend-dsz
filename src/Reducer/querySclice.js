@@ -32,11 +32,14 @@ const querySlice = createSlice({
         setQuotations(state, action) {
             state.Quotations = action.payload;
         },
+        setMDSidebar(state, action) {
+            state.MDSidebar = action.payload;
+        },
 
     }
 })
 
-export const { setAssignQuery, setUnassignQuery, setCloseQuery, setLostQuery, setUAQID, setAQID, setLQID, setCQID, setQuotations } = querySlice.actions;
+export const { setAssignQuery, setUnassignQuery, setCloseQuery, setLostQuery, setUAQID, setAQID, setLQID, setCQID, setQuotations, setMDSidebar } = querySlice.actions;
 export default querySlice.reducer;
 
 

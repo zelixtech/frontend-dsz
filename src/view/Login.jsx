@@ -41,69 +41,71 @@ function Login() {
         // const jar = new CookieJar();
         // const client = wrapper(axios.create({ jar }));
 
+
+
+        // dispach(setAuth("Admin"));
+        // navigate('/hr')
+
+        var data = JSON.stringify({
+            "data": {
+                "email": LoginDetails.email,
+                "password": LoginDetails.password
+            }
+        });
+
+        var config = {
+            method: 'post',
+            url: `${process.env.REACT_APP_HOST}/api/auth`,
+            // withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            data: data
+        };
+
+        axios(config)
+            .then(function (response) {
+                console.log(JSON.stringify(response.data));
+
+                console.log(response.headers)
+
+                var result = response.data;
+
+                if (result.error) {
+                    setStatus("mismatch")
+                } else {
+
+                    result = result.data;
+                    dispach(setUser(result));
+                    dispach(setDept(result.employee_department));
+                    dispach(setEmployeeId(result.employee_id));
+
+                    if (result.employee_isAdmin === 1) {
+                        dispach(setAuth("Admin"));
+                    } else if (result.employee_isHR === 1) {
+                        dispach(setAuth("Hr"));
+                    } else {
+                        dispach(setAuth("Employee"));
+                    }
+
+                    if (result.employee_isAdmin === 1) {
+                        navigate('/admin')
+                    }
+                    else if (result.employee_department === "Employee") {
+                        navigate('/employee');
+                    } else if (result.employee_department === "hr") {
+                        navigate('/hr');
+                    }
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
         if (window.matchMedia("(max-width: 600px)")) {
             // console.log("hiii");
             document.documentElement.requestFullscreen();
         }
-
-        dispach(setAuth("Admin"));
-        navigate('/admin')
-
-        // var data = JSON.stringify({
-        //     "data": {
-        //         "email": LoginDetails.email,
-        //         "password": LoginDetails.password
-        //     }
-        // });
-
-        // var config = {
-        //     method: 'post',
-        //     url: `${process.env.REACT_APP_HOST}/api/auth`,
-        //     // withCredentials: true,
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     data: data
-        // };
-
-        // axios(config)
-        //     .then(function (response) {
-        //         console.log(JSON.stringify(response.data));
-
-        //         console.log(response.headers)
-
-        //         var result = response.data;
-
-        //         if (result.error) {
-        //             setStatus("mismatch")
-        //         } else {
-
-        //             result = result.data;
-        //             dispach(setUser(result));
-        //             dispach(setDept(result.employee_department));
-        //             dispach(setEmployeeId(result.employee_id));
-
-        //             if (result.employee_isAdmin === 1) {
-        //                 dispach(setAuth("Admin"));
-        //             } else if (result.employee_isHR === 1) {
-        //                 dispach(setAuth("Hr"));
-        //             } else {
-        //                 dispach(setAuth("Employee"));
-        //             }
-
-        //             if (result.employee_isAdmin === 1) {
-        //                 navigate('/admin')
-        //             }
-        //             else if (result.employee_department === "Employee") {
-        //                 navigate('/employee');
-        //             } else if (result.employee_department === "hr") {
-        //                 navigate('/hr');
-        //             }
-        //         }
-        //     })
-        //     .catch(function (error) {
-        //         console.log(error);
-        //     });
     }
 
     return (

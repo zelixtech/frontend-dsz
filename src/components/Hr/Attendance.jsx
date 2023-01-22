@@ -3,7 +3,9 @@ import AttendanceDetails from './AttendanceDetails';
 import AttendanceSidebar from './AttendanceSidebar';
 import HrSearchbar from './HrSearchbar';
 import { useDispatch, useSelector } from 'react-redux';
-import { fechEmployeesAttendance, setEmployeeAttendanceID } from '../../Reducer/employeeSlice';
+import { fechEmployeesAttendance, setEmployeeAttendanceID, setMDEASidebar } from '../../Reducer/employeeSlice';
+import { ArrowLongLeftIcon } from '@heroicons/react/24/outline';
+
 
 function Attendance({ HrInput, HrSearchHandler }) {
 
@@ -14,6 +16,7 @@ function Attendance({ HrInput, HrSearchHandler }) {
 
     const SearchInput = useSelector((state) => state.filters.HrInput);
     const SortType = useSelector((state) => state.filters.HrSortType);
+    const MDEASidebar = useSelector((state) => state.employee.MDEASidebar);
 
     const dispatch = useDispatch();
 
@@ -90,11 +93,11 @@ function Attendance({ HrInput, HrSearchHandler }) {
     }
 
     return (
-        <div className='basis-[83%] flex'>
+        <div className='basis-[100%] md:basis-[83%] flex h-screen'>
 
             {/* main content  */}
 
-            <div className='basis-[70%] bg-bg'>
+            <div className='w-full relative md:basis-[70%] bg-bg'>
 
                 <HrSearchbar HrInput={HrInput} HrSearchHandler={HrSearchHandler} />
 
@@ -104,7 +107,7 @@ function Attendance({ HrInput, HrSearchHandler }) {
 
 
                     {
-                        !employeeAttendance ? <div className='fex justify-center items-center text-blue-500 pt-20'>Loading Employees Attendance...</div> :
+                        !employeeAttendance ? <div className='flex justify-center items-center text-blue-500 pt-20'>Loading Employees Attendance...</div> :
 
                             employeeAttendance.map((e, index) => {
                                 return (
@@ -129,12 +132,25 @@ function Attendance({ HrInput, HrSearchHandler }) {
 
             {/* Rightsidebar  */}
 
-            <div className='basis-[30%] overflow-y-scroll h-screen'>
+            <div className='hidden md:block md:basis-[30%] overflow-y-scroll h-screen'>
 
                 <div>
                     <AttendanceSidebar />
                 </div>
 
+            </div>
+
+
+            <div className={MDEASidebar ? 'md:hidden w-[100%] absolute top-0 left-0 right-0 bottom-0 bg-white overflow-y-scroll h-screen' : 'hidden'}>
+
+                <div className='flex justify-start mx-5 mt-5'>
+
+                    <ArrowLongLeftIcon className='w-7 text-blue-500' onClick={() => { dispatch(setMDEASidebar(false)) }} />
+
+                </div>
+                <div>
+                    <AttendanceSidebar />
+                </div>
             </div>
 
         </div>

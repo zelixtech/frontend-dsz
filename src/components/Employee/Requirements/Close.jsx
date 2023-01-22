@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { fechCloseQuery } from '../../../Reducer/querySclice';
+import { fechCloseQuery, setMDSidebar } from '../../../Reducer/querySclice';
 import { setCQID } from '../../../Reducer/querySclice';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -77,39 +77,92 @@ function Close({ SearchInput, SortType, EmployeeId }) {
 
 
     return (
-        <div className='my-5 overflow-y-scroll h-screen'>
 
-            {
-                CQuery.map((q, index) => {
-                    return (
-                        <div className='px-4 py-2 mx-4 my-2 flex justify-between bg-white shadow-md  rounded-md' key={index}>
-                            <div className='w-[50%] pr-3'>
-                                <h1 className='text-base font-400 whitespace-nowrap text-ellipsis max-w-sm overflow-hidden'>
-                                    {q.query_subject}
-                                </h1>
-                                <p className='text-gray-400'>{q.query_product}</p>
-                            </div>
-                            <div className='flex flex-col w-[20%]'>
-                                <p className='text-base'>Inquiry Date</p>
-                                <p className='text-gray-400 font-400 text-sm'>{q.createdAt.split("T")[0]}</p>
-                            </div>
+        <>
 
-                            <div className='flex flex-col w-[20%]'>
-                                <p className='text-base'>Last Seen</p>
-                                <p className='text-gray-400 font-400 text-sm'>{q.updatedAt.split("T")[0]}</p>
-                            </div>
-                            <div className='w-[10%] h-[99%] my-auto'>
-                                <button className='px-4 py-1 h-8 bg-blue-500 text-base font-[400] text-white rounded-[4px] shadow-sm' id={q.query_id} onClick={(e) => {
-                                    dispatch(setCQID(e.target.id))
-                                }}> View </button>
-                            </div>
+            <div className='hidden md:block my-5 overflow-y-scroll h-screen'>
 
-                        </div>
-                    )
-                })
-            }
+                {
+                    CQuery && CQuery.map((q, index) => {
+                        return (
+                            <div className='px-4 py-2 mx-4 my-2 flex justify-between bg-white shadow-md  rounded-md' key={index}>
+                                <div className='w-[50%] pr-3'>
+                                    <h1 className='text-base font-400 whitespace-nowrap text-ellipsis max-w-sm overflow-hidden'>
+                                        {q.query_subject}
+                                    </h1>
+                                    <p className='text-gray-400'>{q.query_product}</p>
+                                </div>
+                                <div className='flex flex-col w-[20%]'>
+                                    <p className='text-base'>Inquiry Date</p>
+                                    <p className='text-gray-400 font-400 text-sm'>{q.createdAt.split("T")[0]}</p>
+                                </div>
 
-        </div>
+                                <div className='flex flex-col w-[20%]'>
+                                    <p className='text-base'>Last Seen</p>
+                                    <p className='text-gray-400 font-400 text-sm'>{q.updatedAt.split("T")[0]}</p>
+                                </div>
+                                <div className='w-[10%] h-[99%] my-auto'>
+                                    <button className='px-4 py-1 h-8 bg-blue-500 text-base font-[400] text-white rounded-[4px] shadow-sm' id={q.query_id} onClick={(e) => {
+                                        dispatch(setCQID(e.target.id))
+                                    }}> View </button>
+                                </div>
+
+                            </div>
+                        )
+                    })
+                }
+
+            </div>
+
+
+            {/* for mobile */}
+
+            <div className='md:hidden my-5 overflow-y-scroll h-screen'>
+
+                {
+                    CQuery && CQuery.map((q, index) => {
+                        return (
+                            <div className='px-4 py-2 mx-4 my-2 flex flex-col bg-white shadow-md  rounded-md' key={index}>
+
+
+                                <div className=''>
+                                    <h1 className='text-base font-400 whitespace-nowrap text-ellipsis max-w-[290px] overflow-hidden'>
+                                        {q.query_subject}
+                                    </h1>
+                                    <p className='text-gray-400'>{q.query_product}</p>
+                                </div>
+
+
+                                <div className='flex justify-between mt-2'>
+
+                                    <div className='flex flex-col w-[35%]'>
+                                        <p className='text-base'>Inquiry Date</p>
+                                        <p className='text-gray-400 font-400 text-sm'>{q.createdAt.split("T")[0]}</p>
+                                    </div>
+
+                                    <div className='flex flex-col w-[35%] pl-5'>
+                                        <p className='text-base'>Last Seen</p>
+                                        <p className='text-gray-400 font-400 text-sm'>{q.updatedAt.split("T")[0]}</p>
+                                    </div>
+                                    <div className='w-[30%] h-[99%] my-auto'>
+                                        <button className='float-right px-4 py-1 h-8 bg-blue-500 text-base font-[400] text-white rounded-[4px] shadow-sm' id={q.query_id} onClick={(e) => {
+                                            dispatch(setCQID(e.target.id));
+                                            dispatch(setMDSidebar(true));
+                                        }}> View </button>
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+                        )
+                    })
+                }
+
+            </div>
+        </>
+
     )
 }
 

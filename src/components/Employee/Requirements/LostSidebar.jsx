@@ -217,7 +217,7 @@ function LostSidebar({ EmployeeId }) {
     }
 
     if (!LQID || !Querys) {
-        return <div className='flex justify-center items-center text-blue-500 mt-20'>Loading Requirement Details </div>
+        return <div className='flex justify-center items-center text-blue-500 mt-20'>Loading Requirement Details... </div>
     }
 
     const req = Querys.filter((obj) => {
@@ -225,7 +225,7 @@ function LostSidebar({ EmployeeId }) {
     })
 
     if (!req[0]) {
-        return <div className='flex justify-center items-center text-blue-500 mt-20'>Loading Requirement Details </div>
+        return <div className='flex justify-center items-center text-blue-500 mt-20'>Loading Requirement Details... </div>
     }
 
     return (

@@ -94,7 +94,7 @@ function AttendanceSidebar() {
 
 
     return (
-        <div className='mx-6 mt-10 felx flex-col text-[14px] text-black'>
+        <div className='mx-6 mt-10 flex flex-col text-[14px] text-black'>
 
             <div>
 

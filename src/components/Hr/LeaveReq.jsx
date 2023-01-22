@@ -12,8 +12,8 @@ function LeaveReq() {
     ]);
 
     return (
-        <div className='basis-[83%] bg-bg overflow-y-scroll h-screen'>
-            <div className='my-10 mx-5'>
+        <div className='basis-[100%] md:basis-[83%] bg-bg overflow-y-scroll h-screen'>
+            <div className='my-10 md:mx-5'>
 
                 <nav className="flex my-4">
                     <TabSelector
@@ -29,7 +29,6 @@ function LeaveReq() {
                         Archived
                     </TabSelector>
                 </nav>
-
 
                 <h1 className='ml-5 pt-5 font-medium text-black'>Leave Requests</h1>
 

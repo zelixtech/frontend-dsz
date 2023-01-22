@@ -4,6 +4,7 @@ import { fetchArchiveLeaveReq } from '../../Reducer/leaveSlice';
 import { Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import axios from 'axios';
+import { TrashIcon } from '@heroicons/react/24/outline'
 
 function ArchiveLeaveReq() {
     const dispatch = useDispatch();
@@ -85,61 +86,126 @@ function ArchiveLeaveReq() {
     }
 
     return (
-        <div>
-            {
-                ArchiveLeaves.map((l, index) => {
-                    return (
-                        <div className='px-4 py-2 my-2 flex flex-col bg-white shadow-md  rounded-md' key={index}>
-                            <div className='flex justify-between'>
-                                <div className='w-[30%] pr-3'>
-                                    <h1 className='text-base font-400 whitespace-nowrap text-ellipsis max-w-sm overflow-hidden'>
-                                        {l.employee.employee_name}
-                                    </h1>
-                                    <p className='text-gray-400'>{l.employee.employee_office_email}</p>
-                                </div>
-                                <div className='flex flex-col w-[20%]'>
-                                    <p className='text-base'>Starting Date</p>
-                                    <p className='text-gray-400 font-400 text-sm'>{l.leave_req_start_date}</p>
-                                </div>
 
-                                <div className='flex flex-col w-[20%]'>
-                                    <p className='text-base'>Ending Date</p>
-                                    <p className='text-gray-400 font-400 text-sm'>{l.leave_req_end_date}</p>
+
+        <>
+
+            <div className='hidden md:block'>
+                {
+                    ArchiveLeaves.map((l, index) => {
+                        return (
+                            <div className='px-4 py-2 my-2 flex flex-col bg-white shadow-md  rounded-md' key={index}>
+                                <div className='flex justify-between'>
+                                    <div className='w-[30%] pr-3'>
+                                        <h1 className='text-base font-400 whitespace-nowrap text-ellipsis max-w-sm overflow-hidden'>
+                                            {l.employee.employee_name}
+                                        </h1>
+                                        <p className='text-gray-400'>{l.employee.employee_office_email}</p>
+                                    </div>
+                                    <div className='flex flex-col w-[20%]'>
+                                        <p className='text-base'>Starting Date</p>
+                                        <p className='text-gray-400 font-400 text-sm'>{l.leave_req_start_date}</p>
+                                    </div>
+
+                                    <div className='flex flex-col w-[20%]'>
+                                        <p className='text-base'>Ending Date</p>
+                                        <p className='text-gray-400 font-400 text-sm'>{l.leave_req_end_date}</p>
+                                    </div>
+                                    <div className='w-[15%] h-[99%] my-auto'>
+                                        <button className='px-4 py-1 h-8 bg-red-500 text-base font-[400] text-white rounded-[4px] shadow-sm' id={index} onClick={(e) => {
+                                            HandelDeleteReq(l.leave_req_id)
+                                        }}> Delete </button>
+                                    </div>
+                                    <div className='w-[15%] h-[99%] my-auto'>
+                                        <button className='px-4 py-1 h-8 bg-blue-500 text-base font-[400] text-white rounded-[4px] shadow-sm' id={index} onClick={(e) => {
+                                            setViewMessageId(index)
+                                        }}> View </button>
+                                    </div>
+
                                 </div>
-                                <div className='w-[15%] h-[99%] my-auto'>
-                                    <button className='px-4 py-1 h-8 bg-red-500 text-base font-[400] text-white rounded-[4px] shadow-sm' id={index} onClick={(e) => {
-                                        HandelDeleteReq(l.leave_req_id)
-                                    }}> Delete </button>
-                                </div>
-                                <div className='w-[15%] h-[99%] my-auto'>
-                                    <button className='px-4 py-1 h-8 bg-blue-500 text-base font-[400] text-white rounded-[4px] shadow-sm' id={index} onClick={(e) => {
-                                        setViewMessageId(index)
-                                    }}> View </button>
+                                <div className={ViewMessageId === index ? `block  mt-1 py-1 rounded-sm` : `hidden`}>
+                                    <div className='py-1'>
+                                        <h1 className='text-base'>Date Of Request</h1>
+                                        <p className='py-1 text-gray-400 font-400 text-sm'>
+                                            {l.createdAt.split("T")[0]}
+                                        </p>
+                                    </div>
+                                    <div className='py-1'>
+                                        <h1 className='text-base'>Message</h1>
+                                        <p className='py-1 text-sm text-gray-400'>
+                                            {l.leave_req_message}
+                                        </p>
+                                    </div>
+
+
                                 </div>
 
                             </div>
-                            <div className={ViewMessageId === index ? `block  mt-1 py-1 rounded-sm` : `hidden`}>
-                                <div className='py-1'>
-                                    <h1 className='text-base'>Date Of Request</h1>
-                                    <p className='py-1 text-gray-400 font-400 text-sm'>
-                                        {l.createdAt.split("T")[0]}
-                                    </p>
-                                </div>
-                                <div className='py-1'>
-                                    <h1 className='text-base'>Message</h1>
-                                    <p className='py-1 text-sm text-gray-400'>
-                                        {l.leave_req_message}
-                                    </p>
-                                </div>
+                        )
+                    })
+                }
+            </div>
 
+            <div className='md:hidden'>
+                {
+                    ArchiveLeaves.map((l, index) => {
+                        return (
+                            <div className='px-4 py-2 my-2 flex flex-col bg-white shadow-md  rounded-md' key={index}>
+                                <div className='flex justify-between'>
+                                    <div className='w-[65%] pr-3'>
+                                        <h1 className='text-base font-400 whitespace-nowrap text-ellipsis max-w-sm overflow-hidden'>
+                                            {l.employee.employee_name}
+                                        </h1>
+                                        <p className='text-gray-400'>{l.employee.employee_office_email}</p>
+                                    </div>
+                                    <div className='w-[12%]'>
+                                        <button className='w-8 h-8 text-red-500 text-base font-[400]' id={index} onClick={(e) => {
+                                            HandelDeleteReq(l.leave_req_id)
+                                        }}> <TrashIcon /> </button>
+                                    </div>
+                                    <div className='w-[23%]'>
+                                        <button className='px-4 py-1 h-8 bg-blue-500 text-base font-[400] text-white rounded-[4px] shadow-sm' id={index} onClick={(e) => {
+                                            setViewMessageId(index)
+                                        }}> View </button>
+                                    </div>
+
+                                </div>
+                                <div className='flex justify-between mt-2'>
+                                    <div className='flex flex-col w-[50%]'>
+                                        <p className='text-base'>Starting Date</p>
+                                        <p className='text-gray-400 font-400 text-sm'>{l.leave_req_start_date}</p>
+                                    </div>
+
+                                    <div className='flex flex-col w-[50%]'>
+                                        <p className='text-base'>Ending Date</p>
+                                        <p className='text-gray-400 font-400 text-sm'>{l.leave_req_end_date}</p>
+                                    </div>
+                                </div>
+                                <div className={ViewMessageId === index ? `block  mt-1 py-1 rounded-sm` : `hidden`}>
+                                    <div className='py-1'>
+                                        <h1 className='text-base'>Date Of Request</h1>
+                                        <p className='py-1 text-gray-400 font-400 text-sm'>
+                                            {l.createdAt.split("T")[0]}
+                                        </p>
+                                    </div>
+                                    <div className='py-1'>
+                                        <h1 className='text-base'>Message</h1>
+                                        <p className='py-1 text-sm text-gray-400'>
+                                            {l.leave_req_message}
+                                        </p>
+                                    </div>
+
+
+                                </div>
 
                             </div>
+                        )
+                    })
+                }
+            </div>
 
-                        </div>
-                    )
-                })
-            }
-        </div>
+        </>
+
     )
 }
 

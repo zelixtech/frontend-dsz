@@ -98,6 +98,7 @@ function Dashbord() {
 
                 } else {
                     setData(resdata.data);
+                    console.log(resdata.data);
                 }
             })
             .catch(function (error) {
@@ -110,7 +111,7 @@ function Dashbord() {
 
 
     return (
-        <div className='basis-[100%] md:basis-[83%] md:flex flex-col bg-bg h-screen'>
+        <div className='basis-[100%] pb-20 md:mb-0 md:basis-[83%] flex flex-col bg-bg h-screen'>
 
             <h1 className='text-xl font-medium text-black pt-5 pb-3 pl-3 mt-5 border-b border-gray-400 mx-7'>DashBoard</h1>
 
@@ -137,7 +138,7 @@ function Dashbord() {
 
 
                     <h1 className='text-black text-lg mx-1 py-2'>Requirements</h1>
-                    <div className='flex justify-start'>
+                    <div className='flex justify-start flex-wrap'>
                         {
                             Data.no_of_queries !== undefined && Data.no_of_queries.reverse().map((obj, id) => {
                                 return (
@@ -152,7 +153,7 @@ function Dashbord() {
                     </div>
 
                     <h1 className='text-black text-lg mx-1 py-2'>Clients</h1>
-                    <div className='flex justify-start'>
+                    <div className='flex justify-start flex-wrap'>
 
                         {
                             Data.no_of_clients !== undefined && Data.no_of_clients.reverse().map((obj, id) => {

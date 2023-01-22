@@ -40,7 +40,7 @@ function BlockedClientsSidebar() {
 
 
     if (!clients || !ClientId) {
-        return "Loading"
+        return <div className='flex justify-center items-center mt-20 text-blue-500'>Loading...</div>
     }
 
     // selecting client clicked on view
@@ -49,7 +49,7 @@ function BlockedClientsSidebar() {
     })
 
     if (!ClientData) {
-        return "Loading..."
+        return <div className='flex justify-center items-center mt-20 text-blue-500'>Loading...</div>;
     }
 
 

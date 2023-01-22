@@ -76,11 +76,11 @@ function QueryDetails({ visible, close, QueryId, Query, Client }) {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-10 backdrop-blur-sm flex items-center justify-center">
 
-            <div className='bg-white w-[1000px] h-[85%] overflow-y-scroll h-screen bg-bg rounded-md'>
+            <div className='w-[98%] md:w-[1000px] h-[82%] md:h-[85%] overflow-y-scroll bg-bg rounded-md'>
 
 
                 <div className='sticky top-0 backdrop-blur-sm bg-bg bg-opacity-20'>
-                    <div className='flex justify-between px-20 pt-5 pb-2'>
+                    <div className='flex justify-between px-5 md:px-20 pt-5 pb-2'>
                         <h1 className='heading'>Query Details</h1>
                         <XCircleIcon onClick={() => close(false)} className="w-8" />
                     </div>
@@ -121,7 +121,7 @@ function QueryDetails({ visible, close, QueryId, Query, Client }) {
 
                     {/* <h1 className='text-black font-medium py-2'>Query Details</h1> */}
 
-                    <div className='mr-14'>
+                    <div className='md:mr-14'>
 
 
 
@@ -183,7 +183,7 @@ function QueryDetails({ visible, close, QueryId, Query, Client }) {
 
                     <h1 className='text-primary font-medium py-3'>Follow Ups</h1>
 
-                    <div className='grid grid-cols-3'>
+                    <div className='grid md:grid-cols-3'>
 
                         {
                             followups.length === 0 ? <div className='flex justify-center items-center text-black h-[100px]'>No Followups...</div> :
@@ -201,7 +201,7 @@ function QueryDetails({ visible, close, QueryId, Query, Client }) {
 
                     <h1 className='text-primary font-medium py-3'>Quotations</h1>
 
-                    <div className='grid grid-cols-3'>
+                    <div className='grid md:grid-cols-3'>
 
                         {
                             Quotation.length === 0 ? <div className='flex justify-center items-center text-black h-[100px]'>No Quotation...</div> :

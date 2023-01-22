@@ -3,7 +3,8 @@ import HrSearchbar from './HrSearchbar'
 import StaffDetails from './StaffDetails'
 import StaffSidebar from './StaffSidebar'
 import { useDispatch, useSelector } from 'react-redux'
-import { fechEmployees, setEmployeeID } from '../../Reducer/employeeSlice'
+import { fechEmployees, setEmployeeID, setMDESidebar } from '../../Reducer/employeeSlice'
+import { ArrowLongLeftIcon } from '@heroicons/react/24/outline';
 
 
 function Staff({ HrInput, HrSearchHandler }) {
@@ -11,6 +12,7 @@ function Staff({ HrInput, HrSearchHandler }) {
 
     const SearchInput = useSelector((state) => state.filters.HrInput);
     const SortType = useSelector((state) => state.filters.HrSortType);
+    const MDESidebar = useSelector((state) => state.employee.MDESidebar);
 
 
     const dispatch = useDispatch();
@@ -89,11 +91,11 @@ function Staff({ HrInput, HrSearchHandler }) {
     }
 
     return (
-        <div className='basis-[83%] flex'>
+        <div className='basis-[100%] md:basis-[83%] flex h-screen'>
 
             {/* main content  */}
 
-            <div className='basis-[70%] bg-bg'>
+            <div className='w-full relative md:basis-[70%] bg-bg'>
 
                 <HrSearchbar HrInput={HrInput} HrSearchHandler={HrSearchHandler} />
 
@@ -102,7 +104,7 @@ function Staff({ HrInput, HrSearchHandler }) {
                 <div className='my-5 overflow-y-scroll h-screen'>
 
                     {
-                        !Employee ? <div className='fex justify-center items-center text-blue-500 pt-20'>Loading Employees...</div> :
+                        !Employee ? <div className='flex justify-center items-center text-blue-500 pt-20'>Loading Employees...</div> :
 
                             Employee.map((e, index) => {
                                 //console.log(e);
@@ -111,6 +113,10 @@ function Staff({ HrInput, HrSearchHandler }) {
                                 )
                             })
                     }
+
+                    {/* <StaffDetails Name={"vishal savaliya"} Position={"Manager"} Contact={"9510342875"} Email={"vsavaliya1106@gmail.com"} key={1} EmployeeId={1} />
+                    <StaffDetails Name={"vishal savaliya"} Position={"Manager"} Contact={"9510342875"} Email={"vsavaliya1106@gmail.com"} key={1} EmployeeId={1} />
+                    <StaffDetails Name={"vishal savaliya"} Position={"Manager"} Contact={"9510342875"} Email={"vsavaliya1106@gmail.com"} key={1} EmployeeId={1} /> */}
 
                 </div>
 
@@ -123,12 +129,24 @@ function Staff({ HrInput, HrSearchHandler }) {
 
 
 
-            <div className='basis-[30%] overflow-y-scroll h-screen'>
+            <div className='hidden md:block md:basis-[30%] overflow-y-scroll h-screen'>
 
                 <div>
                     <StaffSidebar />
                 </div>
 
+            </div>
+
+            <div className={MDESidebar ? 'md:hidden w-[100%] absolute top-0 left-0 right-0 bottom-0 bg-white overflow-y-scroll h-screen' : 'hidden'}>
+
+                <div className='flex justify-start mx-5 mt-5'>
+
+                    <ArrowLongLeftIcon className='w-7 text-blue-500' onClick={() => { dispatch(setMDESidebar(false)) }} />
+
+                </div>
+                <div>
+                    <StaffSidebar />
+                </div>
             </div>
 
 

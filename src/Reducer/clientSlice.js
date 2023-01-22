@@ -16,11 +16,14 @@ const clientSlice = createSlice({
         },
         setBlockClientID(state, action) {
             state.activeBClientId = action.payload;
+        },
+        setMDCSidebar(state, action) {
+            state.MDCSidebar = action.payload;
         }
     }
 })
 
-export const { setActiveClientID, setActiveClients, setBlockClients, setBlockClientID } = clientSlice.actions;
+export const { setActiveClientID, setActiveClients, setBlockClients, setBlockClientID, setMDCSidebar } = clientSlice.actions;
 export default clientSlice.reducer;
 
 

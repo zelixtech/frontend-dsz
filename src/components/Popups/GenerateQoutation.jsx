@@ -494,6 +494,7 @@ function GenerateQoutation({ visible, close }) {
                 .then(response => response.text())
                 .then(text => {
                     setLink(text);
+                    console.log(text)
                     dispatch(fetchQuotations(QueryId))
                 });
 
@@ -512,53 +513,53 @@ function GenerateQoutation({ visible, close }) {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-10 backdrop-blur-sm flex items-center justify-center">
 
-            <div className='w-[1100px] h-[85%] overflow-y-scroll  bg-bg rounded-md'>
+            <div className='w-[98%] md:w-[1100px] h-[82%] md:h-[85%] overflow-y-scroll  bg-bg rounded-md'>
 
 
                 <div className='sticky top-0 backdrop-blur-sm bg-bg bg-opacity-20'>
-                    <div className='flex justify-between px-20 pt-5 pb-2'>
+                    <div className='flex justify-between px-5 md:px-20 pt-5 pb-2'>
                         <h1 className='heading'>Generate Quotation</h1>
                         <XCircleIcon onClick={() => close(false)} className="w-8 hover:cursor-pointer" />
                     </div>
                 </div>
 
-                <div className='px-28 pb-20 w-[95%]'>
+                <div className='px-5 md:px-28 pb-20 md:w-[95%]'>
 
                     <h1 className='text-heading pt-8 pb-2 text-green-500'>Meta Data</h1>
 
                     <div className=''>
 
-                        <div className='flex py-0.5 items-end'>
-                            <div className='flex flex-col w-1/2'>
+                        <div className='flex py-0.5 md:items-end flex-col md:flex-row'>
+                            <div className='flex flex-col md:w-1/2'>
                                 <label className='label'>Offer Validity</label>
                                 <input className='Qinput w-[96%]' type="text" name="offer_validity" value={metadata.offer_validity} onChange={(e) => { HandelMetadataInput(e) }} />
                             </div>
 
-                            <div className='flex flex-col w-1/2'>
+                            <div className='flex flex-col md:w-1/2'>
                                 <label className='label'>Payment Terms</label>
                                 <input className='Qinput w-[96%]' type="text" name="payment_terms" value={metadata.payment_terms} onChange={(e) => { HandelMetadataInput(e) }} />
                             </div>
                         </div>
 
-                        <div className='flex py-0.5 items-end'>
-                            <div className='flex flex-col w-1/2'>
+                        <div className='flex py-0.5 md:items-end flex-col md:flex-row'>
+                            <div className='flex flex-col md:w-1/2'>
                                 <label className='label'>Dispatch Through</label>
                                 <input className='Qinput w-[96%]' type="text" name="dispatch_through" value={metadata.dispatch_through} onChange={(e) => { HandelMetadataInput(e) }} />
                             </div>
 
-                            <div className='flex flex-col w-1/2'>
+                            <div className='flex flex-col md:w-1/2'>
                                 <label className='label'>Destination</label>
                                 <input className='Qinput w-[96%]' type="text" name="destination" value={metadata.destination} onChange={(e) => { HandelMetadataInput(e) }} />
                             </div>
                         </div>
 
-                        <div className='flex py-0.5 items-end'>
-                            <div className='flex flex-col w-1/2'>
+                        <div className='flex py-0.5 md:items-end flex-col md:flex-row'>
+                            <div className='flex flex-col md:w-1/2'>
                                 <label className='label'>Terms Of Deliver</label>
                                 <input className='Qinput w-[96%]' type="text" name="terms_of_deliver" value={metadata.terms_of_deliver} onChange={(e) => { HandelMetadataInput(e) }} />
                             </div>
 
-                            <div className='flex flex-col w-1/2'>
+                            <div className='flex flex-col md:w-1/2'>
                                 <label className='label'>Total Bundel</label>
                                 <input className='Qinput w-[96%]' type="text" name="total_bundel" value={metadata.total_bundel} onChange={(e) => { HandelMetadataInput(e) }} />
                             </div>
@@ -631,20 +632,20 @@ function GenerateQoutation({ visible, close }) {
                                         </div>
 
 
-                                        <div className='flex justify-between py-1 items-center'>
+                                        <div className='flex md:justify-between py-1 md:items-center flex-col md:flex-row'>
                                             <div className='flex flex-col py-2'>
                                                 <label className='label'>Width<span className='text-xs'>{element.wxlunit ? ` ( ${element.wxlunit} )` : ""}</span></label>
-                                                <input className='w-[100px] Qinput' type="text" name="width" value={element.width || ""} onChange={(e) => { HandelCustomInt(index, e) }} />
+                                                <input className='md:w-[100px] Qinput' type="text" name="width" value={element.width || ""} onChange={(e) => { HandelCustomInt(index, e) }} />
                                             </div>
 
                                             <div className='flex flex-col py-2'>
                                                 <label className='label'>length<span className='text-xs'>{element.wxlunit ? ` ( ${element.wxlunit} )` : ""}</span></label>
-                                                <input className='w-[100px] Qinput' type="text" name="length" value={element.length || ""} onChange={(e) => { HandelCustomInt(index, e) }} />
+                                                <input className='md:w-[100px] Qinput' type="text" name="length" value={element.length || ""} onChange={(e) => { HandelCustomInt(index, e) }} />
                                             </div>
 
                                             <div className='flex flex-col py-2'>
                                                 <label className='label'>Unit</label>
-                                                <input className='w-[100px] Qinput' type="text" name="unit" value={element.unit || ""} onChange={(e) => { HandelCustomInt(index, e) }} />
+                                                <input className='md:w-[100px] Qinput' type="text" name="unit" value={element.unit || ""} onChange={(e) => { HandelCustomInt(index, e) }} />
                                             </div>
 
 
@@ -655,15 +656,14 @@ function GenerateQoutation({ visible, close }) {
                                                 </div> */}
 
                                                 <label className='label'>Enter Rate</label>
-                                                <input className={parseInt(element.rate) < parseInt(element.min) ? 'w-[150px] Qinput text-red-500' : 'Qinput w-[180px]'} type="text" name="rate" value={element.rate} onChange={(e) => { HandelCustomInt(index, e) }} />
+                                                <input className={parseInt(element.rate) < parseInt(element.min) ? 'md:w-[150px] Qinput text-red-500' : 'Qinput md:w-[180px]'} type="text" name="rate" value={element.rate} onChange={(e) => { HandelCustomInt(index, e) }} />
 
                                             </div>
 
 
-
                                             <div className='flex flex-col py-2'>
                                                 <label className='label'>Enter Quantity</label>
-                                                <input className='w-[180px] Qinput' type="text" name="quantity" onChange={(e) => { HandelCustomInt(index, e) }} />
+                                                <input className='md:w-[180px] Qinput' type="text" name="quantity" onChange={(e) => { HandelCustomInt(index, e) }} />
                                             </div>
 
                                         </div>
@@ -687,13 +687,13 @@ function GenerateQoutation({ visible, close }) {
                                                     element.details ? (
                                                         Object.entries(element.details).map(([key, value], id) => {
                                                             return (
-                                                                <div className='w-[30%] flex flex-col m-2'>
+                                                                <div className='md:w-[30%] flex flex-col m-2'>
 
                                                                     <div className='ml-2'>
                                                                         <input type="checkbox" value={value} name={key} defaultChecked={true} onChange={(e) => { handelOnChecked(index, element, e) }} />
                                                                         <label className='pl-2 text-sm' name={key} value={value}>{key}:{value}</label>
                                                                     </div>
-                                                                    <input className='mx-1 w-[90%] pl-2 text-sm outline-none py-0.5' name={key} value={element.detailsTobeShown[key]} onChange={(e) => { handelChangeFieldValue(index, e); }} />
+                                                                    <input className='mx-1 md:w-[90%] pl-2 text-sm outline-none py-0.5' name={key} value={element.detailsTobeShown[key]} onChange={(e) => { handelChangeFieldValue(index, e); }} />
                                                                 </div>
                                                             )
                                                         })
@@ -780,20 +780,20 @@ function GenerateQoutation({ visible, close }) {
                                         </div>
 
 
-                                        <div className='flex justify-between py-1 items-center'>
+                                        <div className='flex md:justify-between py-1 md:items-center flex-col md:flex-row'>
                                             <div className='flex flex-col py-2'>
                                                 <label className='label'>Width<span className='text-xs'>{element.wxlunit ? ` ( ${element.wxlunit} )` : ""}</span></label>
-                                                <input className='w-[100px] Qinput' type="text" name="width" value={element.width || ""} onChange={(e) => { HandelRPCustomInt(index, e) }} />
+                                                <input className='md:w-[100px] Qinput' type="text" name="width" value={element.width || ""} onChange={(e) => { HandelRPCustomInt(index, e) }} />
                                             </div>
 
                                             <div className='flex flex-col py-2'>
                                                 <label className='label'>length<span className='text-xs'>{element.wxlunit ? ` ( ${element.wxlunit} )` : ""}</span></label>
-                                                <input className='w-[100px] Qinput' type="text" name="length" value={element.length || ""} onChange={(e) => { HandelRPCustomInt(index, e) }} />
+                                                <input className='md:w-[100px] Qinput' type="text" name="length" value={element.length || ""} onChange={(e) => { HandelRPCustomInt(index, e) }} />
                                             </div>
 
                                             <div className='flex flex-col py-2'>
                                                 <label className='label'>Unit</label>
-                                                <input className='w-[100px] Qinput' type="text" name="unit" value={element.unit || ""} onChange={(e) => { HandelRPCustomInt(index, e) }} />
+                                                <input className='md:w-[100px] Qinput' type="text" name="unit" value={element.unit || ""} onChange={(e) => { HandelRPCustomInt(index, e) }} />
                                             </div>
 
 
@@ -804,7 +804,7 @@ function GenerateQoutation({ visible, close }) {
                                                 </div> */}
 
                                                 <label className='label'>Enter Rate</label>
-                                                <input className={parseInt(element.rate) < parseInt(element.min) ? 'w-[150px] Qinput text-red-500' : 'Qinput w-[180px]'} type="text" name="rate" value={element.rate} onChange={(e) => { HandelRPCustomInt(index, e) }} />
+                                                <input className={parseInt(element.rate) < parseInt(element.min) ? 'md:w-[150px] Qinput text-red-500' : 'Qinput md:w-[180px]'} type="text" name="rate" value={element.rate} onChange={(e) => { HandelRPCustomInt(index, e) }} />
 
                                             </div>
 
@@ -812,7 +812,7 @@ function GenerateQoutation({ visible, close }) {
 
                                             <div className='flex flex-col py-2'>
                                                 <label className='label'>Enter Quantity</label>
-                                                <input className='w-[180px] Qinput' type="text" name="quantity" onChange={(e) => { HandelRPCustomInt(index, e) }} />
+                                                <input className='md:w-[180px] Qinput' type="text" name="quantity" onChange={(e) => { HandelRPCustomInt(index, e) }} />
                                             </div>
 
                                         </div>
@@ -836,13 +836,13 @@ function GenerateQoutation({ visible, close }) {
                                                     element.details ? (
                                                         Object.entries(element.details).map(([key, value], id) => {
                                                             return (
-                                                                <div className='w-[30%] flex flex-col m-2'>
+                                                                <div className='md:w-[30%] flex flex-col m-2'>
 
                                                                     <div className='ml-2'>
                                                                         <input type="checkbox" value={value} name={key} defaultChecked={true} onChange={(e) => { handelRPOnChecked(index, element, e) }} />
                                                                         <label className='pl-2 text-sm' name={key} value={value}>{key}:{value}</label>
                                                                     </div>
-                                                                    <input className='mx-1 w-[90%] pl-2 text-sm outline-none py-0.5' name={key} value={element.detailsTobeShown[key]} onChange={(e) => { handelChangeRPFieldValue(index, e); }} />
+                                                                    <input className='mx-1 md:w-[90%] pl-2 text-sm outline-none py-0.5' name={key} value={element.detailsTobeShown[key]} onChange={(e) => { handelChangeRPFieldValue(index, e); }} />
                                                                 </div>
                                                             )
                                                         })
@@ -896,7 +896,8 @@ function GenerateQoutation({ visible, close }) {
 
                         <div className='py-1'>
                             <div className='flex justify-end items-center'>
-                                <label className='pr-2 text-sm'>Packaging And forwarding Charges</label>
+                                <label className='pr-2 text-sm md:hidden'>P & F Charges</label>
+                                <label className='pr-2 text-sm hidden sm:block'>Packaging And forwarding Charges</label>
                                 <input className='w-[200px] pl-3 text-sm outline-none py-1' type="text" name="packaging_and_forwarding_charges" value={metadata.packaging_and_forwarding_charges} onChange={(e) => { HandelMetadataInput(e) }} />
                             </div>
                         </div>
@@ -925,7 +926,8 @@ function GenerateQoutation({ visible, close }) {
                             ) :
                                 <div className='py-1'>
                                     <div className='flex justify-end items-center'>
-                                        <label className='pr-2 text-sm'>Transportation Cost</label>
+                                        <label className='pr-2 text-sm hidden md:block'>Transportation Cost</label>
+                                        <label className='pr-2 text-sm md:hidden'>Transport Cost</label>
                                         <input className='w-[200px] pl-3 text-sm outline-none py-1' type="text" name="transportation_cost" value={metadata.transportation_cost} onChange={(e) => { HandelMetadataInput(e) }} />
                                     </div>
                                 </div>
@@ -977,9 +979,18 @@ function GenerateQoutation({ visible, close }) {
                     <h1 className='text-heading pt-8 pb-2 text-gray-500'>Preview</h1>
 
 
-                    <object data={Link} type="application/pdf" width="100%" height="100%" className='W-[100%] h-screen '>
-                        <p>View PDF</p>
+                    {Link && <object data={Link} type="application/pdf" width="100%" height="100%" className="w-full h-screen">
+                        <p>Quotation PDF</p>
+                        <a href={Link} target="_blank" className='py-2'>Click here to show pdf</a>
                     </object>
+                    }
+
+
+                    {/* <iframe src={Link}>
+
+                    </iframe> */}
+
+
 
 
                     {/* 

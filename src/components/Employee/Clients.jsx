@@ -4,9 +4,9 @@ import AllClients from './Clients/AllClients';
 import BlockedClientsSidebar from './Clients/BlockedClientsSidebar';
 import ActiveClientSidebar from './Clients/ActiveClientSidebar';
 import ClientSerachbar from './Clients/ClientSerachbar';
-import { useSelector } from 'react-redux';
-
-
+import { useDispatch, useSelector } from 'react-redux';
+import { ArrowLongLeftIcon } from '@heroicons/react/24/outline';
+import { setMDCSidebar } from "../../Reducer/clientSlice";
 
 
 
@@ -18,16 +18,20 @@ function Users({ Input, searchHandler }) {
         "Blocked",
     ]);
 
+    const dispatch = useDispatch();
+
     const SearchInput = useSelector((state) => state.filters.CInput);
     const SortType = useSelector((state) => state.filters.CSortType);
+    const MDCSidebar = useSelector((state) => state.client.MDCSidebar);
+
 
     return (
 
-        <div className='basis-[83%] flex'>
+        <div className='basis-[100%] md:basis-[83%] flex h-screen'>
 
             {/* main content  */}
 
-            <div className='basis-[70%] bg-bg'>
+            <div className='w-full relative md:basis-[70%] bg-bg'>
 
                 <nav className="flex ml-3 my-4">
                     <TabSelector
@@ -64,7 +68,25 @@ function Users({ Input, searchHandler }) {
 
             {/* Rightsidebar  */}
 
-            <div className='basis-[30%] boxs'>
+            <div className='hidden md:block md:basis-[30%]'>
+
+                <div>
+                    <TabPanel hidden={selectedTab !== "Active"}><ActiveClientSidebar /></TabPanel>
+                    <TabPanel hidden={selectedTab !== "Blocked"}><BlockedClientsSidebar /></TabPanel>
+                </div>
+
+            </div>
+
+
+            {/* for mobile */}
+
+            <div className={MDCSidebar ? 'md:hidden w-[100%] absolute top-0 left-0 right-0 bottom-0 bg-white overflow-y-scroll h-screen' : 'hidden'}>
+
+                <div className='flex justify-start mx-5 mt-5'>
+
+                    <ArrowLongLeftIcon className='w-7 text-blue-500' onClick={() => { dispatch(setMDCSidebar(false)) }} />
+
+                </div>
 
                 <div>
                     <TabPanel hidden={selectedTab !== "Active"}><ActiveClientSidebar /></TabPanel>

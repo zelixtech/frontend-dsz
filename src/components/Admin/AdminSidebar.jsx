@@ -62,8 +62,8 @@ function AdminSidebar() {
                     <div>
                         <select id="panel" name="panel" className='bg-gray-50 w-full p-2.5 outline-none border-blue-500  focus:ring-blue-500 rounded-md text-sm focus:border-blue-500 block hover:cursor-pointer' onChange={(e) => { HandelPanelSelection(e) }} defaultValue={Panel}>
                             <option value="Select Option" hidden selected >Admin Panel</option>
-                            <option className='tetx-sm' value="Employee">Employee</option>
-                            <option className='tetx-sm' value="Hr">Hr Department</option>
+                            <option className='text-sm' value="Employee">Employee</option>
+                            <option className='text-sm' value="Hr">Hr Department</option>
                         </select>
                     </div>
                 </div>
@@ -78,8 +78,22 @@ function AdminSidebar() {
 
             </div>
 
-            <div className='fixed w-full bottom-0 md:hidden'>
-                <div className='flex justify-evenly'>
+
+
+
+
+
+            <div className='fixed w-full bottom-0 md:hidden bg-white'>
+
+                <div className='flex justify-evenly items-center'>
+
+                    <div>
+                        <select id="panel" name="panel" className='w-9 block hover:cursor-pointer' onChange={(e) => { HandelPanelSelection(e) }} defaultValue={Panel}>
+                            <option value="Select Option" hidden selected className='text-[#b2b2b4]' >A</option>
+                            <option className='text-sm' value="Hr">H</option>
+                            <option className='text-sm' value="Employee">E</option>
+                        </select>
+                    </div>
                     <SidebarOption link={"dashbord"} Icon={Squares2X2Icon} Title={"DashBoard"} />
                     <SidebarOption link={"products"} Icon={CubeIcon} Title={"Products"} />
                     <SidebarOption link={"ipsetup"} Icon={ServerStackIcon} Title={"Ip SetUp"} />

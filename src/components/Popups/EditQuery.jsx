@@ -147,16 +147,16 @@ function EditQuery({ visible, close, ReqDetails, EmployeeId }) {
         <div>
             <div className="fixed inset-0 bg-black bg-opacity-10 backdrop-blur-sm flex items-center justify-center">
 
-                <div className='w-[1000px] h-[85%] overflow-y-scroll bg-bg rounded-md'>
+                <div className='w-[98%] md:w-[1000px] h-[82%] md:h-[85%] overflow-y-scroll bg-bg rounded-md'>
 
                     <div className='sticky top-0 backdrop-blur-sm bg-bg bg-opacity-20'>
-                        <div className='flex justify-between px-20 pt-5 pb-2'>
+                        <div className='flex justify-between px-5 md:px-20 pt-5 pb-2'>
                             <h1 className='heading'>Edit Requirement</h1>
                             <XCircleIcon onClick={() => { dispatch(fechAssignQuery(EmployeeId)); dispatch(setAQID(AQID)); close(false) }} className="w-8" />
                         </div>
                     </div>
 
-                    <div className='px-28 pb-20 w-[950px]'>
+                    <div className='w-[95%] px-5 md:px-28 pb-20 md:w-[950px]'>
 
                         <div className='flex flex-col'>
                             <label className='label'>Requirements</label>

@@ -99,24 +99,24 @@ function Leave() {
     }
 
     return (
-        <div className='basis-[83%] bg-bg overflow-y-scroll h-screen'>
-            <div className='mx-10 py-10'>
+        <div className='basis-[100%] md:basis-[83%] bg-bg overflow-y-scroll h-screen'>
+            <div className='ml-5 py-5 md:ml-10 md:py-10'>
                 <h1>Request For Leave</h1>
 
-                <div className='mt-6'>
-                    <div className='flex justify-start py-2'>
+                <div className='mr-2 md:mr-0 md:mt-6'>
+                    <div className='flex flex-col md:flex-row md:justify-start py-2'>
                         <div className='flex flex-col'>
                             <label className='label'>Start Data</label>
-                            <input className='outline-none px-2' type="date" name='leave_req_start_date' value={LeaveData.leave_req_start_date} onChange={(e) => { HandelInput(e) }} min={minDate} />
+                            <input className='outline-none px-2 py-1 md:py-0 bg-white' type="date" name='leave_req_start_date' value={LeaveData.leave_req_start_date} onChange={(e) => { HandelInput(e) }} min={minDate} />
                         </div>
-                        <div className='ml-4 flex flex-col'>
+                        <div className='md:ml-4 flex flex-col'>
                             <label className='label'>End Data</label>
-                            <input className='outline-none px-2' type="date" name='leave_req_end_date' value={LeaveData.leave_req_end_date} onChange={(e) => { HandelInput(e) }} min={minDate} />
+                            <input className='outline-none px-2 py-1 md:py-0 bg-white' type="date" name='leave_req_end_date' value={LeaveData.leave_req_end_date} onChange={(e) => { HandelInput(e) }} min={minDate} />
                         </div>
                     </div>
                     <div className='flex flex-col py-2 '>
                         <label className='label'>Message</label>
-                        <textarea className='w-[50%] h-[80px] outline-none rounded-sm py-1 px-2' name='leave_req_message' value={LeaveData.leave_req_message} onChange={(e) => { HandelInput(e) }} ></textarea>
+                        <textarea className='md:w-[50%] h-[80px] outline-none rounded-sm py-1 px-2' name='leave_req_message' value={LeaveData.leave_req_message} onChange={(e) => { HandelInput(e) }} ></textarea>
                     </div>
                     <div className='py-2'>
                         <button className='py-2 px-6 bg-green-500 text-white font-medium rounded-md shadow-sm' onClick={() => { HandelLeaveSubmit() }}>Submit</button>

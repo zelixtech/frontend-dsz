@@ -286,11 +286,11 @@ function AddEmplotyee() {
 
 
     return (
-        <div className='basis-[83%] bg-bg overflow-y-scroll h-screen'>
+        <div className='basis-[100%]  md:basis-[83%] bg-bg overflow-y-scroll h-screen'>
 
-            <h1 className='px-14 pt-9 pb-4 headline'>Create New Employee</h1>
+            <h1 className='px-5 md:px-14 pt-9 pb-4 headline'>Create New Employee</h1>
 
-            <div className='px-28 pb-20 w-[950px]'>
+            <div className='px-5 md:px-28 pb-20 md:w-[950px]'>
 
                 <>
                     <div className='flex flex-col'>
@@ -318,7 +318,7 @@ function AddEmplotyee() {
                         <input className='NewEmployeeinput' type="text" name="employee_password" onChange={(e) => { HandelEmployeeDetailInput(e) }} value={Data.employee_password} />
                     </div>
 
-                    <div className='flex justify-between pt-3 pb-2'>
+                    <div className='flex flex-col md:flex-row md:justify-between md:pt-3 md:pb-2'>
 
                         <div className='flex flex-col'>
                             <label className='label'>Designation</label>
@@ -339,7 +339,7 @@ function AddEmplotyee() {
 
                         <div className='flex flex-col'>
                             <label className='label'>Department</label>
-                            <select id="department" name="employee_department" className='NewEmployeeinput  w-[300px]' onChange={(e) => { HandelEmployeeDetailInput(e) }} value={Data.employee_department}>
+                            <select id="department" name="employee_department" className='NewEmployeeinput w-full bg-white md:w-[300px]' onChange={(e) => { HandelEmployeeDetailInput(e) }} value={Data.employee_department}>
                                 <option value="Employee">Employee</option>
                                 <option value="hr">Hr Department</option>
                                 <option value="Not Required">Not Required</option>
@@ -348,16 +348,16 @@ function AddEmplotyee() {
 
                     </div>
 
-                    <div className='flex justify-between py-3'>
+                    <div className='flex flex-col md:flex-row md:justify-between md:py-3'>
 
                         <div className='flex flex-col'>
                             <label className='label'>Joining Date</label>
-                            <input className='NewEmployeeinput w-[300px]' type="date" name="employee_doj" onChange={(e) => { HandelEmployeeDetailInput(e) }} value={Data.employee_doj} />
+                            <input className='NewEmployeeinput bg-white w-full md:w-[300px]' type="date" name="employee_doj" onChange={(e) => { HandelEmployeeDetailInput(e) }} value={Data.employee_doj} />
                         </div>
 
                         <div className='flex flex-col'>
                             <label className='label'>Date of Birth</label>
-                            <input className='NewEmployeeinput w-[300px]' type="date" name="employee_dob" onChange={(e) => { HandelEmployeeDetailInput(e) }} value={Data.employee_dob} />
+                            <input className='NewEmployeeinput bg-white w-full md:w-[300px]' type="date" name="employee_dob" onChange={(e) => { HandelEmployeeDetailInput(e) }} value={Data.employee_dob} />
                         </div>
 
                     </div>
@@ -400,7 +400,7 @@ function AddEmplotyee() {
                                 </div>
 
                                 <div>
-                                    <button className='py-2 px-6 mt-10 bg-green-500 text-white font-medium rounded-md shadow-sm ' onClick={() => { handelSubmitAddBankInfo() }}>Submit</button>
+                                    <button className='pb-10 md:pb-2 py-2 px-6 mt-10 bg-green-500 text-white font-medium rounded-md shadow-sm ' onClick={() => { handelSubmitAddBankInfo() }}>Submit</button>
                                 </div>
                             </>
 

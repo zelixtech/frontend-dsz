@@ -74,12 +74,12 @@ function AllClients({ SearchInput, SortType, Status }) {
     }
 
     if ((SearchInput || SortType) && (!All_Clients || All_Clients.length === 0)) {
-        return <div className='flex justify-center items-center pt-20 text-blue-500'>No requrements with matching filter...</div>;
+        return <div className='flex justify-center items-center pt-20 text-blue-500'>No Client with matching filter...</div>;
     }
 
-    if (!All_Clients) {
-        return <div className='flex justify-center items-center mt-20 text-blue-500'>Loading Clients...</div>
-    }
+    // if (!All_Clients) {
+    //     return <div className='flex justify-center items-center mt-20 text-blue-500'>Loading Clients...</div>
+    // }
 
     // return null;
 
@@ -89,7 +89,7 @@ function AllClients({ SearchInput, SortType, Status }) {
 
             {
 
-                All_Clients.map((c, index) => {
+                All_Clients && All_Clients.map((c, index) => {
 
                     return (
                         < ClientDetails Username={c.client_name} Email={c.client_email} MobileNo={c.client_mobile} Company={c.client_industry} Status={"New"} IsActive={Status} key={index} ClientId={c.client_id} />
@@ -98,6 +98,12 @@ function AllClients({ SearchInput, SortType, Status }) {
 
                 })
             }
+
+
+            {/* <ClientDetails Username={"vishal savaliya"} Email={"vsleitan@gmail.com"} MobileNo={"95102345666"} Company={"Leitan Developers"} Status={"New"} IsActive={0} key={1} ClientId={1} />
+            <ClientDetails Username={"vishal patel"} Email={"vsleitan@gmail.com"} MobileNo={"95102345666"} Company={"Leitan Developers"} Status={"New"} IsActive={1} key={1} ClientId={1} />
+            <ClientDetails Username={"vishal haha"} Email={"vsleitan@gmail.com"} MobileNo={"95102345666"} Company={"Leitan Developers"} Status={"New"} IsActive={0} key={1} ClientId={1} />
+            <ClientDetails Username={"vishal savaliya"} Email={"vsleitan@gmail.com"} MobileNo={"95102345666"} Company={"Leitan Developers"} Status={"New"} IsActive={1} key={1} ClientId={1} /> */}
 
 
 

@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import { fechUnAssignQuery } from '../../../Reducer/querySclice';
 import axios from 'axios';
 import ReqDetails from './ReqDetails';
+import { Store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
 
 function NewRightsidebar() {
 
@@ -33,7 +35,10 @@ function NewRightsidebar() {
         var config = {
             method: 'patch',
             url: `${process.env.REACT_APP_HOST}/api/client/${ClientId}/block`,
-            headers: {}
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
         };
 
         axios(config)
@@ -42,7 +47,31 @@ function NewRightsidebar() {
                 dispatch(fechUnAssignQuery());
             })
             .catch(function (error) {
-                console.log(error);
+                // console.log(error);
+                var result = error.response.data;
+
+                // console.log(result);
+
+                if (result) {
+                    if (result.error) {
+
+                        Store.addNotification({
+                            title: result.errorType ? result.errorType : "Error!",
+                            message: result.errorMessage ? result.errorMessage : "Error While Processing Request!",
+                            type: "warning",
+                            insert: "top",
+                            container: "top-right",
+                            animationIn: ["animate__animated", "animate__fadeIn"],
+                            animationOut: ["animate__animated", "animate__fadeOut"],
+                            dismiss: {
+                                duration: 5000,
+                                onScreen: true
+                            }
+                        });
+                    }
+
+
+                }
             });
     }
 

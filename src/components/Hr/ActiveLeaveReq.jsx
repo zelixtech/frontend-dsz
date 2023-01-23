@@ -32,6 +32,10 @@ function ActiveLeaveReq() {
         var config = {
             method: 'patch',
             url: `${process.env.REACT_APP_HOST}/api/auth/attendance/leave/` + leave_req_id,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
         };
 
         axios(config)
@@ -78,7 +82,30 @@ function ActiveLeaveReq() {
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                var result = error.response.data;
+
+                // console.log(result);
+
+                if (result) {
+                    if (result.error) {
+
+                        Store.addNotification({
+                            title: result.errorType ? result.errorType : "Error!",
+                            message: result.errorMessage ? result.errorMessage : "Error While Processing Request!",
+                            type: "warning",
+                            insert: "top",
+                            container: "top-right",
+                            animationIn: ["animate__animated", "animate__fadeIn"],
+                            animationOut: ["animate__animated", "animate__fadeOut"],
+                            dismiss: {
+                                duration: 5000,
+                                onScreen: true
+                            }
+                        });
+                    }
+
+
+                }
             });
     }
 

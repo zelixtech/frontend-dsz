@@ -3,6 +3,8 @@ import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setInputFilter } from '../../Reducer/filtersSlice';
+import { Store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
 
 
 function AdminNotifications() {
@@ -21,7 +23,10 @@ function AdminNotifications() {
         var config = {
             method: 'get',
             url: `${process.env.REACT_APP_HOST}/api/query/all/created_unassigned`,
-            headers: {}
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
         };
 
         axios(config)
@@ -37,7 +42,30 @@ function AdminNotifications() {
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                var result = error.response.data;
+
+                // console.log(result);
+
+                if (result) {
+                    if (result.error) {
+
+                        Store.addNotification({
+                            title: result.errorType ? result.errorType : "Error!",
+                            message: result.errorMessage ? result.errorMessage : "Error While Processing Request!",
+                            type: "warning",
+                            insert: "top",
+                            container: "top-right",
+                            animationIn: ["animate__animated", "animate__fadeIn"],
+                            animationOut: ["animate__animated", "animate__fadeOut"],
+                            dismiss: {
+                                duration: 5000,
+                                onScreen: true
+                            }
+                        });
+                    }
+
+
+                }
             });
     }
 
@@ -45,7 +73,10 @@ function AdminNotifications() {
         var config = {
             method: 'get',
             url: `${process.env.REACT_APP_HOST}/api/query/all/running_no_followup?employee_id=${employeeId}`,
-            headers: {}
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
         };
 
         axios(config)
@@ -61,7 +92,30 @@ function AdminNotifications() {
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                var result = error.response.data;
+
+                // console.log(result);
+
+                if (result) {
+                    if (result.error) {
+
+                        Store.addNotification({
+                            title: result.errorType ? result.errorType : "Error!",
+                            message: result.errorMessage ? result.errorMessage : "Error While Processing Request!",
+                            type: "warning",
+                            insert: "top",
+                            container: "top-right",
+                            animationIn: ["animate__animated", "animate__fadeIn"],
+                            animationOut: ["animate__animated", "animate__fadeOut"],
+                            dismiss: {
+                                duration: 5000,
+                                onScreen: true
+                            }
+                        });
+                    }
+
+
+                }
             });
     }
 

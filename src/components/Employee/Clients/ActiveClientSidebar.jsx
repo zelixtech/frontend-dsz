@@ -28,12 +28,18 @@ function ActiveClientSidebar() {
     // console.log(ClientId);
 
     const [query, setquery] = useState([]);
+    const [invoice, setinvoice] = useState([]);
 
-    useEffect(() => {
+
+    const fetchInvoic = () => {
+
         var config = {
             method: 'get',
-            url: `http://localhost:5000/api/query/all/client/${ClientId}`,
-            headers: {}
+            url: `${process.env.REACT_APP_HOST}/api/invoice/${ClientId}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
         };
 
         axios(config)
@@ -42,17 +48,54 @@ function ActiveClientSidebar() {
                 const resData = response.data;
 
                 if (resData.error) {
-                    console.log(resData.error);
+                    // console.log(resData.error);
+                    setinvoice([]);
+                } else {
+                    setinvoice(resData.data.invoice_data);
+                    // console.log(resData.data)
+                }
+
+            })
+            .catch(function (error) {
+                // console.log(error);
+                setinvoice([]);
+            });
+
+    }
+
+    useEffect(() => {
+        var config = {
+            method: 'get',
+            url: `${process.env.REACT_APP_HOST}/api/query/all/client/${ClientId}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        };
+
+        axios(config)
+            .then(function (response) {
+                // console.log(JSON.stringify(response.data));
+                const resData = response.data;
+
+                if (resData.error) {
+                    // console.log(resData.error);
+                    setquery([]);
                 } else {
                     setquery(resData.data.queries);
-                    console.log(resData.data)
+                    // console.log(resData.data)
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                setquery([]);
+                // console.log(error);
             });
 
+        fetchInvoic();
+
     }, [ClientId])
+
+
 
 
     if (!clients || !ClientId) {
@@ -70,8 +113,11 @@ function ActiveClientSidebar() {
 
         var config = {
             method: 'patch',
-            url: `http://localhost:5000/api/client/${ClientId}/block`,
-            headers: {}
+            url: `${process.env.REACT_APP_HOST}/api/client/${ClientId}/block`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
         };
 
         axios(config)
@@ -90,7 +136,7 @@ function ActiveClientSidebar() {
     // return null;
 
     return (
-        <div className='mx-6 mt-10 felx flex-col text-black'>
+        <div className='mx-6 mt-10 felx flex-col text-black overflow-y-scroll'>
 
             <div>
                 <span className='flex items-center'>
@@ -161,10 +207,33 @@ function ActiveClientSidebar() {
 
             </div>
 
+            <hr className='mx-auto my-3 mb-3 w-[60%] bg-indigo-500 h-[2px]' />
+
+            <h1 className='text-blue-500'>Invoices</h1>
+
+            <div className='flex flex-col h-[40vh] overflow-y-scroll mr-2'>
+
+                {
+                    invoice.length === 0 ? <div className='flex justify-center items-center text-black h-[100px]'>No invoices...</div> :
+
+                        (invoice.map((q, id) => {
+                            return (
+                                <div className='text-sm flex flex-col bg-blue-100 text-blue-500 shadow-sm rounded-md my-2 mr-4 px-4 py-1'>
+                                    {/* <p className='py-1'>{q.createdAt.split("T")[0]}</p> */}
+                                    <div>
+                                        <p>{q.generatedInvoiceNumber}</p>
+                                    </div>
+                                </div>
+                            )
+                        }))
+                }
+
+            </div>
+
 
             <div className='mt-6 mb-8 text-[14px]'>
                 <div className='flex items-center'>
-                    {/* <button className='px-4 py-2 bg-primary text-white font-medium rounded-md shadow-md' >Create Quotation</button> */}
+                    {/* <button className='px-4 py-2 bg-primary text-white font-medium rounded-md shadow-md' >Create invoice</button> */}
                     <button className='ml-2 px-4 py-2 bg-rose-500 text-white font-medium rounded-md shadow-md' onClick={() => { HandelBlock() }}>Block Client</button>
                 </div>
             </div>

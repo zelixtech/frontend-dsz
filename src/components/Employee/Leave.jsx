@@ -48,6 +48,7 @@ function Leave() {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include',
             data: data
         };
 
@@ -93,7 +94,30 @@ function Leave() {
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                var result = error.response.data;
+
+                // console.log(result);
+
+                if (result) {
+                    if (result.error) {
+
+                        Store.addNotification({
+                            title: result.errorType ? result.errorType : "Error!",
+                            message: result.errorMessage ? result.errorMessage : "Error While Processing Request!",
+                            type: "warning",
+                            insert: "top",
+                            container: "top-right",
+                            animationIn: ["animate__animated", "animate__fadeIn"],
+                            animationOut: ["animate__animated", "animate__fadeOut"],
+                            dismiss: {
+                                duration: 5000,
+                                onScreen: true
+                            }
+                        });
+                    }
+
+
+                }
             });
 
     }

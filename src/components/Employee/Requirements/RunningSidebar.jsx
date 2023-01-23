@@ -55,8 +55,11 @@ function RunningSidebar({ EmployeeId }) {
     useEffect(() => {
         var config = {
             method: 'get',
-            url: `http://localhost:5000/api/followup/all/${AQID}`,
-            headers: {}
+            url: `${process.env.REACT_APP_HOST}/api/followup/all/${AQID}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
         };
 
         axios(config)
@@ -96,10 +99,11 @@ function RunningSidebar({ EmployeeId }) {
 
         var config = {
             method: 'post',
-            url: 'http://localhost:5000/api/followup/',
+            url: `${process.env.REACT_APP_HOST}/api/followup/`,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
+            credentials: 'include',
             data: data
         };
 
@@ -178,10 +182,11 @@ function RunningSidebar({ EmployeeId }) {
 
         var config = {
             method: 'patch',
-            url: `http://localhost:5000/api/query/status/${AQID}`,
+            url: `${process.env.REACT_APP_HOST}/api/query/status/${AQID}`,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
+            credentials: 'include',
             data: data
         };
 
@@ -257,8 +262,9 @@ function RunningSidebar({ EmployeeId }) {
             method: 'patch',
             url: `${process.env.REACT_APP_HOST}/api/query/status/${AQID}`,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
+            credentials: 'include',
             data: data
         };
 
@@ -307,19 +313,30 @@ function RunningSidebar({ EmployeeId }) {
             })
             .catch(function (error) {
                 // console.log(error);
-                Store.addNotification({
-                    title: "Something Went Wrong...",
-                    message: "Server Side Error",
-                    type: "danger",
-                    insert: "top",
-                    container: "top-right",
-                    animationIn: ["animate__animated", "animate__fadeIn"],
-                    animationOut: ["animate__animated", "animate__fadeOut"],
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
+                var result = error.response.data;
+
+                // console.log(result);
+
+                if (result) {
+                    if (result.error) {
+
+                        Store.addNotification({
+                            title: result.errorType ? result.errorType : "Error!",
+                            message: result.errorMessage ? result.errorMessage : "Error While Processing Request!",
+                            type: "warning",
+                            insert: "top",
+                            container: "top-right",
+                            animationIn: ["animate__animated", "animate__fadeIn"],
+                            animationOut: ["animate__animated", "animate__fadeOut"],
+                            dismiss: {
+                                duration: 5000,
+                                onScreen: true
+                            }
+                        });
                     }
-                });
+
+
+                }
             });
 
     }

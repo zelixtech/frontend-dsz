@@ -36,6 +36,11 @@ function GenerateQoutation({ visible, close }) {
     const EmployeeMeta = DataBundel.user;
 
 
+    //products
+
+    const productDetails = useSelector((state) => state.product.products);
+
+
     // states 
 
     const [Loading, setLoading] = useState(false);

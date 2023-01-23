@@ -87,8 +87,9 @@ function EditClientDitals({ visible, close }) {
             method: 'patch',
             url: `${process.env.REACT_APP_HOST}/api/client/${ClientDetails.client_id}`,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
+            credentials: 'include',
             data: data
         };
 

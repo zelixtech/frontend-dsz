@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import Orders from '../Orders';
 import { useDispatch, useSelector } from 'react-redux';
 import { fechActiveClients, fechBlockClients } from '../../../Reducer/clientSlice';
+import { Store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
 import axios from 'axios';
 
 function BlockedClientsSidebar() {
@@ -17,8 +19,11 @@ function BlockedClientsSidebar() {
     useEffect(() => {
         var config = {
             method: 'get',
-            url: `http://localhost:5000/api/query/all/client/${ClientId}`,
-            headers: {}
+            url: `${process.env.REACT_APP_HOST}/api/query/all/client/${ClientId}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
         };
 
         axios(config)
@@ -26,14 +31,14 @@ function BlockedClientsSidebar() {
                 // console.log(JSON.stringify(response.data));
                 const resData = response.data;
                 if (resData.error) {
-                    console.log(resData.error);
+                    // console.log(resData.error);
                 } else {
                     setquery(resData.data);
-                    console.log(resData)
+                    // console.log(resData)
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                // console.log(error);
             });
 
     }, [ClientId])
@@ -59,19 +64,46 @@ function BlockedClientsSidebar() {
 
         var config = {
             method: 'patch',
-            url: `http://localhost:5000/api/client/${ClientId}/unblock`,
-            headers: {}
+            url: `${process.env.REACT_APP_HOST}/api/client/${ClientId}/unblock`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
         };
 
         axios(config)
             .then(function (response) {
-                console.log(JSON.stringify(response.data));
+                // console.log(JSON.stringify(response.data));
 
                 dispatch(fechBlockClients());
                 dispatch(fechActiveClients());
             })
             .catch(function (error) {
-                console.log(error);
+                // console.log(error);
+                var result = error.response.data;
+
+                // console.log(result);
+
+                if (result) {
+                    if (result.error) {
+
+                        Store.addNotification({
+                            title: result.errorType ? result.errorType : "Error!",
+                            message: result.errorMessage ? result.errorMessage : "Error While Processing Request!",
+                            type: "warning",
+                            insert: "top",
+                            container: "top-right",
+                            animationIn: ["animate__animated", "animate__fadeIn"],
+                            animationOut: ["animate__animated", "animate__fadeOut"],
+                            dismiss: {
+                                duration: 5000,
+                                onScreen: true
+                            }
+                        });
+                    }
+
+
+                }
             });
     }
 

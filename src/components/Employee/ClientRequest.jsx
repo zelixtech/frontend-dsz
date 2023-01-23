@@ -25,8 +25,9 @@ function ClientRequest({ request, requestCatagory, date, QueryId, EmployeeId }) 
             method: 'patch',
             url: `${process.env.REACT_APP_HOST}/api/query/assign`,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
+            credentials: 'include',
             data: data
         };
 
@@ -76,21 +77,30 @@ function ClientRequest({ request, requestCatagory, date, QueryId, EmployeeId }) 
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                var result = error.response.data;
 
-                Store.addNotification({
-                    title: "Somting Went Wrong...",
-                    message: "Server Side Error",
-                    type: "danger",
-                    insert: "top",
-                    container: "top-right",
-                    animationIn: ["animate__animated", "animate__fadeIn"],
-                    animationOut: ["animate__animated", "animate__fadeOut"],
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
+                // console.log(result);
+
+                if (result) {
+                    if (result.error) {
+
+                        Store.addNotification({
+                            title: result.errorType ? result.errorType : "Error!",
+                            message: result.errorMessage ? result.errorMessage : "Error While Processing Request!",
+                            type: "warning",
+                            insert: "top",
+                            container: "top-right",
+                            animationIn: ["animate__animated", "animate__fadeIn"],
+                            animationOut: ["animate__animated", "animate__fadeOut"],
+                            dismiss: {
+                                duration: 5000,
+                                onScreen: true
+                            }
+                        });
                     }
-                });
+
+
+                }
             });
     }
 

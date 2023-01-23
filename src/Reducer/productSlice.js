@@ -23,6 +23,10 @@ export function fetchProducts() {
             var config = {
                 method: 'get',
                 url: `${process.env.REACT_APP_HOST}/api/product/product_list`,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             };
 
             axios(config)

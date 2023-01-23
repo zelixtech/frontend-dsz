@@ -27,8 +27,9 @@ function StaffSidebar() {
             method: 'get',
             url: `${process.env.REACT_APP_HOST}/api/employee/bankinfo/` + EmployeeId,
             headers: {
-                'Cookie': 'darshanSession=s%3AgIDiWuErG9DzIfFSZAA7vb3DJXrttbPk.qsQccDQ7Jit7ZIq3jyEDvZkSkIb0sYq%2FTUEvdrcWKuI'
-            }
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
         };
 
         // console.log(config.url)
@@ -44,7 +45,7 @@ function StaffSidebar() {
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                // console.log(error);
                 setBankDetails({});
             });
 

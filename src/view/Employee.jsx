@@ -8,6 +8,7 @@ import Clients from '../components/Employee/Clients';
 import Requrements from '../components/Employee/Requrements';
 
 import { PopupProvider } from '../components/PopupsContext'
+import GenerateInvoice from '../components/Employee/GenerateInvoice';
 
 
 function Employee() {
@@ -35,6 +36,7 @@ function Employee() {
                     <Route path="/" element={<Requrements Input={Input} searchHandler={searchHandler} />} />
                     <Route path="/notification" element={<Notifcations />} />
                     <Route path="/Leave" element={<Leave />} />
+                    <Route path="/invoice" element={<GenerateInvoice />} />
                 </Routes>
 
             </div>

@@ -20,7 +20,10 @@ function Notifcations() {
         var config = {
             method: 'get',
             url: `${process.env.REACT_APP_HOST}/api/query/all/created_unassigned`,
-            headers: {}
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
         };
 
         axios(config)
@@ -44,7 +47,10 @@ function Notifcations() {
         var config = {
             method: 'get',
             url: `${process.env.REACT_APP_HOST}/api/query/all/running_no_followup?employee_id=${employeeId}`,
-            headers: {}
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
         };
 
         axios(config)

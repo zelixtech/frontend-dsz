@@ -35,7 +35,10 @@ function CloseSidebar({ EmployeeId }) {
         var config = {
             method: 'get',
             url: `${process.env.REACT_APP_HOST}/api/followup/all/${CQID}`,
-            headers: {}
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
         };
 
         axios(config)
@@ -122,20 +125,30 @@ function CloseSidebar({ EmployeeId }) {
                 }
             })
             .catch(function (error) {
-                console.log(error);
-                Store.addNotification({
-                    title: "Somting Went Wrong...",
-                    message: "Server Side Error",
-                    type: "danger",
-                    insert: "top",
-                    container: "top-right",
-                    animationIn: ["animate__animated", "animate__fadeIn"],
-                    animationOut: ["animate__animated", "animate__fadeOut"],
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
+                var result = error.response.data;
+
+                // console.log(result);
+
+                if (result) {
+                    if (result.error) {
+
+                        Store.addNotification({
+                            title: result.errorType ? result.errorType : "Error!",
+                            message: result.errorMessage ? result.errorMessage : "Error While Processing Request!",
+                            type: "warning",
+                            insert: "top",
+                            container: "top-right",
+                            animationIn: ["animate__animated", "animate__fadeIn"],
+                            animationOut: ["animate__animated", "animate__fadeOut"],
+                            dismiss: {
+                                duration: 5000,
+                                onScreen: true
+                            }
+                        });
                     }
-                });
+
+
+                }
             });
 
     }
@@ -199,20 +212,30 @@ function CloseSidebar({ EmployeeId }) {
                 }
             })
             .catch(function (error) {
-                console.log(error);
-                Store.addNotification({
-                    title: "Somting Went Wrong...",
-                    message: "Server Side Error",
-                    type: "danger",
-                    insert: "top",
-                    container: "top-right",
-                    animationIn: ["animate__animated", "animate__fadeIn"],
-                    animationOut: ["animate__animated", "animate__fadeOut"],
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
+                var result = error.response.data;
+
+                // console.log(result);
+
+                if (result) {
+                    if (result.error) {
+
+                        Store.addNotification({
+                            title: result.errorType ? result.errorType : "Error!",
+                            message: result.errorMessage ? result.errorMessage : "Error While Processing Request!",
+                            type: "warning",
+                            insert: "top",
+                            container: "top-right",
+                            animationIn: ["animate__animated", "animate__fadeIn"],
+                            animationOut: ["animate__animated", "animate__fadeOut"],
+                            dismiss: {
+                                duration: 5000,
+                                onScreen: true
+                            }
+                        });
                     }
-                });
+
+
+                }
             });
 
     }

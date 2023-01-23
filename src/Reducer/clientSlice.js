@@ -35,7 +35,10 @@ export function fechActiveClients() {
             var config = {
                 method: 'get',
                 url: `${process.env.REACT_APP_HOST}/api/client/all/active`,
-                headers: {}
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             };
 
             // console.log(config.url);
@@ -73,7 +76,10 @@ export function fechBlockClients() {
             var config = {
                 method: 'get',
                 url: `${process.env.REACT_APP_HOST}/api/client/all/blocked`,
-                headers: {}
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             };
 
             // console.log(config.url);

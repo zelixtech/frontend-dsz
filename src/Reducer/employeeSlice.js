@@ -42,7 +42,9 @@ export function fechEmployees() {
                 method: 'get',
                 url: `${process.env.REACT_APP_HOST}/api/employee/all`,
                 headers: {
-                }
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             };
 
             // console.log(config.url);
@@ -82,7 +84,10 @@ export function fechEmployeesAttendance({ mm, yyyy }) {
             var config = {
                 method: 'get',
                 url: `${process.env.REACT_APP_HOST}/api/auth/attendance/allEmployees?month=${mm}&year=${yyyy}`,
-                headers: {}
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             };
 
             // console.log(config.url);
@@ -121,7 +126,10 @@ export function fechAttendance({ mm, yyyy, EmployeeId }) {
             var config = {
                 method: 'get',
                 url: `${process.env.REACT_APP_HOST}/api/auth/attendance/${EmployeeId}?month=${mm}&year=${yyyy}`,
-                headers: {}
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             };
 
             // console.log(config.url);

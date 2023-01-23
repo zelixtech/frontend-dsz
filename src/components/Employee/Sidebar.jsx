@@ -5,6 +5,7 @@ import {
     BellAlertIcon,
     UserGroupIcon,
     BriefcaseIcon,
+    ClipboardDocumentListIcon
 } from '@heroicons/react/24/outline'
 import SidebarOption from '../SidebarOption';
 import { useNavigate } from 'react-router-dom';
@@ -73,6 +74,7 @@ function Sidebar() {
                     <SidebarOption link={"requirements"} Icon={Squares2X2Icon} Title={"DashBoard"} />
                     <SidebarOption link={"clients"} Icon={UserGroupIcon} Title={"Clients"} />
                     <SidebarOption link={"notification"} Icon={BellAlertIcon} Title={"Notifications"} />
+                    <SidebarOption link={"invoice"} Icon={ClipboardDocumentListIcon} Title={"Invoice"} />
                     <SidebarOption link={"Leave"} Icon={BriefcaseIcon} Title={"Request For Leave"} />
                 </div>
 
@@ -97,7 +99,9 @@ function Sidebar() {
                     <SidebarOption link={"requirements"} Icon={Squares2X2Icon} Title={"DashBoard"} />
                     <SidebarOption link={"clients"} Icon={UserGroupIcon} Title={"Clients"} />
                     <SidebarOption link={"notification"} Icon={BellAlertIcon} Title={"Notifications"} />
+                    <SidebarOption link={"invoice"} Icon={ClipboardDocumentListIcon} Title={"Invoice"} />
                     <SidebarOption link={"Leave"} Icon={BriefcaseIcon} Title={"Request For Leave"} />
+
                 </div>
             </div>
 

@@ -27,6 +27,10 @@ export function fetchActiveLeaveReq() {
             var config = {
                 method: 'get',
                 url: `${process.env.REACT_APP_HOST}/api/auth/attendance/all/leaves`,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             };
 
             // console.log(config.url);
@@ -60,6 +64,10 @@ export function fetchArchiveLeaveReq() {
             var config = {
                 method: 'get',
                 url: `${process.env.REACT_APP_HOST}/api/auth/attendance/all/archived_leaves`,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             };
 
             // console.log(config.url);

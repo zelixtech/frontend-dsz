@@ -26,7 +26,10 @@ function AddNewRequest({ visible, close }) {
         var config = {
             method: 'get',
             url: `${process.env.REACT_APP_HOST}/api/client/all/active`,
-            headers: {}
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
         };
         axios(config)
             .then(function (response) {
@@ -59,6 +62,30 @@ function AddNewRequest({ visible, close }) {
             })
             .catch(function (error) {
                 // console.log(error);
+                var result = error.response.data;
+
+                // console.log(result);
+
+                if (result) {
+                    if (result.error) {
+
+                        Store.addNotification({
+                            title: result.errorType ? result.errorType : "Error!",
+                            message: result.errorMessage ? result.errorMessage : "Error While Processing Request!",
+                            type: "warning",
+                            insert: "top",
+                            container: "top-right",
+                            animationIn: ["animate__animated", "animate__fadeIn"],
+                            animationOut: ["animate__animated", "animate__fadeOut"],
+                            dismiss: {
+                                duration: 5000,
+                                onScreen: true
+                            }
+                        });
+                    }
+
+
+                }
             });
     }
 
@@ -115,7 +142,10 @@ function AddNewRequest({ visible, close }) {
             var config = {
                 method: 'get',
                 url: `${process.env.REACT_APP_HOST}/api/client/check?client_mobile=${e.target.value}`,
-
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             };
 
             axios(config)
@@ -149,7 +179,10 @@ function AddNewRequest({ visible, close }) {
             var config = {
                 method: 'get',
                 url: `${process.env.REACT_APP_HOST}/api/client/check?client_email=${e.target.value}`,
-
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             };
 
             axios(config)
@@ -200,6 +233,7 @@ function AddNewRequest({ visible, close }) {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include',
             data: data
         };
 
@@ -250,21 +284,30 @@ function AddNewRequest({ visible, close }) {
 
             })
             .catch(function (error) {
-                console.log(error);
+                var result = error.response.data;
 
-                Store.addNotification({
-                    title: "Somting Went Wrong...",
-                    message: "Server Side Error",
-                    type: "danger",
-                    insert: "top",
-                    container: "top-right",
-                    animationIn: ["animate__animated", "animate__fadeIn"],
-                    animationOut: ["animate__animated", "animate__fadeOut"],
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
+                // console.log(result);
+
+                if (result) {
+                    if (result.error) {
+
+                        Store.addNotification({
+                            title: result.errorType ? result.errorType : "Error!",
+                            message: result.errorMessage ? result.errorMessage : "Error While Processing Request!",
+                            type: "warning",
+                            insert: "top",
+                            container: "top-right",
+                            animationIn: ["animate__animated", "animate__fadeIn"],
+                            animationOut: ["animate__animated", "animate__fadeOut"],
+                            dismiss: {
+                                duration: 5000,
+                                onScreen: true
+                            }
+                        });
                     }
-                });
+
+
+                }
             });
     }
 
@@ -296,7 +339,7 @@ function AddNewRequest({ visible, close }) {
 
     const HandelCreateReq = (e) => {
 
-        console.log(ReqData);
+        // console.log(ReqData);
 
         var data = JSON.stringify({
             "data": ReqData
@@ -307,8 +350,9 @@ function AddNewRequest({ visible, close }) {
             method: 'post',
             url: `${process.env.REACT_APP_HOST}/api/query`,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
+            credentials: 'include',
             data: data
         };
 
@@ -359,21 +403,30 @@ function AddNewRequest({ visible, close }) {
 
             })
             .catch(function (error) {
-                console.log(error);
+                var result = error.response.data;
 
-                Store.addNotification({
-                    title: "Somting Went Wrong...",
-                    message: "Server Side Error",
-                    type: "danger",
-                    insert: "top",
-                    container: "top-right",
-                    animationIn: ["animate__animated", "animate__fadeIn"],
-                    animationOut: ["animate__animated", "animate__fadeOut"],
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
+                // console.log(result);
+
+                if (result) {
+                    if (result.error) {
+
+                        Store.addNotification({
+                            title: result.errorType ? result.errorType : "Error!",
+                            message: result.errorMessage ? result.errorMessage : "Error While Processing Request!",
+                            type: "warning",
+                            insert: "top",
+                            container: "top-right",
+                            animationIn: ["animate__animated", "animate__fadeIn"],
+                            animationOut: ["animate__animated", "animate__fadeOut"],
+                            dismiss: {
+                                duration: 5000,
+                                onScreen: true
+                            }
+                        });
                     }
-                });
+
+
+                }
             });
     }
 

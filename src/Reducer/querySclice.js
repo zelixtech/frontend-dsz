@@ -53,11 +53,15 @@ export function fechUnAssignQuery() {
                 method: 'get',
                 url: `${process.env.REACT_APP_HOST}/api/query/all/unassigned/active`,
                 // withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             };
 
             axios(config)
                 .then(function (response) {
-                    console.log(JSON.stringify(response.data));
+                    // console.log(JSON.stringify(response.data));
                     var resData = response.data;
                     if (resData.error) {
                         // console.log("error while fatching querys");
@@ -92,7 +96,10 @@ export function fechAssignQuery(EmployeeId) {
                 method: 'get',
                 // url: `${process.env.REACT_APP_HOST}/api/query/all/employee/1`,
                 url: `${process.env.REACT_APP_HOST}/api/query/all/employee?employee_id=${EmployeeId}&query_state=running`,
-                headers: {}
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             };
 
             axios(config)
@@ -132,7 +139,10 @@ export function fechLostQuery(EmployeeId) {
                 method: 'get',
                 // url: `${process.env.REACT_APP_HOST}/api/query/all/employee/1`,
                 url: `${process.env.REACT_APP_HOST}/api/query/all/employee?employee_id=${EmployeeId}&query_state=lost`,
-                headers: {}
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             };
 
             axios(config)
@@ -172,7 +182,10 @@ export function fechCloseQuery(EmployeeId) {
                 method: 'get',
                 // url: `${process.env.REACT_APP_HOST}/api/query/all/employee/1`,
                 url: `${process.env.REACT_APP_HOST}/api/query/all/employee?employee_id=${EmployeeId}&query_state=close`,
-                headers: {}
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             };
 
             axios(config)
@@ -212,8 +225,9 @@ export function fetchQuotations(AQID) {
                 method: 'get',
                 url: `${process.env.REACT_APP_HOST}/api/quotation/all/${AQID}`,
                 headers: {
-                    'Cookie': 'darshanSession=s%3A1pHuUrUxP4VvI_q9PGtz-E7QGHQYB0bC.zID6MNIzgEpXQ8LL%2FylJsR8NfLPG8OSl6NzjnCatxDE'
-                }
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             };
 
             axios(config)

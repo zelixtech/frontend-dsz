@@ -22,7 +22,10 @@ function QueryDetails({ visible, close, QueryId, Query, Client }) {
         var config = {
             method: 'get',
             url: `${process.env.REACT_APP_HOST}/api/followup/all/${QueryId}`,
-            headers: {}
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
         };
 
         axios(config)
@@ -38,7 +41,7 @@ function QueryDetails({ visible, close, QueryId, Query, Client }) {
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                // console.log(error);
             });
 
     }, [QueryId]);
@@ -50,6 +53,10 @@ function QueryDetails({ visible, close, QueryId, Query, Client }) {
         var config = {
             method: 'get',
             url: `${process.env.REACT_APP_HOST}/api/quotation/all/${QueryId}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
         };
 
         axios(config)
@@ -65,7 +72,7 @@ function QueryDetails({ visible, close, QueryId, Query, Client }) {
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                // console.log(error);
                 setQuotation([])
             });
 

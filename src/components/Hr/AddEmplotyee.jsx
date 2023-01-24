@@ -191,18 +191,16 @@ function AddEmplotyee() {
 
         console.log(field);
 
+        var preData = { ...Data };
         if (field === "employee_isAdmin") {
-            var preData = { ...Data };
             preData[field] = !IsAdmin;
-            setData(preData);
             setIsAdmin(!IsAdmin);
 
         } else {
-            var preData = { ...Data };
             preData[field] = !IsHr;
-            setData(preData);
             setIsHr(!IsHr);
         }
+        setData(preData);
 
     }
 

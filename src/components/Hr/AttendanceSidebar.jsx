@@ -38,7 +38,7 @@ function AttendanceSidebar() {
     const Data = Employee[0];
 
     // setAttendanceData(Data.attendance_array);
-    console.log(AttendanceData)
+    // console.log(AttendanceData)
 
     var date = new Date(`${Interval.yyyy}-${Interval.mm}-1`);
 

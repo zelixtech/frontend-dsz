@@ -40,7 +40,7 @@ function ActiveLeaveReq() {
 
         axios(config)
             .then(function (response) {
-                console.log(JSON.stringify(response.data));
+                // console.log(JSON.stringify(response.data));
                 var resdata = response.data;
                 if (resdata.error) {
 
